@@ -2,7 +2,7 @@
 # Problem: Check if a string is palindrome using recursion.
 
 # Function definition
-def IsPalindrome(word):
+def is_palindrome(word):
     # Base case: If the length of word is 0 or 1, it's a palindrome
     if len(word) <= 1:
         return True
@@ -10,7 +10,7 @@ def IsPalindrome(word):
     if word[0] != word[-1]:
         return False
     # Recursively check the inner substring (excluding first and last characters)
-    return IsPalindrome(word[1:-1])
+    return is_palindrome(word[1:-1])
 
 # Function call with word = "hello"
-print(IsPalindrome("hello"))
+print(is_palindrome("hello"))

@@ -4,7 +4,7 @@
 # The sum of these digits would be: 2 + 3 + 4 = 9
 
 # Function definition
-def SumDig(n):
+def sum_digits(n):
     # Base condition: If n is 0, return 0 as there are no more digits to process
     if n == 0:
         return 0
@@ -17,7 +17,7 @@ def SumDig(n):
     
     # Recursive case: Add the extracted digit to the sum of digits from the remaining number
     # The recursion keeps reducing n by removing digits until n becomes 0
-    return m + SumDig(n)
+    return m + sum_digits(n)
 
 # Function call with N = 234
-print(SumDig(234))
+print(sum_digits(234))
