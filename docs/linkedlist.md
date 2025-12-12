@@ -1,1 +1,0 @@
-# docs: linked list basics

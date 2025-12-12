@@ -1,1 +1,0 @@
-# docs: greedy basics
