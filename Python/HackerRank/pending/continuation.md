@@ -1,1 +1,1 @@
-https://www.hackerrank.com/challenges/kangaroo/problem?isFullScreen=true
+https://www.hackerrank.com/challenges/strplay/problem?isFullScreen=true
