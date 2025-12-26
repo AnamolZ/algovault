@@ -1,0 +1,9 @@
+[project]
+name = "algovault"
+version = "0.1.0"
+description = "AlgoVault is a curated collection of Data Structures and Algorithms (DSA) problems, along with their clean, optimized, and well-documented solutions."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=2.4.0",
+]
