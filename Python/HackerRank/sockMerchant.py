@@ -46,8 +46,8 @@ def main():
         the length of the list.
     """
     try:
-        n = int(input("Enter the number of socks: "))
-        ar = list(map(int, input("Enter the sock colors separated by space: ").rstrip().split()))
+        n = int(input())
+        ar = list(map(int, input().rstrip().split()))
 
         if len(ar) != n:
             raise ValueError(f"Expected {n} numbers, but got {len(ar)}")
