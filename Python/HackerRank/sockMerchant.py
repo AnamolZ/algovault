@@ -57,6 +57,5 @@ def main():
     except ValueError:
         raise ValueError("Must be integers")
 
-
 if __name__ == "__main__":
     main()
