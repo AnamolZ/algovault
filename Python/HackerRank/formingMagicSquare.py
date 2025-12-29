@@ -26,7 +26,6 @@ def formingMagicSquare(magic_squares, matrix):
         costs.append(calculate_cost(sq, matrix))
     return min(costs)
 
-
 def calculate_cost(sq, matrix):
     """
     Calculate the transformation cost between a magic square and
@@ -53,7 +52,6 @@ def calculate_cost(sq, matrix):
             total_cost += abs(sq[i][j] - matrix[i][j])
     return total_cost
 
-
 def main():
     """
     Read a 3x3 matrix from standard input and print the minimum cost
@@ -75,7 +73,6 @@ def main():
 
     matrix = [list(map(int, input().rstrip().split())) for _ in range(3)]
     print(formingMagicSquare(magic_squares, matrix))
-
 
 if __name__ == "__main__":
     main()
