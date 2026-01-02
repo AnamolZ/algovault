@@ -1,5 +1,17 @@
 
 def hurdleRace(k, h):
+    """
+    Calculates the minimum doses of potion needed to jump over all hurdles.
+    
+    Each dose of potion increases the maximum height the character can jump by 1 unit.
+
+    Args:
+        k (int): The maximum height the character can jump without potion.
+        height (list[int]): A list of hurdle heights.
+
+    Returns:
+        int: The minimum number of doses needed.
+    """
     max_hurdle = max(h)
     return max(0, max_hurdle - k)
 
