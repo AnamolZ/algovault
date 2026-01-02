@@ -8,6 +8,12 @@ def utopianTree(n):
             height += 1
     return height
 
+def utopianTree(n):
+    if n % 2 == 0:
+        return int(2**(n // 2 + 1) - 1)
+    else:
+        return int(2**((n + 1) // 2 + 1) - 2)
+
 def main():
     try:
         t_input = input().strip()
