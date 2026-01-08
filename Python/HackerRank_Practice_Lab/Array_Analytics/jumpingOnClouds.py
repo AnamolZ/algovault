@@ -1,5 +1,15 @@
 
 def jumpingOnClouds(c, k):
+    """
+    Calculates the energy level after completing a circular path on clouds.
+    
+    Args:
+        c (list[int]): An array of integers representing clouds (0 for normal, 1 for thunderhead).
+        k (int): The jump distance.
+        
+    Returns:
+        int: The remaining energy after returning to the starting position.
+    """
     e = 100
     i = 0
 
@@ -15,6 +25,10 @@ def jumpingOnClouds(c, k):
     return e
 
 def main():
+    """
+    Handles input and output for the Jumping on the Clouds: Revisited solver.
+    Expects n and k followed by the cloud configuration array.
+    """
     nk = input().split()
 
     n = int(nk[0])
