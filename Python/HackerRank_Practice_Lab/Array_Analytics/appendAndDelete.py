@@ -1,5 +1,24 @@
 
 def appendAndDelete(s, t, k):
+    """
+    Determines whether it is possible to convert string `s` into string `t`
+    using exactly `k` operations, where each operation is either:
+    - deleting the last character of the string, or
+    - appending a character to the end of the string.
+
+    The function finds the longest common prefix between `s` and `t` to
+    minimize unnecessary operations, then checks whether the remaining
+    operations can be performed within the allowed count `k`.
+
+    Args:
+        s (str): The initial string.
+        t (str): The target string.
+        k (int): The exact number of operations allowed.
+
+    Returns:
+        str: "Yes" if the transformation is possible within `k` operations,
+             otherwise "No".
+    """
     common_length = 0
     for char_s, char_t in zip(s, t):
         if char_s == char_t:
@@ -20,6 +39,10 @@ def appendAndDelete(s, t, k):
         return "No"
 
 def main():
+    """
+    Main entry point for the script.
+    Reads inputs with robust error handling for the integer 'k'.
+    """
     try:
         s = input().strip()
         t = input().strip()
