@@ -2,6 +2,17 @@
 from collections import Counter
 
 def non_divisible_subset(k, s):
+    """
+    Calculates the size of the largest subset of 's' such that the sum of 
+    any two integers in the subset is not divisible by 'k'.
+
+    Args:
+        k (int): The integer divisor.
+        s (list[int]): An array of integers.
+
+    Returns:
+        int: The size of the maximum non-divisible subset.
+    """
     remainder_count = Counter(x % k for x in s)
     result = 0
 
@@ -18,6 +29,10 @@ def non_divisible_subset(k, s):
     return result
 
 def main():
+    """
+    Reads input from stdin, parses the values, and prints the result of 
+    the non_divisible_subset function.
+    """
     first_multiple_input = input().rstrip().split()
 
     n = int(first_multiple_input[0])
