@@ -2,6 +2,14 @@
 from typing import List
 
 def cut_sticks_bruteforce(sticks: List[int]) -> List[int]:
+    """
+    Simulates the stick-cutting process step by step (brute-force approach).
+
+    At each step, the smallest stick length is removed from all sticks,
+    and sticks of zero or negative length are discarded.
+
+    Time Complexity: O(n²)
+    """
     remaining = sticks.copy()
     cuts = []
 
@@ -13,6 +21,11 @@ def cut_sticks_bruteforce(sticks: List[int]) -> List[int]:
     return cuts
 
 def cutTheSticks(sticks: List[int]) -> List[int]:
+    """
+    Computes the number of sticks remaining after each cut using sorting.
+
+    Time Complexity: O(n log n)
+    """
     if not sticks:
         return []
 
@@ -27,6 +40,10 @@ def cutTheSticks(sticks: List[int]) -> List[int]:
     return cuts
 
 def main():
+    """
+    Reads input, validates it, and prints results
+    using both optimized and brute-force solutions.
+    """
     stick_count = int(input().strip())
     sticks = list(map(int, input().strip().split()))
 
