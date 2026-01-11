@@ -1,5 +1,16 @@
 
 def repeatedString(input_string, total_length):
+    """
+    Counts the number of occurrences of 'a' in the first total_length characters
+    of the infinitely repeated input_string.
+
+    Args:
+        input_string (str): The string to repeat.
+        total_length (int): The number of characters to consider.
+
+    Returns:
+        int: The frequency of 'a' in the first total_length characters.
+    """
     if not input_string or total_length < 0:
         return 0
     
