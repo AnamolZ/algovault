@@ -1,5 +1,22 @@
 
 def get_total_attackable_squares(board_size, obstacle_count, queen_row, queen_column, obstacles):
+    """
+    Calculates the total number of squares the queen can attack on an n x n board.
+    
+    The function considers 8 directions (horizontal, vertical, and diagonal) and 
+    accounts for any obstacles that might block the queen's path.
+
+    Args:
+        board_size (int): The number of rows and columns on the board.
+        obstacle_count (int): The number of obstacles on the board.
+        queen_row (int): The row number of the queen's position.
+        queen_column (int): The column number of the queen's position.
+        obstacles (list[list[int]]): A list of obstacle positions, where each 
+            obstacle is represented as [row, column].
+
+    Returns:
+        int: The total number of squares the queen can attack.
+    """
     max_range = {
         'north': board_size - queen_row,
         'south': queen_row - 1,
@@ -40,6 +57,13 @@ def get_total_attackable_squares(board_size, obstacle_count, queen_row, queen_co
     return sum(max_range.values())
 
 def main():
+    """
+    Main entry point for the script.
+    
+    Reads the board size, obstacle count, queen's position, and obstacle 
+    coordinates from standard input. Then calls `get_total_attackable_squares` 
+    to calculate and print the result.
+    """
     first_multiple_input = input().rstrip().split()
     n = int(first_multiple_input[0])
     k = int(first_multiple_input[1])
