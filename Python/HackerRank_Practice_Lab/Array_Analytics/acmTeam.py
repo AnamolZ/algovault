@@ -1,5 +1,18 @@
 
 def acmTeam(topic_strings, number_of_topics):
+    """
+    Finds the maximum number of topics a two-person team can know and the number of such teams.
+    
+    Args:
+        topic_strings (list[str]): List of binary strings representing topics known by each attendee.
+        number_of_topics (int): The expected length of each topic string.
+        
+    Returns:
+        tuple: (max_topics, max_teams)
+        
+    Raises:
+        ValueError: If any topic string does not match the expected length or contains invalid characters.
+    """
     topic_bitmasks = []
     for i, topic in enumerate(topic_strings):
         if len(topic) != number_of_topics:
@@ -28,6 +41,10 @@ def acmTeam(topic_strings, number_of_topics):
     return max_topics_known, max_teams_count
 
 def main():
+    """
+    Main entry point for the ACM ICPC Team problem.
+    Reads input from stdin, validates it, and prints the maximum topics known and the number of teams.
+    """
     try:
         first_multiple_input = input().rstrip().split()
         if len(first_multiple_input) < 2:
@@ -54,7 +71,6 @@ def main():
         print(f"Input Error: {e}")
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
-
 
 if __name__ == '__main__':
     main()
