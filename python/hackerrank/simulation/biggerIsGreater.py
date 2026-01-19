@@ -1,5 +1,14 @@
 
 def biggerIsGreater(word):
+    """
+    Finds the smallest lexicographically greater string that can be formed by rearranging the characters.
+
+    Args:
+        word (str): The input string to find the next permutation for.
+
+    Returns:
+        str: The next lexicographically greater string, or "no answer" if none exists.
+    """
     chars = list(word)
     codes = [ord(c) for c in chars]
 
@@ -25,6 +34,10 @@ def biggerIsGreater(word):
     return "".join(chars)
 
 def main():
+    """
+    Main function to handle input and output for the "Bigger is Greater" problem.
+    Reads the number of test cases and processes each input word.
+    """
     test_cases = int(input().strip())
     for _ in range(test_cases):
         word = input()
