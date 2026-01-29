@@ -1,7 +1,25 @@
 
+"""
+Beautiful Triplets solution for HackerRank.
+Given a sequence of integers and a value d, a triplet (i, j, k) is beautiful if:
+1. i < j < k
+2. arr[j] - arr[i] = d
+3. arr[k] - arr[j] = d
+"""
+
 from collections import Counter
 
 def beautifulTriplets(arr, d):
+    """
+    Finds the number of beautiful triplets in an array.
+
+    Args:
+        arr (list[int]): A sequence of integers in non-decreasing order.
+        d (int): The beautiful difference.
+
+    Returns:
+        int: The number of beautiful triplets.
+    """
     counts = Counter(arr)
     total = 0
     for x in counts:
