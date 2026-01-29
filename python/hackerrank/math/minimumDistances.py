@@ -1,5 +1,20 @@
 
+"""
+Minimum Distances solution for HackerRank.
+Given an array, find the minimum distance between any two equal elements in the array.
+If no such elements exist, return -1.
+"""
+
 def minimumDistances(arr):
+    """
+    Finds the minimum distance between any two identical elements in an array.
+
+    Args:
+        arr (list[int]): An array of integers.
+
+    Returns:
+        int: The minimum distance, or -1 if no duplicates exist.
+    """
     last_seen = {}
     min_dist = float('inf')
 
