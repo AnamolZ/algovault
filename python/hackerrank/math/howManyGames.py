@@ -1,17 +1,15 @@
 
-def fun(p, d, m, s):
+def howManyGames(p, d, m, s):
     count = 0
-
     while s >= p:
         s -= p
         count += 1
-
-        p -= d
-        if p < m:
-            p = m
-
+        p = max(m, p - d)
     return count
 
-if __name__ == '__main__':
+def main():
     p, d, m, s = map(int, input().rstrip().split())
-    print(fun(p, d, m, s))
+    print(howManyGames(p, d, m, s))
+
+if __name__ == '__main__':
+    main()
