@@ -1,5 +1,17 @@
 
 def chocolateFeast(n, c, m):
+    """
+    Calculates the total number of chocolates eaten based on starting money,
+    cost per chocolate, and number of wrappers required for a free chocolate.
+
+    Args:
+        n (int): The initial amount of money.
+        c (int): The cost of one chocolate.
+        m (int): The number of wrappers needed to get a free chocolate.
+
+    Returns:
+        int: The total number of chocolates eaten.
+    """
     # Initial chocolates bought with money
     chocolates = n // c
     wrappers = chocolates
