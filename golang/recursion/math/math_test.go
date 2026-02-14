@@ -1,8 +1,6 @@
 package math
 
-import (
-	"testing"
-)
+
 
 func TestFactorial(t *testing.T) {
 	if got := Factorial(5); got != 120 {

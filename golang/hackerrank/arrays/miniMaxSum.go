@@ -1,12 +1,6 @@
 package arrays
 
-import (
-	"bufio"
-	"fmt"
-	"os"
-	"strconv"
-	"strings"
-)
+
 
 // Sorting sorts a list of integers in ascending order using a recursive quicksort-like approach.
 func Sorting(arr []int) []int {
@@ -42,18 +36,4 @@ func MiniMaxSum(arr []int) (int64, int64) {
 		maxSum += int64(sorted[len(sorted)-1-i])
 	}
 	return minSum, maxSum
-}
-
-func main() {
-	reader := bufio.NewReader(os.Stdin)
-	line, _ := reader.ReadString('\n')
-	fields := strings.Fields(line)
-
-	arr := make([]int, len(fields))
-	for i, s := range fields {
-		arr[i], _ = strconv.Atoi(s)
-	}
-
-	minVal, maxVal := MiniMaxSum(arr)
-	fmt.Printf("%d %d\n", minVal, maxVal)
 }

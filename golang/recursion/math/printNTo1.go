@@ -1,6 +1,14 @@
 package math
+import (
+	"fmt"
+)
 
-import "fmt"
+
+
+
+
+
+
 
 // PrintNTo1 prints numbers from N to 1 using recursion.
 func PrintNTo1(n int) {

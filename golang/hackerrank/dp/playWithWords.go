@@ -1,8 +1,14 @@
 package dp
-
 import (
 	"fmt"
 )
+
+
+
+
+
+
+
 
 // Solve calculates the maximum product of lengths of two non-overlapping palindromic subsequences.
 func Solve() {
@@ -41,8 +47,4 @@ func max(a, b int) int {
 		return a
 	}
 	return b
-}
-
-func main() {
-	Solve()
 }

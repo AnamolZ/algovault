@@ -1,8 +1,6 @@
 package sequence
 
-import (
-	"testing"
-)
+
 
 func TestIsPalindrome(t *testing.T) {
 	tests := []struct {

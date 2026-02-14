@@ -1,12 +1,6 @@
 package arrays
 
-import (
-	"bufio"
-	"fmt"
-	"os"
-	"strconv"
-	"strings"
-)
+
 
 // PermutationEquation finds the index of the index of each value.
 func PermutationEquation(p []int) []int {
@@ -25,23 +19,4 @@ func PermutationEquation(p []int) []int {
 		result[x-1] = pos[pos[x]]
 	}
 	return result
-}
-
-func main() {
-	reader := bufio.NewReader(os.Stdin)
-
-	line1, _ := reader.ReadString('\n')
-	n, _ := strconv.Atoi(strings.TrimSpace(line1))
-
-	line2, _ := reader.ReadString('\n')
-	fields := strings.Fields(line2)
-	p := make([]int, n)
-	for i := 0; i < n && i < len(fields); i++ {
-		p[i], _ = strconv.Atoi(fields[i])
-	}
-
-	res := PermutationEquation(p)
-	for _, v := range res {
-		fmt.Println(v)
-	}
 }

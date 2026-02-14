@@ -1,12 +1,6 @@
 package math
 
-import (
-	"bufio"
-	"fmt"
-	"os"
-	"strconv"
-	"strings"
-)
+
 
 func gcd(a, b int) int {
 	for b != 0 {
@@ -41,29 +35,4 @@ func GetTotalX(a []int, b []int) int {
 		}
 	}
 	return count
-}
-
-func main() {
-	reader := bufio.NewReader(os.Stdin)
-	line1, _ := reader.ReadString('\n')
-	fields1 := strings.Fields(line1)
-	if len(fields1) < 2 {
-		return
-	}
-
-	line2, _ := reader.ReadString('\n')
-	fields2 := strings.Fields(line2)
-	a := make([]int, len(fields2))
-	for i, s := range fields2 {
-		a[i], _ = strconv.Atoi(s)
-	}
-
-	line3, _ := reader.ReadString('\n')
-	fields3 := strings.Fields(line3)
-	b := make([]int, len(fields3))
-	for i, s := range fields3 {
-		b[i], _ = strconv.Atoi(s)
-	}
-
-	fmt.Println(GetTotalX(a, b))
 }

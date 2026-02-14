@@ -1,12 +1,6 @@
 package simulation
 
-import (
-	"bufio"
-	"fmt"
-	"os"
-	"strconv"
-	"strings"
-)
+
 
 // ViralAdvertising calculates cumulative likes for a campaign.
 func ViralAdvertising(n int) int {
@@ -20,11 +14,4 @@ func ViralAdvertising(n int) int {
 	}
 
 	return cumulativeLikes
-}
-
-func main() {
-	reader := bufio.NewReader(os.Stdin)
-	line, _ := reader.ReadString('\n')
-	n, _ := strconv.Atoi(strings.TrimSpace(line))
-	fmt.Println(ViralAdvertising(n))
 }

@@ -1,13 +1,14 @@
 package simulation
-
 import (
-	"bufio"
-	"fmt"
-	"os"
 	"sort"
-	"strconv"
-	"strings"
 )
+
+
+
+
+
+
+
 
 // GetMoneySpent finds the maximum amount spent using brute-force.
 func GetMoneySpent(k []int, d []int, b int) int {
@@ -45,33 +46,4 @@ func GetMoneySpentMergeSort(k []int, d []int, b int) int {
 		}
 	}
 	return maxSpent
-}
-
-func main() {
-	reader := bufio.NewReader(os.Stdin)
-	line1, _ := reader.ReadString('\n')
-	fields1 := strings.Fields(line1)
-	if len(fields1) < 3 {
-		return
-	}
-	b, _ := strconv.Atoi(fields1[0])
-	n, _ := strconv.Atoi(fields1[1])
-	m, _ := strconv.Atoi(fields1[2])
-
-	line2, _ := reader.ReadString('\n')
-	fields2 := strings.Fields(line2)
-	k := make([]int, n)
-	for i := 0; i < n && i < len(fields2); i++ {
-		k[i], _ = strconv.Atoi(fields2[i])
-	}
-
-	line3, _ := reader.ReadString('\n')
-	fields3 := strings.Fields(line3)
-	d := make([]int, m)
-	for i := 0; i < m && i < len(fields3); i++ {
-		d[i], _ = strconv.Atoi(fields3[i])
-	}
-
-	fmt.Println(GetMoneySpent(k, d, b))
-	fmt.Println(GetMoneySpentMergeSort(k, d, b))
 }

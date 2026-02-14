@@ -1,12 +1,6 @@
 package simulation
 
-import (
-	"bufio"
-	"fmt"
-	"os"
-	"strconv"
-	"strings"
-)
+
 
 // GetTotalAttackableSquares calculates the total squares a queen can attack.
 func GetTotalAttackableSquares(n, k, rQ, cQ int, obstacles [][]int) int {
@@ -69,31 +63,4 @@ func abs(x int) int {
 		return -x
 	}
 	return x
-}
-
-func main() {
-	reader := bufio.NewReader(os.Stdin)
-	line1, _ := reader.ReadString('\n')
-	fields1 := strings.Fields(line1)
-	if len(fields1) < 2 {
-		return
-	}
-	n, _ := strconv.Atoi(fields1[0])
-	k, _ := strconv.Atoi(fields1[1])
-
-	line2, _ := reader.ReadString('\n')
-	fields2 := strings.Fields(line2)
-	rQ, _ := strconv.Atoi(fields2[0])
-	cQ, _ := strconv.Atoi(fields2[1])
-
-	obstacles := make([][]int, k)
-	for i := 0; i < k; i++ {
-		line, _ := reader.ReadString('\n')
-		fields := strings.Fields(line)
-		obstacles[i] = []int{0, 0}
-		obstacles[i][0], _ = strconv.Atoi(fields[0])
-		obstacles[i][1], _ = strconv.Atoi(fields[1])
-	}
-
-	fmt.Println(GetTotalAttackableSquares(n, k, rQ, cQ, obstacles))
 }

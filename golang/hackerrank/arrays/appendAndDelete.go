@@ -1,12 +1,6 @@
 package arrays
 
-import (
-	"bufio"
-	"fmt"
-	"os"
-	"strconv"
-	"strings"
-)
+
 
 // AppendAndDelete determines if s can be converted to t in exactly k operations.
 func AppendAndDelete(s, t string, k int) string {
@@ -34,19 +28,4 @@ func AppendAndDelete(s, t string, k int) string {
 	} else {
 		return "No"
 	}
-}
-
-func main() {
-	reader := bufio.NewReader(os.Stdin)
-
-	s, _ := reader.ReadString('\n')
-	s = strings.TrimSpace(s)
-
-	t, _ := reader.ReadString('\n')
-	t = strings.TrimSpace(t)
-
-	lineK, _ := reader.ReadString('\n')
-	k, _ := strconv.Atoi(strings.TrimSpace(lineK))
-
-	fmt.Println(AppendAndDelete(s, t, k))
 }

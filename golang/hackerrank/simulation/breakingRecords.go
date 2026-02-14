@@ -1,12 +1,6 @@
 package simulation
 
-import (
-	"bufio"
-	"fmt"
-	"os"
-	"strconv"
-	"strings"
-)
+
 
 // BreakingRecords tracks how many times the highest and lowest score records are broken.
 func BreakingRecords(scores []int) (int, int) {
@@ -28,20 +22,4 @@ func BreakingRecords(scores []int) (int, int) {
 		}
 	}
 	return maxCount, minCount
-}
-
-func main() {
-	reader := bufio.NewReader(os.Stdin)
-	line1, _ := reader.ReadString('\n')
-	n, _ := strconv.Atoi(strings.TrimSpace(line1))
-
-	line2, _ := reader.ReadString('\n')
-	fields := strings.Fields(line2)
-	scores := make([]int, n)
-	for i := 0; i < n && i < len(fields); i++ {
-		scores[i], _ = strconv.Atoi(fields[i])
-	}
-
-	maxC, minC := BreakingRecords(scores)
-	fmt.Printf("%d %d\n", maxC, minC)
 }

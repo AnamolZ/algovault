@@ -1,12 +1,6 @@
 package arrays
 
-import (
-	"bufio"
-	"fmt"
-	"os"
-	"strconv"
-	"strings"
-)
+
 
 // DivisibleSumPairs counts pairs (i, j) where i < j and (ar[i] + ar[j]) % k == 0.
 func DivisibleSumPairs(ar []int, k int) int {
@@ -26,25 +20,4 @@ func DivisibleSumPairs(ar []int, k int) int {
 	}
 
 	return res
-}
-
-func main() {
-	reader := bufio.NewReader(os.Stdin)
-
-	line1, _ := reader.ReadString('\n')
-	fieldsNK := strings.Fields(line1)
-	if len(fieldsNK) < 2 {
-		return
-	}
-	n, _ := strconv.Atoi(fieldsNK[0])
-	k, _ := strconv.Atoi(fieldsNK[1])
-
-	line2, _ := reader.ReadString('\n')
-	fieldsAr := strings.Fields(line2)
-	ar := make([]int, n)
-	for i := 0; i < n && i < len(fieldsAr); i++ {
-		ar[i], _ = strconv.Atoi(fieldsAr[i])
-	}
-
-	fmt.Println(DivisibleSumPairs(ar, k))
 }

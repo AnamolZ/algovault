@@ -1,12 +1,15 @@
 package simulation
-
 import (
-	"bufio"
-	"fmt"
 	"math"
-	"os"
 	"strings"
 )
+
+
+
+
+
+
+
 
 // Encryption encrypts a string using a grid-based encryption method.
 func Encryption(text string) string {
@@ -24,11 +27,4 @@ func Encryption(text string) string {
 	}
 
 	return strings.Join(result, " ")
-}
-
-func main() {
-	reader := bufio.NewReader(os.Stdin)
-	s, _ := reader.ReadString('\n')
-	s = strings.TrimSpace(s)
-	fmt.Println(Encryption(s))
 }

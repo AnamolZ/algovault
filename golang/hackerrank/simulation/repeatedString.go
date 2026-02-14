@@ -1,12 +1,6 @@
 package simulation
 
-import (
-	"bufio"
-	"fmt"
-	"os"
-	"strconv"
-	"strings"
-)
+
 
 // RepeatedString counts 'a' occurrences in truncated repeated string.
 func RepeatedString(s string, n int64) int64 {
@@ -32,15 +26,4 @@ func RepeatedString(s string, n int64) int64 {
 	}
 
 	return totalA
-}
-
-func main() {
-	reader := bufio.NewReader(os.Stdin)
-	s, _ := reader.ReadString('\n')
-	s = strings.TrimSpace(s)
-
-	lineN, _ := reader.ReadString('\n')
-	n, _ := strconv.ParseInt(strings.TrimSpace(lineN), 10, 64)
-
-	fmt.Println(RepeatedString(s, n))
 }

@@ -1,12 +1,14 @@
 package math
-
 import (
-	"bufio"
 	"fmt"
-	"os"
-	"strconv"
-	"strings"
 )
+
+
+
+
+
+
+
 
 // DayOfProgrammer calculates the date of the 256th day of the year for the Russian calendar.
 func DayOfProgrammer(y int) string {
@@ -26,11 +28,4 @@ func DayOfProgrammer(y int) string {
 		day = "12"
 	}
 	return fmt.Sprintf("%s.09.%d", day, y)
-}
-
-func main() {
-	reader := bufio.NewReader(os.Stdin)
-	line, _ := reader.ReadString('\n')
-	y, _ := strconv.Atoi(strings.TrimSpace(line))
-	fmt.Println(DayOfProgrammer(y))
 }

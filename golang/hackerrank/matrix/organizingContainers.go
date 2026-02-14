@@ -1,13 +1,14 @@
 package matrix
-
 import (
-	"bufio"
-	"fmt"
-	"os"
 	"sort"
-	"strconv"
-	"strings"
 )
+
+
+
+
+
+
+
 
 // OrganizingContainers determines if it is possible to organize containers.
 func OrganizingContainers(container [][]int) string {
@@ -66,28 +67,4 @@ func OrganizingContainersCounter(container [][]int) string {
 	}
 
 	return "Possible"
-}
-
-func main() {
-	reader := bufio.NewReader(os.Stdin)
-	lineQ, _ := reader.ReadString('\n')
-	q, _ := strconv.Atoi(strings.TrimSpace(lineQ))
-
-	for i := 0; i < q; i++ {
-		lineN, _ := reader.ReadString('\n')
-		n, _ := strconv.Atoi(strings.TrimSpace(lineN))
-
-		container := make([][]int, n)
-		for r := 0; r < n; r++ {
-			line, _ := reader.ReadString('\n')
-			fields := strings.Fields(line)
-			container[r] = make([]int, n)
-			for c := 0; c < n; c++ {
-				container[r][c], _ = strconv.Atoi(fields[c])
-			}
-		}
-
-		fmt.Println(OrganizingContainers(container))
-		fmt.Println(OrganizingContainersCounter(container))
-	}
 }

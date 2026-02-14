@@ -1,12 +1,6 @@
 package arrays
 
-import (
-	"bufio"
-	"fmt"
-	"os"
-	"strconv"
-	"strings"
-)
+
 
 // PickingNumbers finds the maximum length of a subarray where abs diff <= 1.
 func PickingNumbers(a []int) int {
@@ -26,20 +20,4 @@ func PickingNumbers(a []int) int {
 	}
 
 	return maxCount
-}
-
-func main() {
-	reader := bufio.NewReader(os.Stdin)
-
-	line1, _ := reader.ReadString('\n')
-	s, _ := strconv.Atoi(strings.TrimSpace(line1))
-
-	line2, _ := reader.ReadString('\n')
-	fields := strings.Fields(line2)
-	arr := make([]int, s)
-	for i := 0; i < s && i < len(fields); i++ {
-		arr[i], _ = strconv.Atoi(fields[i])
-	}
-
-	fmt.Println(PickingNumbers(arr))
 }

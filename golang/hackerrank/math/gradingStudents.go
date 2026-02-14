@@ -1,12 +1,6 @@
 package math
 
-import (
-	"bufio"
-	"fmt"
-	"os"
-	"strconv"
-	"strings"
-)
+
 
 // GradingStudents rounds student grades according to grading rules.
 func GradingStudents(grades []int) []int {
@@ -20,21 +14,4 @@ func GradingStudents(grades []int) []int {
 		}
 	}
 	return grades
-}
-
-func main() {
-	reader := bufio.NewReader(os.Stdin)
-	line, _ := reader.ReadString('\n')
-	count, _ := strconv.Atoi(strings.TrimSpace(line))
-
-	grades := make([]int, count)
-	for i := 0; i < count; i++ {
-		gLine, _ := reader.ReadString('\n')
-		grades[i], _ = strconv.Atoi(strings.TrimSpace(gLine))
-	}
-
-	res := GradingStudents(grades)
-	for _, g := range res {
-		fmt.Println(g)
-	}
 }

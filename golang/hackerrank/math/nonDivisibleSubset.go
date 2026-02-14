@@ -1,12 +1,6 @@
 package math
 
-import (
-	"bufio"
-	"fmt"
-	"os"
-	"strconv"
-	"strings"
-)
+
 
 // NonDivisibleSubset calculates the size of the largest subset where sum of any two is not divisible by k.
 func NonDivisibleSubset(k int, s []int) int {
@@ -37,23 +31,4 @@ func NonDivisibleSubset(k int, s []int) int {
 	}
 
 	return result
-}
-
-func main() {
-	reader := bufio.NewReader(os.Stdin)
-	line1, _ := reader.ReadString('\n')
-	fields1 := strings.Fields(line1)
-	if len(fields1) < 2 {
-		return
-	}
-	k, _ := strconv.Atoi(fields1[1])
-
-	line2, _ := reader.ReadString('\n')
-	fields2 := strings.Fields(line2)
-	s := make([]int, len(fields2))
-	for i, valStr := range fields2 {
-		s[i], _ = strconv.Atoi(valStr)
-	}
-
-	fmt.Println(NonDivisibleSubset(k, s))
 }

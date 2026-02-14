@@ -1,13 +1,14 @@
 package simulation
-
 import (
-	"bufio"
-	"fmt"
-	"os"
 	"sort"
-	"strconv"
-	"strings"
 )
+
+
+
+
+
+
+
 
 // BiggerIsGreater finds the smallest lexicographically greater string.
 func BiggerIsGreater(word string) string {
@@ -43,15 +44,4 @@ func BiggerIsGreater(word string) string {
 	})
 
 	return string(chars)
-}
-
-func main() {
-	reader := bufio.NewReader(os.Stdin)
-	lineT, _ := reader.ReadString('\n')
-	tCount, _ := strconv.Atoi(strings.TrimSpace(lineT))
-
-	for i := 0; i < tCount; i++ {
-		word, _ := reader.ReadString('\n')
-		fmt.Println(BiggerIsGreater(strings.TrimSpace(word)))
-	}
 }

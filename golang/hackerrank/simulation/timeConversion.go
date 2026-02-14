@@ -1,12 +1,16 @@
 package simulation
-
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
 )
+
+
+
+
+
+
+
 
 // TimeConversion converts 12-hour format to 24-hour format.
 func TimeConversion(s string) string {
@@ -26,11 +30,4 @@ func TimeConversion(s string) string {
 	}
 
 	return fmt.Sprintf("%02d:%s:%s", hh, parts[1], parts[2])
-}
-
-func main() {
-	reader := bufio.NewReader(os.Stdin)
-	line, _ := reader.ReadString('\n')
-	s := strings.TrimSpace(line)
-	fmt.Println(TimeConversion(s))
 }

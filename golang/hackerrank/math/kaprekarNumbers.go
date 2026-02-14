@@ -1,13 +1,16 @@
 package math
-
 import (
-	"bufio"
 	"fmt"
 	"math"
-	"os"
 	"strconv"
-	"strings"
 )
+
+
+
+
+
+
+
 
 // KaprekarNumbers finds and prints all modified Kaprekar numbers in the range [p, q].
 func KaprekarNumbers(p, q int) {
@@ -36,13 +39,4 @@ func KaprekarNumbers(p, q int) {
 	} else {
 		fmt.Println("INVALID RANGE")
 	}
-}
-
-func main() {
-	reader := bufio.NewReader(os.Stdin)
-	lineP, _ := reader.ReadString('\n')
-	p, _ := strconv.Atoi(strings.TrimSpace(lineP))
-	lineQ, _ := reader.ReadString('\n')
-	q, _ := strconv.Atoi(strings.TrimSpace(lineQ))
-	KaprekarNumbers(p, q)
 }

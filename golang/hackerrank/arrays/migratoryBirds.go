@@ -1,12 +1,6 @@
 package arrays
 
-import (
-	"bufio"
-	"fmt"
-	"os"
-	"strconv"
-	"strings"
-)
+
 
 // MigratoryBirds determines the bird type that is most frequently sighted.
 func MigratoryBirds(arr []int) int {
@@ -32,20 +26,4 @@ func MigratoryBirds(arr []int) int {
 	}
 
 	return result
-}
-
-func main() {
-	reader := bufio.NewReader(os.Stdin)
-
-	line1, _ := reader.ReadString('\n')
-	isize, _ := strconv.Atoi(strings.TrimSpace(line1))
-
-	line2, _ := reader.ReadString('\n')
-	fields := strings.Fields(line2)
-	arr := make([]int, isize)
-	for i := 0; i < isize && i < len(fields); i++ {
-		arr[i], _ = strconv.Atoi(fields[i])
-	}
-
-	fmt.Println(MigratoryBirds(arr))
 }
