@@ -1,5 +1,18 @@
 
 def workbook(n, k, arr):
+    """
+    Calculates the number of special problems in Lisa's workbook.
+    A problem is considered "special" if its index (within a chapter) 
+    is the same as the page number it's located on.
+    
+    Args:
+        n (int): The number of chapters.
+        k (int): The maximum number of problems per page.
+        arr (list[int]): An array where arr[i] denotes the number of problems in the (i+1)-th chapter.
+        
+    Returns:
+        int: The total number of special problems in the workbook.
+    """
     page = 1
     special = 0
 
