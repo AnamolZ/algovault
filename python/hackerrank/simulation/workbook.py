@@ -1,14 +1,21 @@
 
 def workbook(n, k, arr):
-    page_count = 1
-    special_problems = 0
-    for i in arr:
-        for j in range(1, i+1):
-            if j == page_count:
-                special_problems += 1
-            if j % k == 0:
-                page_count += 1
-    return special_problems
+    page = 1
+    special = 0
+
+    for problems in arr:
+        num_pages = (problems + k - 1) // k
+
+        for p in range(num_pages):
+            start = p * k + 1
+            end = min(start + k - 1, problems)
+
+            if start <= page <= end:
+                special += 1
+
+            page += 1
+
+    return special
 
 def main():
     n, k = map(int, input().rstrip().split())
