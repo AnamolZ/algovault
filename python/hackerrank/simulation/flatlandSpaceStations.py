@@ -1,5 +1,16 @@
 
 def flatlandSpaceStations(n, m, c):
+    """
+    Calculate the maximum distance from any city to its nearest space station.
+
+    Args:
+        n (int): The number of cities.
+        m (int): The number of space stations.
+        c (list of int): The indices of cities that have a space station.
+
+    Returns:
+        int: The maximum distance any city is from a space station.
+    """
     c.sort()
     max_dist = c[0]
     max_dist = max(max_dist, (n - 1) - c[-1])
