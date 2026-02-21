@@ -1,5 +1,15 @@
 
 def fairRations(b):
+    """
+    Calculates the minimum number of loaves required to ensure everyone has an even number of loaves.
+    If it's not possible to distribute loaves such that everyone has an even number, it returns "NO".
+
+    Args:
+        b (list of int): An array of integers representing the number of loaves each person has.
+
+    Returns:
+        int or str: The minimum number of loaves to distribute, or "NO" if it's impossible.
+    """
     count = 0
     for i in range(len(b)):
         if i == len(b) - 1:
