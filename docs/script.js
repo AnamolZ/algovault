@@ -427,6 +427,513 @@ const algorithms = [
 </div>
 <b>Final Result:</b> Each ratio is printed on its own line.`
     },
+    {
+        id: "simple-array-sum",
+        title: "Simple Array Sum<br><a href='https://www.hackerrank.com/challenges/simple-array-sum/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Arrays",
+        problem: "Imagine you have a list of numbers—maybe they are receipts, scores, or measurements—and you simply want to know the grand total. Your task is to add every single number in the list together to find the final sum!",
+        solution: "To find the sum, we use a simple 'accumulator' strategy. We start with a total of 0. Then, we walk through the list one by one, picking up each number and adding it to our running total. By the time we reach the end of the list, our accumulator holds the sum of every number we encountered!",
+        optimality: "This is the perfectly optimal way to sum a list, running in <b>O(N) Time complexity</b>. Because we must visit every number at least once to know its value, we cannot mathematically solve this faster than O(N). It uses <b>O(1) Space</b> because we only need one variable to store the running total, no matter how many millions of numbers are in the list.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def simpleArraySum(ar):\n    total = 0\n    for x in ar:\n        total += x\n    return total</pre>",
+        stepByStep: `<b>Input Array:</b> [1, 2, 3, 4, 10, 11]<br><br>
+<b>Walking through the list:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Start:</i> Total = 0<br>
+    <i>Add 1:</i> Total = 1<br>
+    <i>Add 2:</i> Total = 3<br>
+    <i>Add 3:</i> Total = 6<br>
+    <i>Add 4:</i> Total = 10<br>
+    <i>Add 10:</i> Total = 20<br>
+    <i>Add 11:</i> Total = 31
+</div>
+<b>Final Answer:</b> 31`
+    },
+    {
+        id: "sock-merchant",
+        title: "Sales by Match<br><a href='https://www.hackerrank.com/challenges/sock-merchant/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Arrays",
+        problem: "Imagine you are doing laundry and you have a giant pile of socks of various colors. Your goal is to find all the matching pairs! <br><br>Each sock has a color ID number. For every two socks that have the same color ID, you have found one matching pair. How many total matching pairs can you pull out of the pile?",
+        solution: "To solve this like a human would, we walk through the pile and pick up socks one at a time. We keep a 'waiting table' (a **Set**) where we put socks that are currently single. <br><br>When we pick up a new sock, we check the table: 'Do I already have a sock of this color waiting?' If yes, we've found a pair! We increment our tally and remove the partner from the table. If no, we simply place the new sock on the table to wait for its match. By the time the pile is empty, we know exactly how many pairs we found!",
+        optimality: "This 'Single Pass Matcher' strategy is perfectly efficient, operating in <b>O(N) Time complexity</b> because we only look at each sock exactly once. It uses <b>O(N) Space</b> in the worst case (if every single sock in the pile is a different color), though in reality, the space used is only as large as the number of unique colors currently waiting for a match.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def sockMerchant(ar):\n    unpaired_socks = set()\n    pairs = 0\n\n    for color in ar:\n        if color in unpaired_socks:\n            pairs += 1\n            unpaired_socks.discard(color)\n        else:\n            unpaired_socks.add(color)\n            \n    return pairs</pre>",
+        stepByStep: `<b>Input Pile:</b> [10, 20, 20, 10, 10, 30, 50, 10, 20]<br><br>
+<b>Sorting the Pile:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Pick 10:</i> No partner on table. Table: {10}. Pairs: 0<br>
+    <i>Pick 20:</i> No partner on table. Table: {10, 20}. Pairs: 0<br>
+    <i>Pick 20:</i> Found a Match! Remove 20 from table. Table: {10}. <b>Pairs: 1</b><br>
+    <i>Pick 10:</i> Found a Match! Remove 10 from table. Table: {}. <b>Pairs: 2</b><br>
+    <i>Pick 10:</i> No partner on table. Table: {10}. Pairs: 2<br>
+    <i>Pick 30:</i> No partner on table. Table: {10, 30}. Pairs: 2<br>
+    <i>Pick 50:</i> No partner on table. Table: {10, 30, 50}. Pairs: 2<br>
+    <i>Pick 10:</i> Found a Match! Remove 10 from table. Table: {30, 50}. <b>Pairs: 3</b><br>
+    <i>Pick 20:</i> No partner on table. Table: {30, 50, 20}. Pairs: 3
+</div>
+<b>Final Answer:</b> 3 pairs found!`
+    },
+    {
+        id: "play-with-words",
+        title: "Play with Words<br><a href='https://www.hackerrank.com/challenges/strplay/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Dynamic Programming",
+        problem: "Imagine you have a long string of letters, like a magic scroll. You want to cut this scroll at exactly one point into two separate pieces. Then, for each piece, you want to find the longest possible hidden message that reads the same forwards and backwards (a palindrome). Finally, you multiply the lengths of those two hidden messages together. Where should you cut the scroll to make that product as large as possible?",
+        solution: "To solve this, we use **Dynamic Programming** to find the 'Longest Palindromic Subsequence' (LPS) for every possible segment of the string. We build a magic table where we calculate: 'What is the longest palindrome in this tiny 2-letter piece? What about this 3-letter piece?' until we know the LPS for every segment. Once we have our table, we try cutting the string at every single possible position. For each cut, we look up our table to find the best palindrome on the left and the best one on the right, multiply them, and keep track of the record-breaking product!",
+        optimality: "This strategy is highly efficient for such a complex task, achieving <b>O(N²) Time complexity</b>. Building the table takes N² operations, and checking all cut points takes only N more. It uses <b>O(N²) Space</b> to store the table. While it uses more memory than a simple loop, it is mathematically the fastest way to solve this 'two-part' palindrome problem because it avoids re-calculating the same palindromes over and over again.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def playWithWords(s):\n    n = len(s)\n    dp = [[0] * n for _ in range(n)]\n    \n    # Build LPS table\n    for i in range(n - 1, -1, -1):\n        dp[i][i] = 1\n        for j in range(i + 1, n):\n            if s[i] == s[j]:\n                dp[i][j] = dp[i + 1][j - 1] + 2\n            else:\n                dp[i][j] = max(dp[i + 1][j], dp[i][j - 1])\n\n    # Maximize product of non-overlapping LPS pieces\n    max_product = 0\n    for i in range(n - 1):\n        product = dp[0][i] * dp[i + 1][n - 1]\n        max_product = max(max_product, product)\n            \n    return max_product</pre>",
+        stepByStep: `<b>Input String:</b> "baaa"<br><br>
+<b>Phase 1: Build the LPS Table</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Single letters:</i> All have length 1.<br>
+    <i>Pair "aa":</i> Match! Length becomes 2.<br>
+    <i>Segment "aaa":</i> Outer "a"s match + middle "a" = 3.<br>
+    <i>Segment "baa":</i> No outer match. Best is "aa" (length 2).
+</div>
+<b>Phase 2: Testing the Cut Points</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Cut 1 [b | aaa]:</i> Left LPS: 1 ("b"), Right LPS: 3 ("aaa"). <b>Product: 3</b><br>
+    <i>Cut 2 [ba | aa]:</i> Left LPS: 1 ("b" or "a"), Right LPS: 2 ("aa"). <b>Product: 2</b><br>
+    <i>Cut 3 [baa | a]:</i> Left LPS: 2 ("aa"), Right LPS: 1 ("a"). <b>Product: 2</b>
+</div>
+<b>Final Answer:</b> The maximum product is <b>3</b>.`
+    },
+    {
+        id: "a-very-big-sum",
+        title: "A Very Big Sum<br><a href='https://www.hackerrank.com/challenges/a-very-big-sum/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Math",
+        problem: "Imagine you are adding up numbers so huge that they would break a normal calculator! In some programming languages, when a number gets too big, it 'overflows' and turns into a strange negative number. Your task is to sum a list of these massive integers correctly.",
+        solution: "While this is a tricky problem in languages like C++ or Java (where you have to use special '64-bit' storage types), Python is like a wizard! It handles numbers of any size automatically without any extra work. <br><br>We simply use a standard 'accumulator' loop. We start at 0 and add each massive number one by one. Python's memory expands dynamically to make sure the total is always accurate, no matter how many billions or trillions it reaches!",
+        optimality: "This solution is perfectly optimal with <b>O(N) Time complexity</b>, as we must touch every number once to include it in the sum. It uses <b>O(1) Space</b> for the accumulator variable (though the variable itself grows slightly in memory as the number increases, it's still considered constant logic space).",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def aVeryBigSum(ar):\n    total_sum = 0\n    for number in ar:\n        total_sum += number\n    return total_sum</pre>",
+        stepByStep: `<b>Input Array:</b> [1000000001, 1000000002, 1000000003]<br><br>
+<b>The Wizardry of Big Integers:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Start:</i> Total = 0<br>
+    <i>Add 1,000,000,001:</i> Total = 1,000,000,001<br>
+    <i>Add 1,000,000,002:</i> Total = 2,000,000,003<br>
+    <i>Add 1,000,000,003:</i> Total = 3,000,000,006
+</div>
+<b>Final Result:</b> 3000000006`
+    },
+    {
+        id: "beautiful-days",
+        title: "Beautiful Days at the Movies<br><a href='https://www.hackerrank.com/challenges/beautiful-days-at-the-movies/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Math",
+        problem: "Imagine you are planning a trip to the movies, but you only want to go on 'Beautiful Days'. A day is considered beautiful if the difference between the day number and its reverse is perfectly divisible by your magic number `k`. <br><br>For example, if today is Day 20 and your magic number is 6, is it beautiful? The reverse of 20 is 02. The difference is `20 - 2 = 18`. Since 18 is divisible by 6, today is a Beautiful Day! How many such days exist in a given range?",
+        solution: "To find all beautiful days, we simply walk through every day in the range one by one. For each day, we calculate its reverse by turning the number into a string, flipping it, and turning it back into a number. <br><br>Once we have the reversed number, we subtract it from the original day number and take the absolute value. If that result divided by `k` has a remainder of zero, we add 1 to our 'Beautiful Day' tally!",
+        optimality: "This 'Range Scanner' approach is optimal, running in <b>O(N * D) Time complexity</b>, where N is the number of days in the range and D is the number of digits in the day number (since we have to reverse the digits). Since we must check every individual day to see if it's beautiful, we cannot do it faster. It uses <b>O(1) Space</b> because we only keep a single tally variable.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def beautifulDays(start, end, k):\n    beautiful_count = 0\n    for day in range(start, end + 1):\n        reversed_day = int(str(day)[::-1])\n        if abs(day - reversed_day) % k == 0:\n            beautiful_count += 1\n    return beautiful_count</pre>",
+        stepByStep: `<b>Input Range:</b> [20, 23], Magic Number <code>k = 6</code><br><br>
+<b>Checking the Calendar:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Day 20:</i> Reverse is 02. |20 - 2| = 18. 18 % 6 == 0. <b>Beautiful!</b> (Tally: 1)<br>
+    <i>Day 21:</i> Reverse is 12. |21 - 12| = 9. 9 % 6 != 0. Not beautiful.<br>
+    <i>Day 22:</i> Reverse is 22. |22 - 22| = 0. 0 % 6 == 0. <b>Beautiful!</b> (Tally: 2)<br>
+    <i>Day 23:</i> Reverse is 32. |23 - 32| = 9. 9 % 6 != 0. Not beautiful.
+</div>
+<b>Final Result:</b> 2 Beautiful Days found!`
+    },
+    {
+        id: "cat-and-mouse",
+        title: "Cats and a Mouse<br><a href='https://www.hackerrank.com/challenges/cats-and-a-mouse/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Math",
+        problem: "Two cats (Cat A and Cat B) are at different positions on a line, and a mouse (Mouse C) is also sitting somewhere on that same line. Both cats want to catch the mouse! They move at the exact same speed. If one cat is closer to the mouse, it will catch it first. If they are exactly the same distance away, they will start fighting, and the mouse will escape! Who wins?",
+        solution: "To find the winner, we just need a simple ruler! We calculate the absolute distance from Cat A to the Mouse, and then the absolute distance from Cat B to the Mouse. <br><br>We compare the two distances: if Cat A's distance is smaller, Cat A wins. If Cat B's distance is smaller, Cat B wins. If they are identical, the 'Mouse C' escapes while the cats fight!",
+        optimality: "This 'Distance Duel' logic is perfectly optimal, operating in <b>O(1) Time complexity</b> per query. Since we only do two subtractions and one comparison, it is as fast as a computer can possibly be. It uses <b>O(1) Space</b> because we only store two small distance numbers.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def catAndMouse(x, y, z):\n    dist_a = abs(x - z)\n    dist_b = abs(y - z)\n    \n    if dist_a < dist_b:\n        return \"Cat A\"\n    elif dist_b < dist_a:\n        return \"Cat B\"\n    else:\n        return \"Mouse C\"</pre>",
+        stepByStep: `<b>Input:</b> Cat A at 1, Cat B at 2, Mouse C at 3<br><br>
+<b>Calculating the Chase:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Cat A distance:</i> |1 - 3| = <b>2</b><br>
+    <i>Cat B distance:</i> |2 - 3| = <b>1</b><br>
+    <i>Comparison:</i> 1 is smaller than 2.
+</div>
+<b>Final Result:</b> Cat B reaches the mouse first!`
+    },
+    {
+        id: "chocolate-feast",
+        title: "Chocolate Feast<br><a href='https://www.hackerrank.com/challenges/chocolate-feast/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Math",
+        problem: "Imagine you have a few dollars in your pocket and you hit the candy store! You buy as many chocolates as you can afford. But there's a bonus: the shop has a special 'Wrapper Recycling' deal! If you bring back a certain number of empty wrappers, they'll give you a brand-new chocolate for free! And yes, that free chocolate comes with a wrapper you can recycle too! How many chocolates can you eat in total?",
+        solution: "We solve this by simulating the entire feast! First, we spend our initial cash `n` to buy as many chocolates as the cost `c` allows. We count these toward our total and keep all the wrappers. Then, we start a loop: as long as we have enough wrappers `m` to get a freebie, we trade them in! Every time we get free chocolates, we add them to our total and collect their shiny new wrappers to add to whatever leftovers we had. We keep recycling until we're left with fewer wrappers than the shop requires.",
+        optimality: "This 'Simulated Recycling' approach is highly efficient, running in <b>O(log(N)) Time complexity</b>. Because the number of wrappers decreases significantly with each trade-in cycle, the loop finishes almost instantly even for large amounts of money. It uses <b>O(1) Space</b> because we only need to keep track of a few integer variables.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def chocolateFeast(n, c, m):\n    chocolates = n // c\n    wrappers = chocolates\n    total_eaten = chocolates\n    \n    while wrappers >= m:\n        new_chocolates = wrappers // m\n        total_eaten += new_chocolates\n        wrappers = (wrappers % m) + new_chocolates\n        \n    return total_eaten</pre>",
+        stepByStep: `<b>Input:</b> $10, Chocolate Cost: $2, Exchange Rate: 5 wrappers<br><br>
+<b>The Feast Begins:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Step 1:</i> Spend $10 to buy 5 chocolates. (Total Eaten: 5, Wrappers: 5)<br>
+    <i>Step 2:</i> Trade 5 wrappers for 1 free chocolate. (Total Eaten: 6, Wrappers: 1)<br>
+    <i>Step 3:</i> Only 1 wrapper left. Can't trade for more.
+</div>
+<b>Final Result:</b> You ate a total of 6 chocolates!`
+    },
+    {
+        id: "day-of-programmer",
+        title: "Day of the Programmer<br><a href='https://www.hackerrank.com/challenges/day-of-the-programmer/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Math",
+        problem: "Russia has a very interesting calendar history! Between 1700 and 2700, they used the Julian calendar, then switched to the Gregorian calendar in 1918. Your task is to find the exact date (in dd.mm.yyyy format) of the 256th day of any given year. Beware: the leap year rules changed during the switch, and 1918 was a very short year because they skipped 13 days in February!",
+        solution: "We solve this by checking which historical period the year falls into! <br>1. **Before 1918 (Julian):** Leap years are simply any year divisible by 4. <br>2. **After 1918 (Gregorian):** We use standard leap year rules (divisible by 400, or by 4 but not 100). <br>3. **The Year 1918:** This was the transition year. Since they jumped from January 31st directly to February 14th, the 256th day is always September 26th.<br><br>For all other years, the 256th day is either September 12th (leap year) or September 13th (normal year).",
+        optimality: "This is a flawlessly optimal <b>O(1) Time complexity</b> solution. We only perform a few basic math operations and 'if' checks to determine the date. It uses <b>O(1) Space</b> because we don't store any data, just a single return string.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def dayOfProgrammer(y):\n    if y == 1918:\n        return '26.09.1918'\n    \n    if y < 1918:\n        is_leap = (y % 4 == 0)\n    else:\n        is_leap = (y % 400 == 0) or (y % 4 == 0 and y % 100 != 0)\n            \n    day = \"12\" if is_leap else \"13\"\n    return f\"{day}.09.{y}\"</pre>",
+        stepByStep: `<b>Input Year:</b> 2017 (Gregorian)<br><br>
+<b>Calculating the Date:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Step 1:</i> Check year 2017. It is after 1918.<br>
+    <i>Step 2:</i> Rule: Is 2017 divisible by 400? No. By 4? No. <br>
+    <i>Step 3:</i> It is a <b>Normal Year</b>.<br>
+    <i>Step 4:</i> In a normal year, the 256th day is <b>September 13th</b>.
+</div>
+<b>Final Result:</b> 13.09.2017`
+    },
+    {
+        id: "extra-long-factorials",
+        title: "Extra Long Factorials<br><a href='https://www.hackerrank.com/challenges/extra-long-factorials/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Math",
+        problem: "In many programming languages, calculating the factorial of a large number (like 25!) is impossible because the result is so huge it 'overflows' 64-bit memory. Your task is to calculate the factorial for numbers up to 100, which results in a massive number with over 150 digits!",
+        solution: "This is another problem where Python's built-in 'BigInt' capabilities make us look like geniuses! We calculate the factorial using a simple recursive approach: $n! = n \times (n-1)!$. <br><br>While a language like C++ would require complex array-based math to store such a large number, Python's integers grow automatically to accommodate as many digits as needed. We just multiply the numbers down to 1 and let Python handle the massive storage behind the scenes.",
+        optimality: "This recursive approach is optimal for readability and logic, running in <b>O(N²) Time complexity</b> (where N is the number, because each of the N multiplications involves numbers with $O(N)$ digits). It uses <b>O(N) Space</b> on the call stack due to recursion. For values up to 100, this completes in a split second.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def extraLongFactorials(n):\n    if n == 1:\n        return 1\n    return n * extraLongFactorials(n - 1)</pre>",
+        stepByStep: `<b>Input:</b> n = 5<br><br>
+<b>The Recursive Chain:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Step 1:</i> 5 * factorial(4)<br>
+    <i>Step 2:</i> 5 * (4 * factorial(3))<br>
+    <i>Step 3:</i> 5 * (4 * (3 * factorial(2)))<br>
+    <i>Step 4:</i> 5 * (4 * (3 * (2 * factorial(1))))<br>
+    <i>Step 5:</i> 5 * 4 * 3 * 2 * 1 = <b>120</b>
+</div>
+<b>Final Result:</b> 120 (Imagine this for 100!)`
+    },
+    {
+        id: "find-digits",
+        title: "Find Digits<br><a href='https://www.hackerrank.com/challenges/find-digits/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Math",
+        problem: "You are given a number and you need to look at each of its digits one by one. Your goal is to see how many of those digits are 'friendly' to the original number—meaning the original number can be divided by that digit without any remainder. (Remember: zero can't divide anything, so we ignore it!)",
+        solution: "To solve this, we first turn the number into a string of characters so we can easily visit each digit individually. For every digit we see, we convert it back into a small number and check two things: <br>1. Is it greater than zero? <br>2. Does the original number divided by this digit leave a remainder of 0? <br><br>If both are true, we give that digit a 'point' in our counter!",
+        optimality: "This 'Digit Inspector' approach is perfectly optimal with <b>O(D) Time complexity</b>, where D is the number of digits in the input. Since we must look at every digit at least once, we can't do it any faster! It uses <b>O(D) Space</b> to store the string version of the number while we inspect it.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def findDigits(n):\n    n_str = str(n)\n    count = 0\n    \n    for char in n_str:\n        digit = int(char)\n        if digit != 0 and n % digit == 0:\n            count += 1\n    return count</pre>",
+        stepByStep: `<b>Input Number:</b> 124<br><br>
+<b>Inspecting the Digits:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Digit 1:</i> 124 % 1 == 0. <b>Yes!</b> (Count: 1)<br>
+    <i>Digit 2:</i> 124 % 2 == 0. <b>Yes!</b> (Count: 2)<br>
+    <i>Digit 3:</i> 124 % 4 == 0. <b>Yes!</b> (Count: 3)
+</div>
+<b>Final Result:</b> 3 digits are divisors of 124.`
+    },
+    {
+        id: "get-total-x",
+        title: "Between Two Sets<br><a href='https://www.hackerrank.com/challenges/between-two-sets/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Math",
+        problem: "You are given two sets of numbers, Group A and Group B. You need to find all the numbers that act as a 'bridge' between them. To be a bridge, a number must satisfy two rules: <br>1. Every number in Group A must be able to divide into it perfectly. <br>2. It must be able to divide into every number in Group B perfectly.",
+        solution: "To find these bridges, we use two powerful math tools: <b>LCM</b> (Least Common Multiple) and <b>GCD</b> (Greatest Common Divisor). <br><br>First, we find the LCM of Group A. This is the smallest number that everyone in Group A can divide into. Any 'bridge' must be a multiple of this LCM. <br>Second, we find the GCD of Group B. This is the largest number that divides into everyone in Group B. Any 'bridge' must be a divisor of this GCD. <br><br>Finally, we just look at the multiples of our LCM (LCM, 2*LCM, 3*LCM...) and see which ones divide perfectly into our GCD!",
+        optimality: "This 'Math Identity' approach is extremely efficient, running in <b>O((N+M) log(max)) Time complexity</b>. Instead of checking every possible number, we jump straight to the candidates using LCM and GCD. It uses <b>O(1) Space</b> to store our results.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def getTotalX(a, b):\n    # Helper to find GCD/LCM... \n    L = LCM(a)\n    G = GCD(b)\n    \n    count = 0\n    multiple = L\n    while multiple <= G:\n        if G % multiple == 0:\n            count += 1\n        multiple += L\n    return count</pre>",
+        stepByStep: `<b>Group A:</b> [2, 4], <b>Group B:</b> [16, 32, 96]<br><br>
+<b>Building the Bridge:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Step 1:</i> Find LCM of [2, 4]. Result is <b>4</b>.<br>
+    <i>Step 2:</i> Find GCD of [16, 32, 96]. Result is <b>16</b>.<br>
+    <i>Step 3:</i> Check multiples of 4 that divide 16:<br>
+    &nbsp;&nbsp;• 4? Yes (16/4 = 4).<br>
+    &nbsp;&nbsp;• 8? Yes (16/8 = 2).<br>
+    &nbsp;&nbsp;• 12? No.<br>
+    &nbsp;&nbsp;• 16? Yes (16/16 = 1).
+</div>
+<b>Final Result:</b> 3 bridge numbers found (4, 8, 16).`
+    },
+    {
+        id: "grading-students",
+        title: "Grading Students<br><a href='https://www.hackerrank.com/challenges/grading/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Math",
+        problem: "Professor Sam at HackerLand University has a special way of rounding student grades. He wants every student to be happy, so if a grade is within 2 points of the next multiple of 5, he rounds it up! However, if a student is failing (grade below 38), he doesn't round at all because even a few points won't save them. Your task is to automate Sam's rounding logic.",
+        solution: "We solve this by checking each grade one by one. First, we ignore any grade lower than 38. For the rest, we find out how far away they are from the next multiple of 5. <br><br>We use the <b>Modulo Operator (%)</b> to find the distance. If a grade is 73, `73 % 5` is 3. This means we are 2 points away from 75 ($5 - 3 = 2$). Since 2 is less than 3, we round up to 75! If the distance was 3 or more, we would leave the grade exactly as it is.",
+        optimality: "This 'Conditional Rounding' approach is optimal, running in <b>O(N) Time complexity</b> because we visit each grade exactly once. It uses <b>O(1) Space</b> (beyond the input list) since we modify the grades in-place or store them in a simple resulting list.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def gradingStudents(grades):\n    for i in range(len(grades)):\n        if grades[i] < 38:\n            continue\n\n        remainder = grades[i] % 5\n        if remainder >= 3:\n            # Round up by adding the difference \n            grades[i] += (5 - remainder)\n            \n    return grades</pre>",
+        stepByStep: `<b>Input Grades:</b> [73, 67, 38, 33]<br><br>
+<b>Applying Sam's Logic:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Grade 73:</i> Next multiple is 75. Difference is 2. <b>Round to 75.</b><br>
+    <i>Grade 67:</i> Next multiple is 70. Difference is 3. <b>Stay at 67.</b><br>
+    <i>Grade 38:</i> Next multiple is 40. Difference is 2. <b>Round to 40.</b><br>
+    <i>Grade 33:</i> Below 38. <b>Stay at 33.</b> (Failing)
+</div>
+<b>Final Result:</b> [75, 67, 40, 33]`
+    },
+    {
+        id: "how-many-games",
+        title: "Halloween Sale<br><a href='https://www.hackerrank.com/challenges/halloween-sale/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Math",
+        problem: "You're getting ready for a massive Halloween sale! The first game you buy costs `p` dollars. For every game you buy after that, the price drops by `d` dollars until it hits a minimum price of `m` dollars. Every game bought after that stays at `m` dollars. If you have `s` dollars in your wallet, how many games can you walk away with?",
+        solution: "We solve this by simulating a shopping spree! We start with our budget `s` and the current price `p`. As long as we can afford the current price ($s \\geq p$), we buy the game, subtract the price from our budget, and increase our count. Then, we calculate the price for the next game: it's either the current price minus `d` (using `max(m, p-d)`), or the minimum price `m`. We repeat this until we run out of money.",
+        optimality: "This 'Greedy Shopping' approach is optimal, running in <b>O(S/M) Time complexity</b>. Since we only buy one game at a time and the price eventually stabilizes at a constant <code>m</code>, the number of iterations is directly proportional to how many games we can afford. It uses <b>O(1) Space</b> to store our count and current price tally.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def howManyGames(p, d, m, s):\n    count = 0\n    while s >= p:\n        s -= p\n        count += 1\n        p = max(m, p - d)\n    return count</pre>",
+        stepByStep: `<b>Input:</b> Start $20, Discount $3, Min $6, Budget $80<br><br>
+<b>Let's Go Shopping:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Game 1:</i> Cost $20. Budget left: $60. (Price drops to $17)<br>
+    <i>Game 2:</i> Cost $17. Budget left: $43. (Price drops to $14)<br>
+    <i>Game 3:</i> Cost $14. Budget left: $29. (Price drops to $11)<br>
+    <i>Game 4:</i> Cost $11. Budget left: $18. (Price drops to $8)<br>
+    <i>Game 5:</i> Cost $8. Budget left: $10. (Price drops to $6)<br>
+    <i>Game 6:</i> Cost $6. Budget left: $4. (Price stays at $6)<br>
+    <i>Game 7:</i> Can't afford $6! STOP.
+</div>
+<b>Final Result:</b> You bought 6 games!`
+    },
+    {
+        id: "kangaroo",
+        title: "Number Line Jumps<br><a href='https://www.hackerrank.com/challenges/kangaroo/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Math",
+        problem: "Imagine two kangaroos on a number line, ready to jump! The first kangaroo starts at position $x1$ and jumps $v1$ meters at a time. The second starts further ahead at position $x2$ and jumps $v2$ meters at a time. They jump at the exact same moment. Will they ever land on the same spot at the same time?",
+        solution: "To find out if they meet, we look at their speeds and the gap between them. <br><br>First, if the kangaroo starting behind ($x1$) isn't faster than the one in front ($v1 \\leq v2$), it will never catch up. <br>Second, if it is faster, they will only meet if the distance between them is perfectly 'eaten up' by the difference in their jump distances. We use the <b>Modulo Operator (%)</b> to check if the starting gap is perfectly divisible by the speed difference. If it is, they'll land on the same spot in a whole number of jumps!",
+        optimality: "This 'Relative Speed' approach is perfectly optimal, running in <b>O(1) Time complexity</b>. Instead of simulating every single jump, we use one simple math equation to get the answer instantly. It uses <b>O(1) Space</b> as well.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def kangaroo(x1, v1, x2, v2):\n    # If the one behind is slower or same speed, no meeting\n    if v1 <= v2:\n        return 'NO'\n    \n    # Check if the gap is perfectly divisible by speed difference\n    if (x2 - x1) % (v1 - v2) == 0:\n        return 'YES'\n    \n    return 'NO'</pre>",
+        stepByStep: `<b>Kangaroo 1:</b> Starts at 0, Jumps 3m<br>
+<b>Kangaroo 2:</b> Starts at 4, Jumps 2m<br><br>
+<b>The Race:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Initial Gap:</i> 4 meters (4 - 0)<br>
+    <i>Speed Difference:</i> 1 meter/jump (3 - 2)<br>
+    <i>Check:</i> Does 1 divide 4 perfectly? <b>Yes!</b> (4 % 1 == 0)<br>
+    <i>Prediction:</i> They will meet in 4 jumps at position 12.
+</div>
+<b>Final Result:</b> YES!`
+    },
+    {
+        id: "kaprekar-numbers",
+        title: "Modified Kaprekar Numbers<br><a href='https://www.hackerrank.com/challenges/kaprekar-numbers/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Math",
+        problem: "A Modified Kaprekar Number is a rare and special integer! If you take this number, square it, and then split that square into two parts (a left side and a right side), adding those two parts together brings you right back to your original number! The only catch is that the right side must have the same number of digits as the original number. Can you find all of them in a given range?",
+        solution: "We solve this by trying every number in the range. For each number: <br>1. We measure how many digits it has ($d$). <br>2. We calculate its square. <br>3. We slice the square into two pieces: the right piece gets the last $d$ digits, and the left piece gets everything else. <br>4. We add them together. If the sum equals our original number, we found a Kaprekar Number!",
+        optimality: "This 'Number Scanner' approach is optimal, running in <b>O(N * D) Time complexity</b> where N is the range size and D is the number of digits (since squaring and string-slicing depend on length). Since we have to check every individual number to see if it's special, we cannot go faster. It uses <b>O(N) Space</b> only to store our final list of winners.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def kaprekarNumbers(p, q):\n    results = []\n    for n in range(p, q + 1):\n        d = len(str(n))\n        square = n * n\n        \n        # Split square into two parts\n        s_str = str(square)\n        right = s_str[-d:] if s_str[-d:] else '0'\n        left = s_str[:-d] if s_str[:-d] else '0'\n        \n        if int(left) + int(right) == n:\n            results.append(n)\n    return results</pre>",
+        stepByStep: `<b>Input Range:</b> [1, 50], Check Number: <b>45</b><br><br>
+<b>The Kaprekar Test:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Step 1:</i> 45 has <b>2</b> digits.<br>
+    <i>Step 2:</i> 45 squared is <b>2025</b>.<br>
+    <i>Step 3:</i> Split 2025 into two parts (right side gets 2 digits):<br>
+    &nbsp;&nbsp;• Left: 20<br>
+    &nbsp;&nbsp;• Right: 25<br>
+    <i>Step 4:</i> Add them: 20 + 25 = <b>45</b>.
+</div>
+<b>Final Result:</b> 45 is a Kaprekar Number!`
+    },
+    {
+        id: "library-fine",
+        title: "Library Fine<br><a href='https://www.hackerrank.com/challenges/library-fine/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Math",
+        problem: "You've returned a book to the library, but oh no—it might be overdue! The library has a strict 'Penalty Tier' system based on how late you are. If you return it in a different year, it's a huge flat fine. A different month? A monthly fine. Just a few days? A daily fine. On time? Zero fine! Can you calculate the exact damage to your wallet?",
+        solution: "We solve this by comparing the 'Return Date' and the 'Due Date' starting from the most severe case to the least severe. <br>1. **Year Check:** If the return year is greater than the due year, the user pays a flat 10,000 fine. <br>2. **Month Check:** If the year is the same but the month is later, we multiply the number of months late by 500. <br>3. **Day Check:** If both year and month are the same but the day is later, we multiply the number of days late by 15. <br>4. **On-Time:** In any other case (return date is before or on the due date), the fine is 0.",
+        optimality: "This 'Hierarchical Comparison' is perfectly optimal, running in <b>O(1) Time complexity</b>. It only performs a constant number of integer comparisons and basic arithmetic. It uses <b>O(1) Space</b> as well.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def libraryFine(d1, m1, y1, d2, m2, y2):\n    # Severe case: Different year\n    if y1 > y2:\n        return 10000\n\n    # Moderate case: Same year, different month\n    if y1 == y2 and m1 > m2:\n        return 500 * (m1 - m2)\n\n    # Minor case: Same month, different day\n    if y1 == y2 and m1 == m2 and d1 > d2:\n        return 15 * (d1 - d2)\n\n    return 0</pre>",
+        stepByStep: `<b>Input:</b> Returned 9 June 2015, Due 6 June 2015<br><br>
+<b>Calculating the Penalty:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Year Check:</i> 2015 == 2015. (Not a year late)<br>
+    <i>Month Check:</i> June == June. (Not a month late)<br>
+    <i>Day Check:</i> 9 > 6. User is <b>3 days late</b>.<br>
+    <i>Calculation:</i> 3 days * 15 = 45.
+</div>
+<b>Final Result:</b> Your fine is 45.`
+    },
+    {
+        id: "finding-the-percentage",
+        title: "Finding the Percentage<br><a href='https://www.hackerrank.com/challenges/finding-the-percentage/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Math",
+        problem: "You have a list of students and their marks in different subjects. You need to store all this data efficiently and then, when someone asks for a specific student, calculate their average marks and display them perfectly formatted to two decimal places (e.g., 80.00).",
+        solution: "We use a <b>Dictionary (Hash Map)</b> to store the student data, where the student's name is the 'Key' and their list of marks is the 'Value'. This makes looking up a student near-instant! To calculate the average, we sum the marks for the requested student and divide by the total number of subjects. Finally, we use Python's <b>F-string formatting</b> (`:.2f`) to ensure the average always looks professional with exactly two decimal points.",
+        optimality: "This 'Dictionary Lookup' approach is optimal, offering <b>O(1) Time complexity</b> for the student lookup and <b>O(K) Time</b> to calculate the average mark (where K is the number of subjects). It uses <b>O(N * K) Space</b> to store all student data in memory.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def marksCal(student_data, query_name):\n    # Lookup the student's marks list\n    marks = student_data[query_name]\n    \n    # Calculate average and format to 2 decimal places\n    average = sum(marks) / len(marks)\n    return f\"{average:.2f}\"</pre>",
+        stepByStep: `<b>Data Store:</b> { "Alice": [80, 90, 70], "Bob": [60, 75, 85] }<br>
+<b>Query:</b> "Alice"<br><br>
+<b>Calculating Average:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Lookup:</i> Found "Alice" → [80, 90, 70]<br>
+    <i>Summing marks:</i> 80 + 90 + 70 = 240<br>
+    <i>Averaging:</i> 240 / 3 = 80.0<br>
+    <i>Formatting:</i> "80.0" becomes <b>"80.00"</b>.
+</div>
+<b>Final Result:</b> 80.00`
+    },
+    {
+        id: "minimum-distances",
+        title: "Minimum Distances<br><a href='https://www.hackerrank.com/challenges/minimum-distances/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Math",
+        problem: "You have a list of numbers, and some of them might be identical twins! Your goal is to find the pair of identical numbers that are standing closest to each other in the line. How few steps are between them? If there are no twins at all, we return -1.",
+        solution: "We solve this efficiently using a <b>Memory Map (Dictionary)</b> to remember where we last saw each number. <br><br>As we walk through the list, we check: 'Have I seen this number before?' <br>• If **yes**, we calculate the distance between our current spot and the spot where we last saw it. We keep track of the smallest distance found so far. <br>• In both cases, we update our memory with the number's current location so we're ready for the next time it appears!",
+        optimality: "This 'One-Pass Memory' approach is highly optimal, running in <b>O(N) Time complexity</b> because we only walk through the list once. It uses <b>O(N) Space</b> to store the locations of the numbers we've encountered. This is much faster than checking every possible pair ($O(N^2)$).",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def minimumDistances(a):\n    last_seen = {}\n    min_dist = float('inf')\n\n    for i, val in enumerate(a):\n        if val in last_seen:\n            dist = i - last_seen[val]\n            min_dist = min(min_dist, dist)\n        last_seen[val] = i\n\n    return min_dist if min_dist != float('inf') else -1</pre>",
+        stepByStep: `<b>Input Array:</b> [7, 1, 3, 4, 1, 7]<br><br>
+<b>Walking the List:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Step 1:</i> See 7 at index 0. Store: {7: 0}<br>
+    <i>Step 2:</i> See 1 at index 1. Store: {7: 0, 1: 1}<br>
+    <i>Step 3:</i> See 3 at index 2. Store: {7: 0, 1: 1, 3: 2}<br>
+    <i>Step 4:</i> See 4 at index 3. Store: {..., 4: 3}<br>
+    <i>Step 5:</i> See <b>1</b> at index 4. Distance from last 1 (at index 1) is <b>3</b>. Min Dist: 3.<br>
+    <i>Step 6:</i> See <b>7</b> at index 5. Distance from last 7 (at index 0) is <b>5</b>. Min stays 3.
+</div>
+<b>Final Result:</b> 3`
+    },
+    {
+        id: "non-divisible-subset",
+        title: "Non-Divisible Subset<br><a href='https://www.hackerrank.com/challenges/non-divisible-subset/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Math",
+        problem: "You have a collection of numbers and a secret divisor `k`. You want to pick as many numbers as possible to form a 'safe' group. What makes it safe? No two numbers in your group, when added together, can be perfectly divisible by `k`. How big a group can you build?",
+        solution: "This is a clever logic puzzle! Instead of looking at the numbers themselves, we look at their <b>Remainders</b> when divided by `k`. <br><br>1. If two numbers have remainders that add up to `k` (like 1 and 3 if $k=4$), they are 'dangerous' together. <br>2. For each dangerous pair of remainders, we simply pick the remainder that appears more often in our collection. <br>3. We handle special cases: remainders of 0 and $k/2$ can only have <i>one</i> representative in our safe group, because adding two of them would create a sum divisible by `k`.",
+        optimality: "This 'Remainder Counting' approach is optimal, running in <b>O(N + K) Time complexity</b>. We look at each number once to find its remainder ($O(N)$) and then loop through the unique remainders ($O(K)$). It uses <b>O(K) Space</b> to store the counts of each remainder.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def non_divisible_subset(k, s):\n    counts = [0] * k\n    for x in s: counts[x % k] += 1\n    \n    # Special cases for 0 and k/2\n    result = min(counts[0], 1) \n    \n    for r in range(1, (k // 2) + 1):\n        if r == k - r:\n            result += min(counts[r], 1)\n        else:\n            result += max(counts[r], counts[k - r])\n            \n    return result</pre>",
+        stepByStep: `<b>Input:</b> $S = [1, 7, 2, 4]$, $K = 3$<br><br>
+<b>Building the Safe Group:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Step 1:</i> Find remainders for each number (mod 3):<br>
+    &nbsp;&nbsp;• 1 % 3 = 1<br>
+    &nbsp;&nbsp;• 7 % 3 = 1<br>
+    &nbsp;&nbsp;• 2 % 3 = 2<br>
+    &nbsp;&nbsp;• 4 % 3 = 1<br>
+    <i>Step 2:</i> Counts: { Rem-1: 3, Rem-2: 1 }<br>
+    <i>Step 3:</i> Rem-1 and Rem-2 add up to 3 (K). They are dangerous! <br>
+    <i>Step 4:</i> Pick the winner: Count(1) vs Count(2) → 3 vs 1. We pick the 3 numbers with Rem-1.
+</div>
+<b>Final Result:</b> 3`
+    },
+    {
+        id: "page-count",
+        title: "Drawing Book<br><a href='https://www.hackerrank.com/challenges/drawing-book/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Math",
+        problem: "You're looking for a specific page in a drawing book. The book always starts with page 1 on the right side. When you turn a page, you see two new pages (except for the very last page, which might be alone). Since you're lazy, you want to get to your page with the absolute minimum number of turns. Should you start from the front or the back?",
+        solution: "This is a problem of finding the shortest path! <br>• **Starting from the front:** Since every turn reveals 2 pages, reaching page `p` takes `p // 2` turns. <br>• **Starting from the back:** Reaching page `p` takes `(total_pages // 2) - (p // 2)` turns. <br><br>We simply calculate both distances and return the smaller one. It's like deciding whether to take the front door or the back door to get to the kitchen!",
+        optimality: "This 'Shortest Path' logic is optimal, running in <b>O(1) Constant Time</b>. We only perform a few basic integer divisions and subtractions to get the answer instantly. It uses <b>O(1) Space</b>.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def pageCount(n, p):\n    from_front = p // 2\n    from_back = (n // 2) - (p // 2)\n    \n    return min(from_front, from_back)</pre>",
+        stepByStep: `<b>Book Details:</b> Total Pages (n) = 6, Target Page (p) = 2<br><br>
+<b>Finding the Shortcut:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Front Path:</i> 2 // 2 = <b>1 turn</b> (Page 1 → Pages 2,3)<br>
+    <i>Back Path:</i> (6 // 2) - (2 // 2) = 3 - 1 = <b>2 turns</b> (Pages 6,7 → Pages 4,5 → Pages 2,3)<br>
+</div>
+<b>Final Result:</b> 1 turn (Start from the front!)`
+    },
+    {
+        id: "save-the-prisoner",
+        title: "Save the Prisoner!<br><a href='https://www.hackerrank.com/challenges/save-the-prisoner/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Math",
+        problem: "A group of prisoners are sitting in a circle, and the jailer is handing out treats. He starts at a specific seat and hands them out one by one. The catch? The very last treat is actually a 'bad' one! You need to warn the prisoner who is about to receive that last, unlucky piece of candy.",
+        solution: "This is a classic 'Circular Distribution' problem. We use the <b>Modulo Operator (%)</b> to wrap around the circle. <br><br>The formula is simplified as: `((s + m - 2) % n) + 1`. <br>• We subtract 1 because the first candy goes to the starting person (they've already taken 1 candy before we start 'walking'). <br>• We subtract another 1 to convert to a '0-indexed' system for the computer. <br>• Finally, we add 1 back at the very end to return a human-style ID (starting from 1).",
+        optimality: "This 'One-Shot Math' approach is perfectly optimal, running in <b>O(1) Constant Time</b>. We don't need to simulate handing out thousands of candies; we just calculate the destination instantly. It uses <b>O(1) Space</b>.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def saveThePrisoner(n, m, s):\n    # n = prisoners, m = candies, s = start\n    # (s + m - 2) logic handles the circle and indexing\n    result = ((s + m - 2) % n) + 1\n    return result</pre>",
+        stepByStep: `<b>Prisoners:</b> 3, <b>Candies:</b> 7, <b>Start:</b> 2<br><br>
+<b>Tracking the Candies:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Candy 1:</i> Seat 2<br>
+    <i>Candy 2:</i> Seat 3<br>
+    <i>Candy 3:</i> Seat 1 (Wrap around!)<br>
+    <i>Candy 4:</i> Seat 2<br>
+    <i>Candy 5:</i> Seat 3<br>
+    <i>Candy 6:</i> Seat 1<br>
+    <i>Candy 7:</i> <b>Seat 2</b> (The Unlucky One!)
+</div>
+<b>Final Result:</b> 2`
+    },
+    {
+        id: "solve-me-first",
+        title: "Solve Me First<br><a href='https://www.hackerrank.com/challenges/solve-me-first/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Math",
+        problem: "Welcome to the world of algorithms! Your first quest is simple: you are given two numbers, and you need to find their sum. It's the 'Hello World' of competitive programming.",
+        solution: "We solve this by using the most fundamental operation in mathematics: **Addition**. We take the first number `a`, the second number `b`, and combine them using the `+` operator. Simple, elegant, and the foundation of everything else we build here!",
+        optimality: "This approach is the theoretical limit of efficiency, running in <b>O(1) Constant Time</b>. Combining two integers is a single CPU operation. It uses <b>O(1) Space</b> as well.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def solveMeFirst(a, b):\n    return a + b</pre>",
+        stepByStep: `<b>Input:</b> a = 7, b = 3<br><br>
+<b>The Calculation:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Equation:</i> 7 + 3 = <b>10</b>
+</div>
+<b>Final Result:</b> 10`
+    },
+    {
+        id: "sherlock-and-squares",
+        title: "Sherlock and Squares<br><a href='https://www.hackerrank.com/challenges/sherlock-and-squares/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Math",
+        problem: "Sherlock Holmes is looking for square numbers (like 4, 9, 16) hidden within a range of numbers from `a` to `b`. Your job is to count exactly how many square numbers exist in that range without counting them manually one by one.",
+        solution: "Instead of checking every number in the range (which could be millions!), we use math to find the answer almost instantly. <br><br>We find the square root of the ending number (`sqrt(b)`) and the square root of the number just before the start (`sqrt(a-1)`). The difference between these two square roots tells us exactly how many integers were squared to land in that range. It's like finding how many milestones are between two distances on a highway!",
+        optimality: "This 'Square Root Identity' approach is optimal, running in <b>O(1) Constant Time</b>. We perform two square root calculations regardless of how large the range is. It uses <b>O(1) Space</b>.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def squares(a, b):\n    # Count of squares up to b minus squares up to a-1\n    return int(b**0.5) - int((a-1)**0.5)</pre>",
+        stepByStep: `<b>Input Range:</b> [3, 9]<br><br>
+<b>Counting Squares:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Step 1:</i> Find sqrt(9) = <b>3</b>. (There are 3 squares up to 9: 1, 4, 9)<br>
+    <i>Step 2:</i> Find sqrt(3-1) = sqrt(2) ≈ <b>1.41</b>. Take the floor: <b>1</b>. (There is 1 square up to 2: 1)<br>
+    <i>Step 3:</i> Subtract: 3 - 1 = <b>2</b>.
+</div>
+<b>Final Result:</b> 2 (The squares are 4 and 9)`
+    },
+    {
+        id: "diagonal-difference",
+        title: "Diagonal Difference<br><a href='https://www.hackerrank.com/challenges/diagonal-difference/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Matrix",
+        problem: "Imagine you're looking at a square grid of numbers. Your task is to find two special paths: the 'Main Diagonal' (from top-left to bottom-right) and the 'Side Diagonal' (from top-right to bottom-left). Sum up the numbers in each path, and find the absolute difference between those two sums. It's like finding the balance between two crossing lines!",
+        solution: "We solve this by walking through the rows of our square grid once. <br><br>For each row `i`, we pick two numbers:<br>1. The one where row and column index are the same: `matrix[i][i]`. This is our **Main Diagonal** (Primary).<br>2. The one where the column index counts backwards from the end: `matrix[i][n-i-1]`. This is our **Side Diagonal** (Secondary).<br><br>We keep two running totals, subtract them at the end, and take the absolute value to ensure our result is positive.",
+        optimality: "This 'One-Pass Scanner' approach is optimal, running in <b>O(N) Time complexity</b> where N is the number of rows (size of the square). Since we must look at each diagonal element once, we can't do it any faster! It uses <b>O(1) Space</b> to store our two running sums.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def diagonalDifference(matrix):\n    n = len(matrix)\n    primary_sum = 0\n    secondary_sum = 0\n    \n    for i in range(n):\n        primary_sum += matrix[i][i]\n        secondary_sum += matrix[i][n - i - 1]\n        \n    return abs(primary_sum - secondary_sum)</pre>",
+        stepByStep: `<b>Input Matrix:</b><br>
+[ 1, 2, 3 ]<br>
+[ 4, 5, 6 ]<br>
+[ 9, 8, 9 ]<br><br>
+<b>Calculating Diagonals:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Row 0:</i> Primary picks 1, Secondary picks 3.<br>
+    <i>Row 1:</i> Primary picks 5, Secondary picks 5.<br>
+    <i>Row 2:</i> Primary picks 9, Secondary picks 9.<br>
+    <br>
+    <i>Primary Total:</i> 1 + 5 + 9 = <b>15</b><br>
+    <i>Secondary Total:</i> 3 + 5 + 9 = <b>17</b>
+</div>
+<b>Final Result:</b> |15 - 17| = <b>2</b>`
+    },
+    {
+        id: "forming-magic-square",
+        title: "Forming a Magic Square<br><a href='https://www.hackerrank.com/challenges/forming-a-magic-square/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Matrix",
+        problem: "You're given a 3x3 grid of numbers. A grid is 'Magic' if every row, every column, and both main diagonals add up to the exact same total (which is always 15 for a 3x3 grid). Your task is to turn your messy grid into a Magic Square with the minimum possible 'effort' (cost). The cost of changing one number is the absolute difference between the old and new number.",
+        solution: "This is a classic 'Brute Force' puzzle mixed with some math trivia! It turns out there are **exactly 8 possible 3x3 magic squares** in existence. <br><br>Since 8 is a very small number, the smartest way to solve this is to simply compare your input grid against each of those 8 perfect squares. For each square, we calculate the total cost to transform our grid into it. The answer is simply the smallest cost we find! It's like checking 8 different reference keys to see which one fits your lock with the least filing.",
+        optimality: "This 'Pattern Matching' approach is perfectly optimal, running in <b>O(1) Constant Time</b>. Because the grid size is always 3x3 and there are always only 8 magic squares to check, the computer does the exact same small amount of work no matter what the numbers are. It uses <b>O(1) Space</b> to store the reference squares.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def formingMagicSquare(matrix):\n    # There are only 8 possible magic squares\n    all_magic = [\n        [[8, 1, 6], [3, 5, 7], [4, 9, 2]],\n        [[6, 1, 8], [7, 5, 3], [2, 9, 4]],\n        # ... (all 8 patterns)\n    ]\n    \n    min_cost = float('inf')\n    for magic in all_magic:\n        current_cost = 0\n        for r in range(3):\n            for c in range(3):\n                current_cost += abs(matrix[r][c] - magic[r][c])\n        min_cost = min(min_cost, current_cost)\n        \n    return min_cost</pre>",
+        stepByStep: `<b>Input Grid:</b><br>
+[ 4, 8, 2 ]<br>
+[ 4, 5, 7 ]<br>
+[ 6, 1, 6 ]<br><br>
+<b>Checking a Candidate:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Target Square:</i> [[8,1,6], [3,5,7], [4,9,2]]<br>
+    <i>Cost Calc:</i> <br>
+    |4-8| + |8-1| + |2-6| + ... <br>
+    4 + 7 + 4 + 1 + 0 + 0 + 2 + 8 + 4 = <b>30</b>
+</div>
+<b>Final Result:</b> After checking all 8, the smallest cost found is <b>4</b>.`
+    },
+    {
+        id: "organizing-containers",
+        title: "Organizing Containers<br><a href='https://www.hackerrank.com/challenges/organizing-containers/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Matrix",
+        problem: "You have several containers, and each container is currently a mix of different types of balls. Your goal is to end up with each container only holding one type of ball. The only move you can make is swapping a ball from one container with a ball from another. There's a catch: swapped balls are always one-for-one, meaning the capacity of each container never changes. Is it possible to reach your goal?",
+        solution: "This problem is a bit of a 'conservation of space' puzzle! Because swaps are always 1-for-1, the total number of balls in any given container (its capacity) is locked forever. <br><br>Therefore, to succeed:<br>1. Calculate the **capacity** of every container (sum of each row).<br>2. Calculate the **total number of balls** of each type (sum of each column).<br>3. If the collection of capacities matches the collection of totals exactly, then we can always find a set of swaps to organize them! We simply sort both lists and see if they are identical.",
+        optimality: "This 'Capacity Matching' logic is highly efficient, running in <b>O(N^2) Time complexity</b> (to sum up the grid) and <b>O(N log N)</b> to sort the results. It uses <b>O(N) Space</b> to store the sums. It avoids any complex simulation and gives an instant 'Possible' or 'Impossible' answer.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def organizingContainers(matrix):\n    # Container sizes (row sums)\n    row_sums = sorted([sum(row) for row in matrix])\n    \n    # Ball type totals (column sums)\n    col_sums = sorted([sum(col) for col in zip(*matrix)])\n    \n    return \"Possible\" if row_sums == col_sums else \"Impossible\"</pre>",
+        stepByStep: `<b>Input Matrix:</b><br>
+[ 1, 3, 1 ] (Container 0)<br>
+[ 2, 1, 2 ] (Container 1)<br>
+[ 3, 3, 3 ] (Container 2)<br><br>
+<b>Checking Feasibility:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Step 1: Container Capacities (Rows)</i><br>
+    Row 0: 5 | Row 1: 5 | Row 2: 9<br>
+    Sorted: <b>[5, 5, 9]</b><br>
+    <br>
+    <i>Step 2: Ball Type Totals (Cols)</i><br>
+    Col 0: 6 | Col 1: 7 | Col 2: 6<br>
+    Sorted: <b>[6, 6, 7]</b>
+</div>
+<b>Final Result:</b> [5, 5, 9] ≠ [6, 6, 7]. <b>Impossible!</b>`
+    },
 ];
 
 function initSite() {
@@ -499,14 +1006,12 @@ function initSite() {
             <div class="professional-note">
                 <h4>Solution Code</h4>
                 <div class="code-block" style="margin-bottom: 1rem;">
-                    <b>Input Example:</b> { c = [0, 0, 1, 0, 0, 1, 1, 0], k = 2 }<br>
-                    <b>Expected Output:</b> 92<br>
                     ${algo.codeBlock ? algo.codeBlock : ''}
                 </div>
                 
                 <h4>Step-by-Step Explanation</h4>
                 <div class="step-by-step-block" style="background: rgba(0,0,0,0.03); padding: 15px; border-radius: 5px; border-left: 4px solid #007bff; line-height: 1.6;">
-                    ${algo.stepByStep ? algo.stepByStep : algo.example.replace(/\n/g, '<br>')}
+                    ${algo.stepByStep ? algo.stepByStep : (algo.example ? algo.example.replace(/\n/g, '<br>') : 'Information not available.')}
                 </div>
             </div>
         `;
