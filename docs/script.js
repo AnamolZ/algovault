@@ -400,7 +400,33 @@ const algorithms = [
     <i>Mix 5s and 6s:</i> 1 + 1 = 2.
 </div>
 <b>Final Printed Answer:</b> The highest adjacent sum we found was <b>3</b>.`
-    }
+    },
+    {
+        id: "plus-minus",
+        title: "Plus Minus<br><a href='https://www.hackerrank.com/challenges/plus-minus/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Arrays",
+        problem: "Imagine you have a bag of numbers containing positive integers, negative integers, and zeros. Your task is to reach into the bag and find out exactly what proportion of the numbers fall into each of these three categories!<br><br>For example, if you have 6 numbers and 3 of them are positive, the 'positive ratio' is 3 out of 6, or 0.500000. You need to calculate the ratios for all three types (Positives, Negatives, and Zeros) and print them out clearly.",
+        solution: "To solve this, we just need to do a single sweep through our list of numbers! We keep three separate counters (like three tally marks) in our head: one for positives, one for negatives, and one for zeros. <br><br>As we look at each number, we check its sign and add 1 to the correct tally. Once we've looked at every single number, we simply divide each total tally by the total number of items we counted. The magic is in the formatting—we make sure to display the answer with exactly 6 decimal places to satisfy the picky math requirements!",
+        optimality: "This is the most efficient way possible to solve the problem, running in <b>O(N) Time complexity</b>. Since we have to look at every number at least once to know its sign, we can't go faster than O(N). We also use <b>O(1) Space</b> because we only ever keep three small counter variables, regardless of whether the bag has 10 numbers or 10 million numbers!",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def plusMinus(arr):\n    n = len(arr)\n    positive = 0\n    negative = 0\n    zero = 0\n    \n    for x in arr:\n        if x > 0:\n            positive += 1\n        elif x < 0:\n            negative += 1\n        else:\n            zero += 1\n            \n    print(f\"{positive/n:.6f}\")\n    print(f\"{negative/n:.6f}\")\n    print(f\"{zero/n:.6f}\")</pre>",
+        stepByStep: `<b>Input Array:</b> [-4, 3, -9, 0, 4, 1] (Total 6 numbers)<br><br>
+<b>Phase 1: Tallying the Numbers</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Check -4:</i> Negative! (Neg: 1, Pos: 0, Zero: 0)<br>
+    <i>Check 3:</i> Positive! (Neg: 1, Pos: 1, Zero: 0)<br>
+    <i>Check -9:</i> Negative! (Neg: 2, Pos: 1, Zero: 0)<br>
+    <i>Check 0:</i> Zero! (Neg: 2, Pos: 1, Zero: 1)<br>
+    <i>Check 4:</i> Positive! (Neg: 2, Pos: 2, Zero: 1)<br>
+    <i>Check 1:</i> Positive! (Neg: 2, Pos: 3, Zero: 1)
+</div>
+<b>Phase 2: Calculating Ratios</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Positive Ratio:</i> 3 / 6 = <b>0.500000</b><br>
+    <i>Negative Ratio:</i> 2 / 6 = <b>0.333333</b><br>
+    <i>Zero Ratio:</i> 1 / 6 = <b>0.166667</b>
+</div>
+<b>Final Result:</b> Each ratio is printed on its own line.`
+    },
 ];
 
 function initSite() {
