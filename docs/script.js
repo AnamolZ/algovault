@@ -1362,6 +1362,40 @@ const algorithms = [
 <b>Test Case 2:</b> ".*++"<br>
 <b>Validation:</b> Attempting to compile... Error! (Consecutive quantifiers). <b>Invalid</b>.`
     },
+    {
+        id: "viral-advertising",
+        title: "Viral Advertising<br><a href='https://www.hackerrank.com/challenges/strange-advertising/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Simulation",
+        problem: "A company starts an advertising campaign! On the first day, they show the ad to 5 people. Exactly half (rounded down) like the ad and share it with 3 of their friends the following day. This pattern repeats daily. Your goal is to find out the *cumulative* number of people who liked the ad after **n** days.",
+        solution: "We solve this by simulating the campaign day by day. We keep track of two variables: `shared` (people shown the ad today) and `cumulative` (total likes so far). <br><br>Each day:<br>1. Half the people who saw it like it: `liked = shared // 2`.<br>2. Add these to our running total: `cumulative += liked`.<br>3. These people each share it with 3 friends for tomorrow: `shared = liked * 3`.<br><br>We repeat this for **n** days and return the cumulative total.",
+        optimality: "This 'Daily Tally' simulation runs in <b>O(N) Time complexity</b> where N is the number of days. Since N is typically small, this is extremely efficient. It uses <b>O(1) Space</b> to store the counters. It's the most direct and accurate way to model the growth of a viral trend.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def viralAdvertising(n):\n    shared = 5\n    cumulative = 0\n    for _ in range(n):\n        liked = shared // 2\n        cumulative += liked\n        shared = liked * 3\n    return cumulative</pre>",
+        stepByStep: `<b>Input:</b> n = 3 days<br><br>
+<b>Campaign Progress:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Day 1:</i> Shared with 5. Likes: 5//2 = 2. Total Likes: <b>2</b>. Next day shared: 2*3=6.<br>
+    <i>Day 2:</i> Shared with 6. Likes: 6//2 = 3. Total Likes: 2+3 = <b>5</b>. Next day shared: 3*3=9.<br>
+    <i>Day 3:</i> Shared with 9. Likes: 9//2 = 4. Total Likes: 5+4 = <b>9</b>. Next day shared: 4*3=12.
+</div>
+<b>Final Result:</b> 9 cumulative likes.`
+    },
+    {
+        id: "lisas-workbook",
+        title: "Lisa's Workbook<br><a href='https://www.hackerrank.com/challenges/lisa-workbook/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Simulation",
+        problem: "Lisa has a math workbook! It has several chapters, and each chapter has a different number of problems. The catch? Only <b>k</b> problems fit on a single page. A problem is considered 'special' if its number within the chapter (1, 2, 3...) happens to be the same as the page number it's printed on. Help Lisa count all the special problems in her book.",
+        solution: "We solve this by simulating the printing of the book! We maintain a `current_page` counter starting at 1. We iterate through each chapter and calculate how many problems it has. <br><br>For each 'batch' of <b>k</b> problems on a page, we determine the range of problem numbers (e.g., problems 4 to 6). If the `current_page` number falls within that range (e.g., is page 5 also problem 5?), we increment our 'special' counter. We then turn the page and continue until every chapter is done.",
+        optimality: "This 'Page Turner' simulation runs in <b>O(N + P) Time complexity</b> where N is the number of chapters and P is the number of pages (which depends on total problems). Since we must 'check' every page once, this is the most efficient way to solve it. It uses <b>O(1) Space</b> as we only need to track the page and special counters.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def workbook(n, k, chapters):\n    page = 1\n    special = 0\n    for problems_in_chapter in chapters:\n        for start in range(1, problems_in_chapter + 1, k):\n            end = min(start + k - 1, problems_in_chapter)\n            if start <= page <= end:\n                special += 1\n            page += 1\n    return special</pre>",
+        stepByStep: `<b>Config:</b> k = 3 problems/page | <b>Chapter 1:</b> 5 problems<br><br>
+<b>Building the Workbook:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Page 1:</i> Problems 1, 2, 3. (Page 1 = Problem 1? <b>YES!</b>)<br>
+    <i>Page 2:</i> Problems 4, 5. (Page 2 is NOT in range 4-5. NO.)<br>
+    <i>Page 3:</i> (Start of next chapter...)
+</div>
+<b>Final Result:</b> Lisa found 1 special problem so far!`
+    },
 ];
 
 function initSite() {
