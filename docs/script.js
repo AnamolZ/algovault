@@ -9,8 +9,8 @@ const algorithms = [
         example: "Input: [4, 2, 2, 8, 3, 3, 1]\n\n1. Find max K = 8\n2. Create count array length 9: [0, 0, 0, 0, 0, 0, 0, 0, 0]\n3. Tally frequencies: [0, 1, 2, 2, 1, 0, 0, 0, 1]\n4. Reconstruct: [1, 2, 2, 3, 3, 4, 8]"
     },
     {
-        id: "jumping-clouds",
-        title: "Jumping on the Clouds<br><a href='https://www.hackerrank.com/challenges/jumping-on-the-clouds-revisited/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        id: "jumping-clouds-revisited",
+        title: "Jumping on the Clouds: Revisited<br><a href='https://www.hackerrank.com/challenges/jumping-on-the-clouds-revisited/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Arrays",
         problem: "Imagine a game where a character stands on a circle of numbered clouds. The game starts at Cloud 0, and the player is given 100 Energy Points to begin with! The rules are simple:<br><br>1. You always jump forward exactly <b>k</b> steps at a time.<br>2. When you jump, you lose <b>1 Energy Point</b> because jumping is tiring work.<br>3. There are two types of clouds: Safe Clouds (marked as <b>0</b>) and Thunderclouds (marked as <b>1</b>).<br>4. If you land on a Thundercloud, you get electrocuted and lose an <b>extra 2 Energy Points</b> (so you lose 3 points total for that jump!).<br><br>Because the path is a circle, if you jump past the last cloud, you loop right back around to the beginning. The game finishes the exact moment you land back on Cloud 0 where you started. Your mission? Calculate exactly how much Energy you have left when the game ends!",
         solution: "To solve this, we don't need any complex formulas! We just play the game using a 'loop' in our code, tracking the character exactly as they jump.<br><br>We start by setting our Energy to 100, and our Current Position to 0. Then, we calculate where the next jump lands. To handle the 'circle' part of the game perfectly, we use the Math Modulo Operator (`%`). This operator basically gives us the remainder of division. So if there are 8 clouds (0 to 7), and we jump from cloud 6 by 2 steps, `(6 + 2) % 8 = 0`. It wraps exactly back to 0!<br><br>Once we know the new cloud we landed on, we check if it is a `0` (subtract 1 energy) or a `1` (subtract 3 energy). We keep doing jumps in our loop until our position becomes 0 again. Then we stop the loop and return the final Energy.",
@@ -470,6 +470,59 @@ const algorithms = [
     <i>Pick 20:</i> No partner on table. Table: {30, 50, 20}. Pairs: 3
 </div>
 <b>Final Answer:</b> 3 pairs found!`
+    },
+    {
+        id: "subarray-division",
+        title: "Subarray Division<br><a href='https://www.hackerrank.com/challenges/the-birthday-bar/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Arrays",
+        problem: "Lily wants to share a chocolate bar with Ron for his birthday! The bar is a row of squares, each with a number on it. She wants to give him a contiguous segment of the bar such that:<br>1. The length of the segment matches his birth month (<b>m</b>).<br>2. The sum of the numbers on the squares equals his birth day (<b>d</b>).<br><br>How many ways can Lily break off a piece of the chocolate bar for Ron?",
+        solution: "We solve this by sliding a 'window' of length <b>m</b> across the chocolate bar! For every possible starting position, we grab a segment of length <b>m</b> and calculate its sum. If that sum matches the magic birthday <b>d</b>, we count it as a success. We simply slide the window from the left side of the bar all the way to the right until we run out of chocolate.",
+        optimality: "This 'Sliding Window' approach is very efficient, running in <b>O(N * M) Time complexity</b> in its simplest form (where N is the bar length). While we could optimize this to O(N) using a 'Running Sum' (adding the new element and subtracting the old one), for the small constraints of this birthday problem, the simple window sum is incredibly clear and fast. It uses <b>O(1) Space</b> for our counting tally.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def birthday(s, d, m):\n    count = 0\n    for i in range(len(s) - m + 1):\n        if sum(s[i:i + m]) == d:\n            count += 1\n    return count</pre>",
+        stepByStep: `<b>Input:</b> Bar [1, 2, 1, 3, 2], d=3, m=2<br><br>
+<b>Scanning the Bar:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Window 1 ([1, 2]):</i> Sum is 3. <b>Success!</b> (Count: 1)<br>
+    <i>Window 2 ([2, 1]):</i> Sum is 3. <b>Success!</b> (Count: 2)<br>
+    <i>Window 3 ([1, 3]):</i> Sum is 4. No.<br>
+    <i>Window 4 ([3, 2]):</i> Sum is 5. No.
+</div>
+<b>Final Result:</b> 2 ways to share the chocolate!`
+    },
+    {
+        id: "jumping-on-the-clouds",
+        title: "Jumping on the Clouds<br><a href='https://www.hackerrank.com/challenges/jumping-on-the-clouds/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Arrays",
+        problem: "You are playing a mobile game where you jump from cloud to cloud! There are two types of clouds: safe cumulus clouds (marked as <b>0</b>) and dangerous thunderheads (marked as <b>1</b>). You start on the first cloud and your goal is to reach the very last cloud using the fewest jumps possible. From any cloud, you can jump either 1 or 2 steps ahead, but you MUST land on a safe cloud. What is the minimum number of jumps you need?",
+        solution: "This is a 'Greedy' problem! Since we want to reach the end as fast as possible, we should always try to take the biggest leap (2 steps) whenever it's safe to do so. <br><br>Our algorithm starts at the first cloud. At each step, it looks 2 clouds ahead. If that cloud is safe and exists, we take the big jump! If not, we are forced to take a single step jump to the next cloud. We keep doing this until we land on the final cloud, counting each jump as we go.",
+        optimality: "This 'Greedy Strategy' is perfectly optimal, achieving <b>O(N) Time complexity</b> because we visit each cloud at most once. It also uses <b>O(1) Space</b> as we only need to track our current position and the jump count. There is no need for complex pathfinding because we always prefer the longest possible move.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def jumpingOnClouds(c):\n    jumps = 0\n    i = 0\n    while i < len(c) - 1:\n        # Try jumping 2 steps first\n        if i + 2 < len(c) and c[i + 2] == 0:\n            i += 2\n        else:\n            i += 1\n        jumps += 1\n    return jumps</pre>",
+        stepByStep: `<b>Input Clouds:</b> [0, 0, 1, 0, 0, 1, 0]<br><br>
+<b>Making the Jumps:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>At Index 0:</i> Cloud 2 is a Thunderhead (1). Must jump to Index 1. (Jumps: 1)<br>
+    <i>At Index 1:</i> Cloud 3 is Safe (0). Take a big jump to Index 3! (Jumps: 2)<br>
+    <i>At Index 3:</i> Cloud 5 is a Thunderhead (1). Must jump to Index 4. (Jumps: 3)<br>
+    <i>At Index 4:</i> Cloud 6 is Safe (0). Take a big jump to Index 6! (Jumps: 4)
+</div>
+<b>Final Result:</b> 4 jumps to reach the finish line!`
+    },
+    {
+        id: "sequence-equation",
+        title: "Sequence Equation<br><a href='https://www.hackerrank.com/challenges/permutation-equation/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Arrays",
+        problem: "You are given a sequence of <b>n</b> integers where each number from 1 to <b>n</b> appears exactly once (a permutation). Your goal is to find an 'inverse of an inverse'! <br><br>Specifically, for each value <b>x</b> from 1 to <b>n</b>, you need to find an integer <b>y</b> such that the value at position <b>y</b> (let's call it <b>p(y)</b>) points to another position which contains the value <b>x</b>. In math terms: find <b>y</b> such that <b>p(p(y)) = x</b>.",
+        solution: "We can think of this as a 'Double Search'. For each number <b>x</b> (starting from 1), we first find its position in the array. Let's say 1 is at index 3. Now we have a new target: 3. We then search the array again to find the position of *that* index. If 3 is at index 2, then our final answer for 1 is 2! <br><br>By repeating this two-step lookup for every number from 1 to <b>n</b>, we build our final list of answers.",
+        optimality: "This solution uses direct indexing or searching, resulting in <b>O(N²) Time complexity</b> if we use `.index()` inside a loop. While O(N²) is acceptable for small constraints, we could optimize this to <b>O(N)</b> by pre-calculating an 'Inverse Map' (a dictionary where keys are values and values are their positions). This would allow us to perform the double-lookup in constant time. Given the problem's scope, the double-lookup logic is the most intuitive way to grasp the requirement.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def permutationEquation(p):\n    n = len(p)\n    result = []\n    for x in range(1, n + 1):\n        # Step 1: Find where 'x' is\n        pos1 = p.index(x) + 1\n        # Step 2: Find where 'pos1' is\n        pos2 = p.index(pos1) + 1\n        result.append(pos2)\n    return result</pre>",
+        stepByStep: `<b>Input Permutation (p):</b> [2, 3, 1] (Indices: 1:2, 2:3, 3:1)<br><br>
+<b>Solving for x = 1, 2, 3:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>For x = 1:</i> 1 is at Index 3. Now find where 3 is. 3 is at Index 2. <b>Result: 2</b><br>
+    <i>For x = 2:</i> 2 is at Index 1. Now find where 1 is. 1 is at Index 3. <b>Result: 3</b><br>
+    <i>For x = 3:</i> 3 is at Index 2. Now find where 2 is. 2 is at Index 1. <b>Result: 1</b>
+</div>
+<b>Final Result:</b> [2, 3, 1]`
     },
     {
         id: "play-with-words",
@@ -933,6 +986,314 @@ const algorithms = [
     Sorted: <b>[6, 6, 7]</b>
 </div>
 <b>Final Result:</b> [5, 5, 9] ≠ [6, 6, 7]. <b>Impossible!</b>`
+    },
+    {
+        id: "angry-professor",
+        title: "Angry Professor<br><a href='https://www.hackerrank.com/challenges/angry-professor/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Simulation",
+        problem: "A class has a strict professor! The professor has set a 'cancellation threshold' <b>k</b>. If fewer than <b>k</b> students arrive on time (arrival time ≤ 0), the class is cancelled. Given the arrival times of all students, determine if the class is cancelled.",
+        solution: "We solve this by simply counting how many students have an arrival time that is zero or negative (indicating they arrived on time or early). Once we have the total count of on-time students, we compare it to the professor's threshold <b>k</b>. If our count is less than <b>k</b>, the class is cancelled ('YES'); otherwise, it proceeds ('NO').",
+        optimality: "This 'Threshold Checker' is perfectly optimal, operating in <b>O(N) Time complexity</b> as we must check the arrival time of every student once. It uses <b>O(1) Space</b> to store the count of on-time students.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def angryProfessor(k, a):\n    on_time = sum(1 for x in a if x <= 0)\n    return 'YES' if on_time < k else 'NO'</pre>",
+        stepByStep: `<b>Input:</b> k=3, a=[-1, -3, 4, 2]<br><br>
+<b>Checking Attendance:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Student 1 (-1):</i> On time.<br>
+    <i>Student 2 (-3):</i> On time.<br>
+    <i>Student 3 (4):</i> Late.<br>
+    <i>Student 4 (2):</i> Late.<br>
+    <i>Total On Time:</i> 2
+</div>
+<b>Final Result:</b> 2 is less than 3 (k). Class is Cancelled! Result: <b>YES</b>`
+    },
+    {
+        id: "bigger-is-greater",
+        title: "Bigger is Greater<br><a href='https://www.hackerrank.com/challenges/bigger-is-greater/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Simulation",
+        problem: "You are given a word, and you want to rearrange its letters to create a new word that is 'alphabetically next'. Specifically, you need the smallest word that is lexicographically greater than the original. If no such word can be formed (because the word is already in its final alphabetical order), return 'no answer'.",
+        solution: "We use the 'Next Lexicographical Permutation' algorithm! <br>1. **Find the Pivot**: Scan from right to left to find the first character that is smaller than the one to its right. This is our 'pivot'.<br>2. **Find the Successor**: Scan from right to left again to find the smallest character that is still larger than our pivot.<br>3. **Swap**: Swap the pivot and the successor.<br>4. **Reverse**: Reverse (or sort) everything to the right of the pivot's original position to ensure it is as small as possible.<br><br>If we can't find a pivot (the whole string is descending), it means no greater word exists.",
+        optimality: "This 'Pivot-Swap-Reverse' strategy is perfectly optimal, achieving <b>O(N) Time complexity</b> (or O(N log N) if sorting the suffix). Since we only scan the string a few times, it is incredibly fast even for very long words. It uses <b>O(N) Space</b> to store the character list for modification.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def biggerIsGreater(w):\n    chars = list(w)\n    i = len(chars) - 1\n    while i > 0 and chars[i-1] >= chars[i]:\n        i -= 1\n    if i <= 0: return 'no answer'\n    \n    pivot = i - 1\n    j = len(chars) - 1\n    while chars[j] <= chars[pivot]:\n        j -= 1\n    \n    chars[pivot], chars[j] = chars[j], chars[pivot]\n    chars[pivot+1:] = chars[pivot+1:][::-1]\n    return ''.join(chars)</pre>",
+        stepByStep: `<b>Input:</b> "abdc"<br><br>
+<b>Finding the Next Word:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Step 1:</i> Pivot is 'b' (index 1) because 'b' < 'd'.<br>
+    <i>Step 2:</i> Successor is 'c' because it's the smallest on the right larger than 'b'.<br>
+    <i>Step 3:</i> Swap 'b' and 'c' → "acdb".<br>
+    <i>Step 4:</i> Reverse everything after index 1 → "acbd".
+</div>
+<b>Final Result:</b> "acbd"`
+    },
+    {
+        id: "bon-appetit",
+        title: "Bill Division (Bon Appétit)<br><a href='https://www.hackerrank.com/challenges/bon-appetit/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Simulation",
+        problem: "Anna and Brian are sharing a meal! Brian orders a few items, and Anna decides not to eat one specific item (at index <b>k</b>). Brian calculates the bill and tells Anna how much she owes. Your job is to determine if Brian's math is correct. Did he accurately subtract the item Anna didn't eat from her half of the bill? If yes, print 'Bon Appetit'. If not, print the amount Brian owes Anna.",
+        solution: "We solve this by calculating Anna's actual fair share ourselves! We take the whole list of items, remove the cost of the item at index <b>k</b>, and divide the remaining total by 2. This is what Anna *actually* owes. We then compare our 'Fair Share' to the 'Charged Amount' Brian told her. If they match, she is happy! If they don't, we simply return the difference (Charged - Fair).",
+        optimality: "This 'Fair Share Audit' approach is optimal, running in <b>O(N) Time complexity</b> to sum the bill items. It uses <b>O(1) Space</b> as we only need to store the total sum and the calculated shares.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def bonAppetit(bill, k, b):\n    actual_total = sum(bill) - bill[k]\n    anna_fair_share = actual_total // 2\n    \n    if b == anna_fair_share:\n        print('Bon Appetit')\n    else:\n        print(b - anna_fair_share)</pre>",
+        stepByStep: `<b>Input:</b> Bill [3, 10, 2], k=1 (Anna didn't eat item costs 10), Charged=12<br><br>
+<b>Auditing the Bill:</b>
+<div style="padding-left: 20px; border-left: 20px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Step 1:</i> Items Anna ate: [3, 2]. Total: 5.<br>
+    <i>Step 2:</i> Anna's fair share: 5 / 2 = 2.5 (but we use integer 2 or 5 total).<br>
+    <i>Step 3:</i> Wait, Brian charged 12?! Anna only owes 2.<br>
+    <i>Math:</i> 12 - 2 = 10.
+</div>
+<b>Final Result:</b> 10 (Brian owes Anna 10 back!)`
+    },
+    {
+        id: "breaking-records",
+        title: "Breaking the Records<br><a href='https://www.hackerrank.com/challenges/breaking-best-and-worst-records/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Simulation",
+        problem: "Maria is a basketball player who wants to track her season statistics! After every game, she writes down her score. She wants to know how many times during the season she broke her 'Highest Score' record and how many times she broke her 'Lowest Score' record. Note: The record set in the very first game of the season doesn't count as 'breaking' a record.",
+        solution: "We solve this by keeping track of her 'Best' and 'Worst' scores using two variables. We start both at her very first game's score. Then, for every game after that, we compare her new score to our current records. If a score is strictly higher than the record, we update the 'Best' and increment our 'High Record' tally. If it's strictly lower, we update the 'Worst' and increment our 'Low Record' tally. We finish when we've seen every game in the season.",
+        optimality: "This 'Record Monitor' strategy is perfectly optimal, achieving <b>O(N) Time complexity</b> because we process each game score exactly once. It uses <b>O(1) Space</b> to store her two current records and two counters. It is the most efficient way to track statistics over time.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def breakingRecords(scores):\n    high = low = scores[0]\n    hi_count = lo_count = 0\n    \n    for s in scores[1:]:\n        if s > high:\n            high = s\n            hi_count += 1\n        elif s < low:\n            low = s\n            lo_count += 1\n            \n    return hi_count, lo_count</pre>",
+        stepByStep: `<b>Scores:</b> [10, 5, 20, 20, 4, 30]<br><br>
+<b>Season Simulation:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Game 1 (10):</i> Initial Records: High=10, Low=10.<br>
+    <i>Game 2 (5):</i> 5 < 10. New Low! Record broken. (Low=5, Count=1).<br>
+    <i>Game 3 (20):</i> 20 > 10. New High! Record broken. (High=20, Count=1).<br>
+    <i>Game 4 (20):</i> 20 is not > 20. No record broken.<br>
+    <i>Game 5 (4):</i> 4 < 5. New Low! Record broken. (Low=4, Count=2).<br>
+    <i>Game 6 (30):</i> 30 > 20. New High! Record broken. (High=30, Count=2).
+</div>
+<b>Final Result:</b> [2, 2]`
+    },
+    {
+        id: "apples-and-oranges",
+        title: "Apples and Oranges<br><a href='https://www.hackerrank.com/challenges/apple-and-orange/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Simulation",
+        problem: "Sam's house is located between points <b>s</b> and <b>t</b> on a number line. He has an apple tree at point <b>a</b> and an orange tree at point <b>b</b>. When a fruit falls, it lands some distance <b>d</b> from its tree. Your goal is to determine exactly how many apples and how many oranges land on Sam's house (inclusive of the boundaries <b>s</b> and <b>t</b>).",
+        solution: "We solve this by simulating the drop for every single fruit! For each apple, we calculate its landing position by adding its fall distance to the tree's position <b>a</b>. We then check if that calculated position is between <b>s</b> and <b>t</b>. We repeat the exact same process for the oranges using the orange tree's position <b>b</b>. We keep two separate tallies and return them as the final answer.",
+        optimality: "This 'Position Mapper' approach is perfectly optimal, running in <b>O(M + N) Time complexity</b>, where M is the number of apples and N is the number of oranges. Since we must evaluate every fruit's landing spot once, we cannot mathematically solve this faster. It uses <b>O(1) Space</b> to store the two counting variables.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def countApplesAndOranges(s, t, a, b, apples, oranges):\n    apple_on_house = sum(1 for d in apples if s <= a + d <= t)\n    orange_on_house = sum(1 for d in oranges if s <= b + d <= t)\n    print(apple_on_house)\n    print(orange_on_house)</pre>",
+        stepByStep: `<b>Input:</b> House [7, 10], Apple Tree at 4, Orange Tree at 12<br>
+<b>Apples falling:</b> [2, 3, -4]<br>
+<b>Oranges falling:</b> [3, -2, -4]<br><br>
+<b>Simulating the Fruit Drops:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Apple 1:</i> 4 + 2 = 6. (Not on house [7, 10])<br>
+    <i>Apple 2:</i> 4 + 3 = 7. (ON HOUSE!)<br>
+    <i>Apple 3:</i> 4 + (-4) = 0. (Not on house)<br>
+    <i>Orange 1:</i> 12 + 3 = 15. (Not on house)<br>
+    <i>Orange 2:</i> 12 + (-2) = 10. (ON HOUSE!)<br>
+    <i>Orange 3:</i> 12 + (-4) = 8. (ON HOUSE!)
+</div>
+<b>Final Result:</b> 1 apple and 2 oranges.`
+    },
+    {
+        id: "counting-valleys",
+        title: "Counting Valleys<br><a href='https://www.hackerrank.com/challenges/counting-valleys/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Simulation",
+        problem: "An avid hiker keeps track of their steps on a journey! Each step is either an 'up' (<b>U</b>) or a 'down' (<b>D</b>). They always start at sea level (altitude 0). A 'valley' is defined as a sequence of steps that starts with a step down from sea level and ends with a step up to sea level. Your job is to count exactly how many valleys the hiker traversed during their trip.",
+        solution: "We solve this by keeping a 'sea level tracker'—an integer variable representing our current altitude. We loop through every step in the path: if it's a 'U', we add 1 to our altitude; if it's a 'D', we subtract 1. The key is in spotting the *end* of a valley: if our previous step was 'U' and our new altitude is exactly 0, it means we just climbed back to sea level from a valley below. We increment our valley counter every time this specific event happens.",
+        optimality: "This 'Altitude Tracker' approach is highly efficient, running in <b>O(N) Time complexity</b> because we visit each step in the path exactly once. It uses <b>O(1) Space</b> to store the current altitude and the valley count. It is the most robust way to process continuous motion data.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def countingValleys(steps, path):\n    altitude = 0\n    valleys = 0\n    for step in path:\n        if step == 'U':\n            altitude += 1\n            if altitude == 0:\n                valleys += 1\n        else:\n            altitude -= 1\n    return valleys</pre>",
+        stepByStep: `<b>Path:</b> [D, D, U, U, U, U, D, D] (8 steps)<br><br>
+<b>Walking the Path:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Step 1 (D):</i> Altitude -1. We are below sea level.<br>
+    <i>Step 2 (D):</i> Altitude -2.<br>
+    <i>Step 3 (U):</i> Altitude -1.<br>
+    <i>Step 4 (U):</i> Altitude 0. <b>Valley Finished!</b> (Count: 1)<br>
+    <i>Step 5 (U):</i> Altitude 1. We are on a mountain.<br>
+    <i>Step 6 (U):</i> Altitude 2.<br>
+    <i>Step 7 (D):</i> Altitude 1.<br>
+    <i>Step 8 (D):</i> Altitude 0. (Not a valley, just returned from height).
+</div>
+<b>Final Result:</b> 1 valley traversed.`
+    },
+    {
+        id: "designer-pdf-viewer",
+        title: "Designer PDF Viewer<br><a href='https://www.hackerrank.com/challenges/designer-pdf-viewer/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Simulation",
+        problem: "When you select a word in a PDF viewer, a blue highlighting rectangle appears. In this specific viewer, all characters are 1mm wide, but they have different heights! Given a list of heights for every letter in the alphabet and a specific word, calculate the total area in mm² of the rectangle that would highlight that word. The height of the rectangle is determined by the *tallest* letter in the word selection.",
+        solution: "We solve this by finding the 'Maximum Height' among all the characters in the word. We iterate through each letter of the word, look up its height in the provided list (using its alphabetical index), and keep track of the tallest one we see. Once we know the max height, we multiply it by the width of the word, which is simply the number of letters in the word! Area = max_height * word_length.",
+        optimality: "This 'Height Scanner' strategy is perfectly optimal, achieving <b>O(N) Time complexity</b> where N is the length of the word to find the maximum height. It uses <b>O(1) Space</b> as we only store one 'max height' variable. It is a clean, direct simulation of a UI selection component.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def designerPdfViewer(h, word):\n    max_h = 0\n    for char in word:\n        height = h[ord(char) - ord('a')]\n        if height > max_h:\n            max_h = height\n    return max_h * len(word)</pre>",
+        stepByStep: `<b>Heights:</b> [1, 3, 1, 3, 1, 4, ...] (a=1, b=3, c=1, d=3, e=1, f=4)<br>
+<b>Word:</b> "abc"<br><br>
+<b>Calculating Area:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Letter 'a':</i> Height 1. Max so far: 1.<br>
+    <i>Letter 'b':</i> Height 3. Max so far: 3.<br>
+    <i>Letter 'c':</i> Height 1. Max so far: 3.<br>
+    <i>Final Max Height:</i> 3mm.<br>
+    <i>Word Length:</i> 3 characters.<br>
+    <i>Math:</i> 3mm * 3mm = <b>9mm²</b>
+</div>
+<b>Final Result:</b> 9`
+    },
+    {
+        id: "encryption",
+        title: "Encryption<br><a href='https://www.hackerrank.com/challenges/encryption/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Simulation",
+        problem: "You need to encrypt a secret message! The message is a string of letters (spaces removed). You must fit the letters into a grid where the number of rows and columns are determined by the square root of the string length ($L$). Specifically, if $\\text{rows} \\times \\text{cols} \\geq L$, and they are close to $\\sqrt{L}$, the grid is valid. Once the message is in the grid row-by-row, you read the result out column-by-column to create the ciphertext.",
+        solution: "We solve this by first calculating the ideal dimensions. We find the square root of the message length, take the floor as our row count and the ceiling as our column count. If that isn't large enough to hold all characters, we just increment the row count until it fits. <br><br>Once the dimensions are set, we don't actually need to build a physical grid! We can just use a nested loop: for each 'column index', we jump through the string in steps equal to the 'column count'. This effectively 'plucks' the letters out in column order, which we then join together with spaces.",
+        optimality: "This 'Index Jumper' approach is very efficient, achieving <b>O(L) Time complexity</b> where L is the length of the string, as we process each character exactly once to form the ciphertext. It uses <b>O(L) Space</b> to store and return the encrypted result. It's a classic example of using grid logic without needing the memory overhead of an actual 2D array.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>import math\ndef encryption(s):\n    s = s.replace(\" \", \"\")\n    n = len(s)\n    root = math.sqrt(n)\n    rows = math.floor(root)\n    cols = math.ceil(root)\n    if rows * cols < n: rows += 1\n    \n    res = []\n    for c in range(cols):\n        temp = \"\"\n        for r in range(rows):\n            idx = r * cols + c\n            if idx < n: temp += s[idx]\n        res.append(temp)\n    return \" \".join(res)</pre>",
+        stepByStep: `<b>Input Message:</b> "haveaniceday" (length 12)<br><br>
+<b>Grid Selection:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Square Root:</i> √12 ≈ 3.46. Rows=3, Cols=4.<br>
+    <i>Area:</i> 3 * 4 = 12. Fits perfectly!<br>
+    <i>Row-by-Row Grid:</i><br>
+    have<br>anic<br>eday
+</div>
+<b>Reading Columns:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Col 1:</i> 'h' + 'a' + 'e' = "hae"<br>
+    <i>Col 2:</i> 'a' + 'n' + 'd' = "and"<br>
+    <i>Col 3:</i> 'v' + 'i' + 'a' = "via"<br>
+    <i>Col 4:</i> 'e' + 'c' + 'y' = "ecy"
+</div>
+<b>Final Result:</b> "hae and via ecy"`
+    },
+    {
+        id: "fair-rations",
+        title: "Fair Rations<br><a href='https://www.hackerrank.com/challenges/fair-rations/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Simulation",
+        problem: "You are the minister of food distribution! A line of people is waiting for bread, but there's a catch: everyone must have an 'even' number of loaves. If you give a loaf to someone, you MUST also give a loaf to the person immediately behind (or in front of) them. Your goal is to find the minimum number of loaves you need to distribute to make everyone's count even, or determine if it's impossible.",
+        solution: "We solve this by walking through the line from start to finish. Whenever we encounter someone with an 'odd' number of loaves, we give them one (making it even) and automatically give one to the next person in line. We keep doing this until we reach the last person. If the last person ends up with an even number, we've succeeded! If they are still odd, it means it was mathematically impossible to satisfy the 'even' rule for everyone.",
+        optimality: "This 'Ripple Effect' simulation runs in <b>O(N) Time complexity</b> because we only need to pass through the line once. It uses <b>O(1) Space</b> to store the loaf counter. It is perfectly optimal because each decision is forced: if person `i` is odd, you *must* give a loaf to them and `i+1` to fix `i`.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def fairRations(b):\n    loaves = 0\n    for i in range(len(b) - 1):\n        if b[i] % 2 != 0:\n            b[i] += 1\n            b[i+1] += 1\n            loaves += 2\n    return loaves if b[-1] % 2 == 0 else 'NO'</pre>",
+        stepByStep: `<b>Input:</b> [2, 3, 4, 5, 6]<br><br>
+<b>Feeding the Line:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Person 0 (2):</i> Even. Skip.<br>
+    <i>Person 1 (3):</i> Odd! Give 1 to P1 and P2 → [2, 4, 5, 5, 6]. (Loaves: 2)<br>
+    <i>Person 2 (5):</i> Odd! Give 1 to P2 and P3 → [2, 4, 6, 6, 6]. (Loaves: 4)<br>
+    <i>Person 3 (6):</i> Even. Skip.<br>
+    <i>Person 4 (6):</i> Even. Success!
+</div>
+<b>Final Result:</b> 4 loaves distributed.`
+    },
+    {
+        id: "flatland-space-stations",
+        title: "Flatland Space Stations<br><a href='https://www.hackerrank.com/challenges/flatland-space-stations/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Simulation",
+        problem: "Flatland has <b>n</b> cities built in a single line, and some of them have space stations. A citizen in any city wants to know exactly how far they are from the *nearest* space station. Your task is to find the maximum possible 'minimum distance' anyone in Flatland has to travel. Basically, find the city that is most 'marooned' from space travel!",
+        solution: "We solve this by sorting the locations of all space stations. The distance to the nearest station can be found by checking three main areas:<br>1. The distance from the **first city** to the **first station**.<br>2. The distance from the **last city** to the **last station**.<br>3. The gaps **between** any two adjacent stations. For these gaps, the most isolated person is exactly in the middle, so the distance is half the gap size (`gap // 2`).<br><br>The final answer is simply the largest of all these distances.",
+        optimality: "This 'Gap Analysis' approach is highly efficient, running in <b>O(M log M) Time complexity</b> (due to sorting the station list) where M is the number of stations. Since M is usually much smaller than the total number of cities N, this is significantly faster than checking every city individually. It uses <b>O(1) Space</b> (ignoring the input list).",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def flatlandSpaceStations(n, c):\n    c.sort()\n    # Check start and end distances\n    max_d = max(c[0], (n - 1) - c[-1])\n    \n    # Check gaps between stations\n    for i in range(len(c) - 1):\n        distance = (c[i+1] - c[i]) // 2\n        max_d = max(max_d, distance)\n        \n    return max_d</pre>",
+        stepByStep: `<b>Input:</b> n=5 cities (0-4), Stations at [0, 4]<br><br>
+<b>Finding the Maximum Gap:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Start Check:</i> Pos 0 is a station. Distance = 0.<br>
+    <i>End Check:</i> Pos 4 is a station. Distance = 0.<br>
+    <i>Inter-station Gap:</i> Between 0 and 4 is a gap of 4. Middle distance is 4 // 2 = <b>2</b>.<br>
+    (The person in City 2 is 2 steps away from 0 AND 2 steps away from 4).
+</div>
+<b>Final Result:</b> 2`
+    },
+    {
+        id: "electronics-shop",
+        title: "Electronics Shop<br><a href='https://www.hackerrank.com/challenges/electronics-shop/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Simulation",
+        problem: "Monica wants to buy exactly one keyboard and one USB drive within her budget <b>b</b>. She wants to spend as much of her money as possible! Given the prices for several models of keyboards and USB drives, find the highest total cost she can afford. If she can't even afford the cheapest pair, return -1.",
+        solution: "We solve this by sorting one list (keyboards) ascending and the other (USB drives) descending. Using a **Two-Pointer** technique, we start at the beginning of the keyboards and the beginning of the drives. <br>• If the sum is within budget, we record it (as it's a candidate for the max) and move to a more expensive keyboard to try and spend more.<br>• If the sum exceeds the budget, we move to a cheaper USB drive to try and bring the cost down.<br><br>This way, we explore all potentially optimal pairs without checking every single combination.",
+        optimality: "This 'Two-Pointer' approach is highly optimal, running in <b>O(N log N + M log M) Time complexity</b> (dominated by sorting). The actual search takes only <b>O(N + M)</b>, which is significantly better than a brute-force O(N * M) search for large inventories. It uses <b>O(1) Space</b> beyond storing the prices.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def getMoneySpent(keyboards, drives, b):\n    keyboards.sort()\n    drives.sort(reverse=True)\n    max_spent = -1\n    i = j = 0\n    while i < len(keyboards) and j < len(drives):\n        total = keyboards[i] + drives[j]\n        if total <= b:\n            max_spent = max(max_spent, total)\n            i += 1 # Try a more expensive keyboard\n        else:\n            j += 1 # Must use a cheaper drive\n    return max_spent</pre>",
+        stepByStep: `<b>Budget:</b> 10 | <b>Keyboards:</b> [3, 1] | <b>Drives:</b> [5, 2, 8]<br><br>
+<b>Shopping Simulation:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Sorted:</i> K: [1, 3], D: [8, 5, 2]<br>
+    <i>Pair 1 ([1, 8]):</i> Sum 9. Within budget! Max=9. (Move to K=3)<br>
+    <i>Pair 2 ([3, 8]):</i> Sum 11. Too expensive. (Move to D=5)<br>
+    <i>Pair 3 ([3, 5]):</i> Sum 8. Affordable, but 8 < 9. (Move to K=end)
+</div>
+<b>Final Result:</b> 9`
+    },
+    {
+        id: "the-hurdle-race",
+        title: "The Hurdle Race<br><a href='https://www.hackerrank.com/challenges/the-hurdle-race/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Simulation",
+        problem: "In a hurdle race, a character can naturally jump a maximum height of <b>k</b>. However, some hurdles in the race are taller than <b>k</b>! To jump over these, the character must drink a 'magic potion'. Each dose of the potion increases their jump height by 1 unit. Your goal is to find the minimum number of doses the character needs to drink to jump over every single hurdle in the race.",
+        solution: "This is a very straightforward 'Comparison' problem. To jump over every hurdle, the character's jump height must be at least as high as the *tallest* hurdle in the track. <br><br>We simply find the maximum height in the list of hurdles. If that maximum height is already less than or equal to <b>k</b>, zero doses are needed. If it's greater than <b>k</b>, the number of doses required is simply the difference: `max_height - k`.",
+        optimality: "This 'One-Pass Max' approach is perfectly optimal, running in <b>O(N) Time complexity</b> as we only need to look at each hurdle once to find the maximum. It uses <b>O(1) Space</b> to store the maximum value found. There is no faster way to know the height of the tallest hurdle.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def hurdleRace(k, height):\n    tallest = max(height)\n    return max(0, tallest - k)</pre>",
+        stepByStep: `<b>Input:</b> k=4, Hurdles=[1, 6, 3, 5, 2]<br><br>
+<b>Finding the Requirement:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Step 1:</i> Scan the race track. The tallest hurdle is <b>6</b>.<br>
+    <i>Step 2:</i> Current capacity is 4.<br>
+    <i>Step 3:</i> Calculation: 6 - 4 = <b>2</b>.
+</div>
+<b>Final Result:</b> 2 doses of potion needed!`
+    {
+        id: "queens-attack-2",
+        title: "Queen's Attack II<br><a href='https://www.hackerrank.com/challenges/queens-attack-2/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Simulation",
+        problem: "You have a queen on an <b>n x n</b> chessboard. There are also <b>k</b> obstacles on the board that block her path. We need to calculate exactly how many squares the queen can attack. Remember: a queen can move any number of squares horizontally, vertically, or diagonally, but she cannot jump over obstacles or move off the board.",
+        solution: "Instead of simulating the queen's movement square-by-square (which would be too slow for a large board), we pre-calculate the maximum possible distance she could travel in all 8 directions (North, South, East, West, and the 4 diagonals). <br><br>Then, we loop through the list of obstacles once. For each obstacle, we check if it lies on any of those 8 paths. If it does, we 'trim' the possible distance in that specific direction to stop just before the obstacle. After checking all obstacles, the sum of these 8 distances is our final answer.",
+        optimality: "This 'Direction Trimming' approach is highly optimal, running in <b>O(K) Time complexity</b> where K is the number of obstacles. The size of the board (up to 10^5) doesn't capture the runtime, making it much faster than any board-scanning method. It uses <b>O(1) Space</b> to store the 8 distance values.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def queensAttack(n, k, r_q, c_q, obstacles):\n    # Initial distances to edges\n    dists = {\n        'N': n-r_q, 'S': r_q-1, 'W': c_q-1, 'E': n-c_q,\n        'NW': min(n-r_q, c_q-1), 'NE': min(n-r_q, n-c_q),\n        'SW': min(r_q-1, c_q-1), 'SE': min(r_q-1, n-c_q)\n    }\n    for r_o, c_o in obstacles:\n        # Check if obstacle is in any of the 8 directions\n        # and update (trim) the distance if it is\n        # (Logic for horizontal, vertical, diagonal checks...)\n        pass\n    return sum(dists.values())</pre>",
+        stepByStep: `<b>Board:</b> 4x4, <b>Queen:</b> (4, 4), <b>Obstacle:</b> (4, 2)<br><br>
+<b>Calculating Reach:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Initial Reach (W):</i> 3 squares (Cols 3, 2, 1).<br>
+    <i>Obstacle (4, 2):</i> This blocks the 'West' path at Col 2.<br>
+    <i>Trimmed Reach (W):</i> The queen can only hit Col 3. New distance: <b>1</b>.<br>
+    <i>Other Directions:</i> North=0, East=0, South=3, NE=0, NW=0, SE=0, SW=3.
+</div>
+<b>Final Result:</b> 1 + 3 + 3 = 7 attackable squares.`
+    },
+    {
+        id: "repeated-string",
+        title: "Repeated String<br><a href='https://www.hackerrank.com/challenges/repeated-string/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Simulation",
+        problem: "You have a short string that repeats infinitely to form an endless chain. Given an integer <b>n</b>, you need to count exactly how many 'a's appear in the first <b>n</b> characters of this infinite string. It's like counting how many red beads are in a necklace that only has a few feet showing.",
+        solution: "Since the string repeats perfectly, we don't need to actually build the infinite version! We calculate two things using basic division:<br>1. **Full Cycles**: How many times the whole original string fits into the first <b>n</b> characters (`n // length`).<br>2. **The Leftover**: How many extra characters are left at the end of the last partial repeat (`n % length`).<br><br>Total 'a's = (Count in original string * Full Cycles) + (Count in the leftover substring).",
+        optimality: "This 'Math-Not-Simulation' approach is perfectly optimal, running in <b>O(L) Time complexity</b> where L is the length of the *original* string (to count 'a's once). It handles massive values of <b>n</b> (up to trillions) instantly. It uses <b>O(1) Space</b>.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def repeatedString(s, n):\n    # Count 'a's in one string\n    count_in_pattern = s.count('a')\n    # Number of whole patterns\n    full_repeats = n // len(s)\n    # Remaining characters\n    remainder = n % len(s)\n    \n    return (full_repeats * count_in_pattern) + s[:remainder].count('a')</pre>",
+        stepByStep: `<b>String (s):</b> "aba", <b>Target (n):</b> 10 characters<br><br>
+<b>Calculating Frequency:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Step 1:</i> "aba" has 2 'a's. Length is 3.<br>
+    <i>Step 2:</i> 10 // 3 = 3 full repeats ("abaabaaba"). Total 'a's: 3 * 2 = 6.<br>
+    <i>Step 3:</i> 10 % 3 = 1 leftover char ("a"). Extra 'a's: 1.<br>
+    <i>Math:</i> 6 + 1 = 7.
+</div>
+<b>Final Result:</b> 7 'a's in the first 10 characters of "abaabaabaa..."`
+    },
+    {
+        id: "service-lane",
+        title: "Service Lane<br><a href='https://www.hackerrank.com/challenges/service-lane/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Simulation",
+        problem: "Imagine a freeway with a service lane that changes width at every segment. There are three types of vehicles: bikes (width 1), cars (width 2), and trucks (width 3). Given a specific segment of the road defined by a start and end entry, you need to find the *widest* vehicle that can travel through that entire stretch without getting stuck.",
+        solution: "This is a 'Minimum Value' problem! For a vehicle to pass through a stretch of road, it must be slender enough to fit through the *narrowest* part of that stretch. <br><br>We solve this by looking at all the width values between our entry and exit points and finding the smallest number (the minimum). If the minimum width in that range is 1, only a bike fits. If it's 2, cars can pass. If it's 3, even heavy trucks can make it through.",
+        optimality: "This 'Range Minimum' approach runs in <b>O(N) Time complexity per query</b> in its simplest form. For a small number of tests, this is perfect. It could be optimized to **O(1)** using a 'Segment Tree' or 'Sparse Table' if we had millions of queries, but for this problem, a simple scan is the most readable and efficient solution. It uses <b>O(1) Space</b>.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def serviceLane(widths, cases):\n    for entry, exit in cases:\n        # The widest vehicle depends on the narrowest segment\n        print(min(widths[entry : exit + 1]))</pre>",
+        stepByStep: `<b>Freeway Widths:</b> [2, 3, 1, 2, 3, 2, 3, 3]<br>
+<b>Inquiry:</b> Can we pass between Segment 0 and Segment 3?<br><br>
+<b>Checking the Stretch:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Stretch:</i> [2, 3, 1, 2]<br>
+    <i>Narrowest Point:</i> The width at segment 2 is <b>1</b>.<br>
+    <i>Constraint:</i> Because of that '1', only a bike (width 1) can pass.
+</div>
+<b>Final Result:</b> 1`
+    },
+    {
+        id: "staircase",
+        title: "Staircase<br><a href='https://www.hackerrank.com/challenges/staircase/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Simulation",
+        problem: "Your task is to build a beautiful, right-aligned staircase made of symbols (<b>#</b>). The staircase should have a base and height of size <b>n</b>. For example, a staircase of size 4 should look like a climbable slope where the bottom row is completely full and the top row has only one symbol on the far right.",
+        solution: "We solve this by printing the staircase row by row. For each row <b>i</b> (starting from 1 up to <b>n</b>):<br>1. Calculate the number of **spaces** needed to align it to the right: `n - i`.<br>2. Calculate the number of **symbols** (<b>#</b>) needed: `i`.<br>3. Combine them together and print that line.<br><br>As we move down the rows, the number of spaces decreases and the number of symbols increases, creating that iconic staircase shape.",
+        optimality: "This 'Pattern Printer' runs in <b>O(N^2) Time complexity</b> because for <b>n</b> rows, we print <b>n</b> characters. Since we must output every single character, this is the theoretical limit of efficiency. It uses <b>O(1) Space</b> (beyond the output buffer).",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def staircase(n):\n    for i in range(1, n + 1):\n        spaces = \" \" * (n - i)\n        hashes = \"#\" * i\n        print(spaces + hashes)</pre>",
+        stepByStep: `<b>Input:</b> n = 4<br><br>
+<b>Building the Pattern:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px; font-family: monospace; white-space: pre;">
+    Row 1: "   #" (3 spaces, 1 hash)<br>
+    Row 2: "  ##" (2 spaces, 2 hashes)<br>
+    Row 3: " ###" (1 space, 3 hashes)<br>
+    Row 4: "####" (0 spaces, 4 hashes)
+</div>
+<b>Final Result:</b> A perfectly aligned staircase!`
     },
 ];
 

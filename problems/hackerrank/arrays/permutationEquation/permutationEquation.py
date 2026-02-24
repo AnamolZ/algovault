@@ -1,15 +1,23 @@
 
-def permutationEquation(a):
+def permutationEquation(p):
     """
-    Solves the permutation equation by finding the index of the index of each value.
+    Solves the permutation equation by finding the index y such that p(p(y)) == x for each x from 1 to n.
     
     Args:
-        a (list[int]): A list of n integers where each integer from 1 to n appears exactly once.
+        p (list[int]): A list of n integers where each integer from 1 to n appears exactly once.
         
     Returns:
         list[int]: A list of integers representing the values of y for each x from 1 to n.
     """
-    return [a.index(a.index(a.index(i) + 1) + 1) + 1 for i in a]
+    n = len(p)
+    result = []
+    for x in range(1, n + 1):
+        # Find index where p[i] == x
+        p_inv_x = p.index(x) + 1
+        # Find index where p[i] == p_inv_x
+        p_inv_p_inv_x = p.index(p_inv_x) + 1
+        result.append(p_inv_p_inv_x)
+    return result
 
 def main():
     """
