@@ -1223,6 +1223,7 @@ const algorithms = [
     <i>Step 3:</i> Calculation: 6 - 4 = <b>2</b>.
 </div>
 <b>Final Result:</b> 2 doses of potion needed!`
+    },
     {
         id: "queens-attack-2",
         title: "Queen's Attack II<br><a href='https://www.hackerrank.com/challenges/queens-attack-2/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
