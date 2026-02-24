@@ -1396,6 +1396,341 @@ const algorithms = [
 </div>
 <b>Final Result:</b> Lisa found 1 special problem so far!`
     },
+    {
+        id: "heap-sort",
+        title: "Heap Sort",
+        category: "Algorithms - Sorting",
+        problem: "Sorting a large list of numbers where you need a guaranteed O(N log N) performance regardless of the input data, unlike QuickSort which can occasionally hit a 'worst-case' slow point. You need an 'in-place' sort that doesn't use extra memory for a new list.",
+        solution: "The Heap Sort algorithm treats the array as a 'Binary Heap'—a special tree structure where every parent is larger than its children. First, we transform the messy array into a Max-Heap (a process called 'heapify'). Then, we repeatedly pluck the largest element (the root) and swap it with the last element of the unsorted section, shrinking the heap and building the sorted list from the back.",
+        optimality: "Heap Sort is a heavyweight champion of efficiency, delivering <b>O(N log N) Time complexity</b> in the Best, Average, AND Worst cases. Because it performs all operations directly within the original array, it uses <b>O(1) Space complexity</b>. While it might be slightly slower than QuickSort in random real-world data due to cache performance, its rock-solid guarantees make it ideal for systems where predictable performance is mission-critical.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def heapify(arr, n, i):\n    largest = i\n    l, r = 2*i + 1, 2*i + 2\n    if l < n and arr[l] > arr[largest]: largest = l\n    if r < n and arr[r] > arr[largest]: largest = r\n    if largest != i:\n        arr[i], arr[largest] = arr[largest], arr[i]\n        heapify(arr, n, largest)\n\ndef heapSort(arr):\n    n = len(arr)\n    for i in range(n // 2 - 1, -1, -1): heapify(arr, n, i)\n    for i in range(n-1, 0, -1):\n        arr[i], arr[0] = arr[0], arr[i]\n        heapify(arr, i, 0)\n    return arr</pre>",
+        stepByStep: `<b>Input array:</b> [4, 10, 3, 5, 1]<br><br>
+<b>Phase 1: Build the Max-Heap</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Action:</i> Rearrange array so parent > children.<br>
+    <i>Result:</i> [10, 5, 3, 4, 1]
+</div>
+<b>Phase 2: Sorting</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Step 1:</i> Swap root (10) with last (1). Result: [1, 5, 3, 4, 10]. Heapify unsorted part.<br>
+    <i>Step 2:</i> Largest in unsorted is 5. Swap with last in unsorted (4). Result: [4, 1, 3, 5, 10].<br>
+    <i>...Continue until sorted...</i>
+</div>
+<b>Final Result:</b> [1, 3, 4, 5, 10]`
+    },
+    {
+        id: "insertion-sort",
+        title: "Insertion Sort",
+        category: "Algorithms - Sorting",
+        problem: "Sorting a small or nearly sorted list of items, like arranging a hand of playing cards from smallest to largest as you receive them one by one.",
+        solution: "Insertion Sort works exactly like sorting a hand of cards! We start with one card and assume it's sorted. Then, for every new card we pick up, we compare it to the cards already in our hand, shifting them to the right until we find the perfect slot to 'insert' the new card. We repeat this until every card is in its proper place.",
+        optimality: "For small datasets or lists that are already 'mostly' sorted, Insertion Sort is incredibly fast, achieving <b>O(N) Time complexity</b> in the best case. However, for large, random lists, it slows down to <b>O(N²)</b>. Its main advantage is its extreme simplicity and the fact that it uses <b>O(1) Space</b>, making it a favorite for 'online' sorting where data arrives incrementally.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def insertionSort(arr):\n    for i in range(1, len(arr)):\n        key = arr[i]\n        j = i - 1\n        while j >= 0 and key < arr[j]:\n            arr[j + 1] = arr[j]\n            j -= 1\n        arr[j + 1] = key\n    return arr</pre>",
+        stepByStep: `<b>Input array:</b> [12, 11, 13, 5, 6]<br><br>
+<b>Walking through the hand:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Card 11:</i> Smaller than 12. Shift 12 right and insert 11. [11, 12, 13, 5, 6]<br>
+    <i>Card 13:</i> Larger than 12. Keep it. [11, 12, 13, 5, 6]<br>
+    <i>Card 5:</i> Smaller than 13, 12, 11. Shift all three right and insert 5 at front. [5, 11, 12, 13, 6]<br>
+    <i>Card 6:</i> Smaller than 13, 12, 11. Shift those three right and insert 6 after 5. [5, 6, 11, 12, 13]
+</div>
+<b>Final Result:</b> [5, 6, 11, 12, 13]`
+    },
+    {
+        id: "merge-sort",
+        title: "Merge Sort",
+        category: "Algorithms - Sorting",
+        problem: "Sorting massive datasets with absolute stability (meaning items with the same value stay in their original relative order). You need a reliable, parallelizable algorithm that handles data of any size consistently.",
+        solution: "Merge Sort follows the 'Divide and Conquer' philosophy. It recursively splits the list into halves until it's dealing with tiny, one-item lists (which are naturally sorted). Then, it 'merges' those tiny lists back together in the correct order. The magic happens in the merge step, where we compare the heads of two sorted lists and zip them into a single, perfectly ordered result.",
+        optimality: "Merge Sort is the gold standard for stability and scales perfectly with <b>O(N log N) Time complexity</b> across all scenarios. While it requires <b>O(N) Space</b> to create the temporary merged lists, its predictable performance and ease of parallelization (splitting work across multiple CPUs) make it the engine behind many industrial-strength sorting libraries.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def mergeSort(arr):\n    if len(arr) <= 1: return arr\n    mid = len(arr) // 2\n    L = mergeSort(arr[:mid])\n    R = mergeSort(arr[mid:])\n    \n    res, i, j = [], 0, 0\n    while i < len(L) and j < len(R):\n        if L[i] <= R[j]: res.append(L[i]); i += 1\n        else: res.append(R[j]); j += 1\n    return res + L[i:] + R[j:]</pre>",
+        stepByStep: `<b>Input array:</b> [38, 27, 43, 3]<br><br>
+<b>Phase 1: Divide</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    Split into [38, 27] and [43, 3].<br>
+    Split further into [38], [27], [43], [3].
+</div>
+<b>Phase 2: Conquer (Merge)</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    Merge [38] and [27] → [27, 38].<br>
+    Merge [43] and [3] → [3, 43].<br>
+    Merge [27, 38] and [3, 43] → [3, 27, 38, 43].
+</div>
+<b>Final Result:</b> [3, 27, 38, 43]`
+    },
+    {
+        id: "quick-sort",
+        title: "Quick Sort",
+        category: "Algorithms - Sorting",
+        problem: "Sorting large amounts of data as fast as humanly possible on average. You need an 'in-place' algorithm that uses CPU caches efficiently and outperforms most other sorting methods in the real world.",
+        solution: "Quick Sort picks a 'pivot' element and partitions the rest of the array into two piles: those smaller than the pivot and those larger. It then recursively applies the same logic to those piles. By the time the recursion finishes, the entire array is sorted! Its speed comes from the fact that it does very few unnecessary swaps and works entirely within the original memory space.",
+        optimality: "Quick Sort is legendary for its <b>O(N log N) Average-case Time complexity</b>, often beating Merge Sort and Heap Sort in practice due to lower low-level overhead. While it can theoretically hit <b>O(N²)</b> in extremely rare 'unbalanced' cases (solved by picking a random pivot), its <b>O(log N) Space complexity</b> (for the recursion stack) and sheer raw speed make it the default choice for most modern programming languages.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def quickSort(arr):\n    if len(arr) <= 1: return arr\n    pivot = arr[len(arr) // 2]\n    L = [x for x in arr if x < pivot]\n    M = [x for x in arr if x == pivot]\n    R = [x for x in arr if x > pivot]\n    return quickSort(L) + M + quickSort(R)</pre>",
+        stepByStep: `<b>Input array:</b> [10, 80, 30, 90, 40, 50, 70]<br><br>
+<b>Picking the Pivot:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Pivot chosen:</i> 90 (at index 3).<br>
+    <i>Partition:</i> [10, 80, 30, 40, 50, 70] | [90] | []<br>
+    <i>Recurse:</i> Sort the left side [10, 80, 30, 40, 50, 70].
+</div>
+<b>Final Result:</b> [10, 30, 40, 50, 70, 80, 90]`
+    },
+    {
+        id: "cavity-map",
+        title: "Cavity Map<br><a href='https://www.hackerrank.com/challenges/cavity-map/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Matrix",
+        problem: "Imagine you have a top-down map of a terrain, represented by a grid of numbers showing heights. You want to identify 'cavities'—special deep spots in the terrain. A spot is a cavity if it isn't on the edge of the map and its height is strictly greater than all four of its immediate neighbors (Up, Down, Left, and Right). Once found, you need to mark these spots with an 'X' to warn travelers!",
+        solution: "We solve this by scanning the inner portion of the grid (skipping the very first and last rows and columns). For every inner cell, we perform a 'Four-Way Check'. We compare the current height against the heights of the cells directly above, below, to the left, and to the right. If the central cell is 'The King of the Hill' (strictly greater than all four), we mark it as a cavity. We use a copy of the grid to store our 'X' marks so that we don't accidentally use an 'X' as a height value for the next check!",
+        optimality: "This 'Neighborhood Inspector' approach is perfectly optimal, running in <b>O(N²) Time complexity</b> where N is the side length of the square grid. Since we must examine almost every cell once, we cannot Mathematically solve this faster. It uses <b>O(N²) Space</b> to store the modified result grid, ensuring the original terrain data stays intact during the scan.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def cavityMap(grid):\n    n = len(grid)\n    res = [list(r) for r in grid]\n    for i in range(1, n-1):\n        for j in range(1, n-1):\n            v = grid[i][j]\n            if v > grid[i-1][j] and v > grid[i+1][j] and \\\n               v > grid[i][j-1] and v > grid[i][j+1]:\n                res[i][j] = 'X'\n    return [''.join(r) for r in res]</pre>",
+        stepByStep: `<b>Input Map:</b><br>
+1112<br>
+1912<br>
+1892<br>
+1234<br><br>
+<b>Scanning the Interior:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Spot (1,1) height 9:</i> Compare to 1, 1, 1, 8. All are smaller! Mark as <b>X</b>.<br>
+    <i>Spot (1,2) height 1:</i> Smaller than neighbors. Skip.<br>
+    <i>Spot (2,1) height 8:</i> Smaller than neighbors (9 is above). Skip.<br>
+    <i>Spot (2,2) height 9:</i> Compare to 1, 8, 3, 2. All are smaller! Mark as <b>X</b>.
+</div>
+<b>Final Warning Map:</b><br>
+1112<br>
+1X12<br>
+18X2<br>
+1234`
+    },
+    {
+        id: "factorial-recursion",
+        title: "Factorial (Recursion)",
+        category: "Concepts - Recursion",
+        problem: "Calculate the factorial of a number ($n!$). Factorial is the product of all positive integers from 1 to $n$. For example, $5! = 5 \times 4 \times 3 \times 2 \times 1 = 120$.",
+        solution: "Recursion is the perfect way to represent the 'Russian Doll' nature of factorials! We define $n!$ as $n \\times (n-1)!$. This means to find $5!$, we just need to know $4!$ and multiply it by 5. We keep breaking the problem down until we hit our 'Base Case': the factorial of 1 (or 0) is simply 1. Once we hit that bottom point, the recursion 'unwinds', multiplying all the numbers back up to our answer.",
+        optimality: "The recursive approach reflects the mathematical definition perfectly, achieving <b>O(N) Time complexity</b> since we perform one multiplication for each number from 1 to N. It uses <b>O(N) Space</b> on the 'Call Stack' to keep track of each pending multiplication. For standard numbers, this is incredibly clean and readable code.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def factorial(n):\n    if n <= 1: return 1\n    return n * factorial(n - 1)</pre>",
+        stepByStep: `<b>Input:</b> n = 4<br><br>
+<b>The Execution Stack:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Call 1:</i> factorial(4) → 4 * factorial(3)<br>
+    <i>Call 2:</i> factorial(3) → 3 * factorial(2)<br>
+    <i>Call 3:</i> factorial(2) → 2 * factorial(1)<br>
+    <i>Call 4 (Base):</i> factorial(1) → 1
+</div>
+<b>Unwinding:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    Return 1 to Call 3: 2 * 1 = 2<br>
+    Return 2 to Call 2: 3 * 2 = 6<br>
+    Return 6 to Call 1: 4 * 6 = <b>24</b>
+</div>
+<b>Final Result:</b> 24`
+    },
+    {
+        id: "gcd-recursion",
+        title: "Greatest Common Divisor",
+        category: "Concepts - Recursion",
+        problem: "Find the largest number that divides two integers perfectly without leaving a remainder. For example, the GCD of 48 and 18 is 6.",
+        solution: "We use the ancient and brilliant **Euclidean Algorithm** via recursion! The logic is simple: the GCD of two numbers (A and B) is the same as the GCD of B and the remainder of $A \\div B$. We keep 'swapping and modding' until the second number becomes 0. At that exact moment, the first number is our Greatest Common Divisor! It's like folding a piece of paper repeatedly until you find the largest square that fits perfectly.",
+        optimality: "The Euclidean algorithm is legendary for its efficiency, achieving <b>O(log(min(A, B))) Time complexity</b>—far faster than checking every possible divisor! It uses <b>O(log(min(A, B))) Space</b> for the recursion stack. It is the gold standard for GCD calculations in every modern computer system.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def gcd(a, b):\n    if b == 0: return a\n    return gcd(b, a % b)</pre>",
+        stepByStep: `<b>Input:</b> a = 48, b = 18<br><br>
+<b>The Euclidean Dance:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Round 1:</i> gcd(48, 18). Remainder (48%18) is 12.<br>
+    <i>Round 2:</i> gcd(18, 12). Remainder (18%12) is 6.<br>
+    <i>Round 3:</i> gcd(12, 6). Remainder (12%6) is 0.<br>
+    <i>Round 4:</i> gcd(6, 0). <b>Base Case reached!</b>
+</div>
+<b>Final Result:</b> 6`
+    },
+    {
+        id: "power-compute-recursion",
+        title: "Fast Exponentiation",
+        category: "Concepts - Recursion",
+        problem: "Calculate $X^N$ (X raised to the power of N) efficiently. While you could just multiply X by itself N times, a computer can do it much faster for large exponents!",
+        solution: "We use the 'Divide and Conquer' trick called **Exponentiation by Squaring**. Instead of calculating $2^8$ as $2 \\times 2 \\times 2...$, we realize that $2^8 = (2^4)^2$. And $2^4 = (2^2)^2$. By splitting the exponent in half at every step, we drastically reduce the work! If the exponent is odd (like $2^9$), we just calculate $(2^4)^2 \\times 2$. This recursive approach cuts the number of operations down significantly.",
+        optimality: "This optimized recursion achieves <b>O(log N) Time complexity</b>, which is a massive leap over the simple O(N) loop! While a standard loop might take a million steps for $2^{1000000}$, this method only takes about 20 steps. It uses <b>O(log N) Space</b> for the call stack, making it the fastest way to handle large powers in cryptography and higher math.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def power(x, n):\n    if n == 0: return 1\n    half = power(x, n // 2)\n    if n % 2 == 0: return half * half\n    return x * half * half</pre>",
+        stepByStep: `<b>Input:</b> 2^5<br><br>
+<b>Divide and Conquer:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Step 1:</i> Need 2^2 to find 2^5.<br>
+    <i>Step 2:</i> Need 2^1 to find 2^2.<br>
+    <i>Step 3:</i> Need 2^0 (is 1).<br>
+    <i>Recursive Climb:</i> <br>
+    2^1 = 2 * (1*1) = 2<br>
+    2^2 = (2*2) = 4<br>
+    2^5 = 2 * (4*4) = <b>32</b>
+</div>
+<b>Final Result:</b> 32`
+    },
+    {
+        id: "sum-of-digits-recursion",
+        title: "Sum of Digits",
+        category: "Concepts - Recursion",
+        problem: "Calculate the sum of all digits in a number. For example, if the input is 234, the answer should be $2 + 3 + 4 = 9$.",
+        solution: "We use recursion to peel the number like an onion, one digit at a time! We take the last digit (using `number % 10`) and add it to the 'Sum of Digits' of whatever is left (using `number // 10`). We keep doing this until there are no digits left (the number becomes 0). The recursion then adds all the 'peeled' digits together as it returns.",
+        optimality: "This approach is perfectly efficient with <b>O(D) Time complexity</b>, where D is the number of digits. Since we must look at every digit once, it's impossible to go faster. It uses <b>O(D) Space</b> for the recursion stack. It's a fundamental example of how recursion can break down numerical data structures.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def sumDigits(n):\n    if n == 0: return 0\n    return (n % 10) + sumDigits(n // 10)</pre>",
+        stepByStep: `<b>Input:</b> 234<br><br>
+<b>Peeling the Onion:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Call 1:</i> 4 + sumDigits(23)<br>
+    <i>Call 2:</i> 3 + sumDigits(2)<br>
+    <i>Call 3:</i> 2 + sumDigits(0)<br>
+    <i>Base:</i> 0
+</div>
+<b>Recombining:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    2 + 0 = 2<br>
+    3 + 2 = 5<br>
+    4 + 5 = <b>9</b>
+</div>
+<b>Final Result:</b> 9`
+    },
+    {
+        id: "is-palindrome-recursion",
+        title: "Palindrome Check",
+        category: "Concepts - Recursion",
+        problem: "Determine if a word or phrase is a 'Palindrome'—meaning it reads exactly the same forwards and backwards (like 'level' or 'racecar').",
+        solution: "Recursion allows us to check symmetry from the 'outside-in'! We check if the first and last letters match. If they don't, it's definitely not a palindrome. If they DO match, we strip them off and recursively ask the same question about the inner part of the word. We stop when we are left with 0 or 1 letters (which are always symmetrical). It's like checking the layers of a mirrored reflection.",
+        optimality: "The recursive checker runs in <b>O(N) Time complexity</b>, where N is the length of the string. We only ever look at each pair of characters once. It uses <b>O(N) Space</b> for the recursion stack and substring creation. It's the most intuitive way to express the recursive symmetry of palindromic structures.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def isPalindrome(s):\n    if len(s) <= 1: return True\n    return s[0] == s[-1] and isPalindrome(s[1:-1])</pre>",
+        stepByStep: `<b>Input:</b> "racecar"<br><br>
+<b>Symmetry Inspection:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Check 1:</i> 'r' == 'r'? Yes. Check "aceca".<br>
+    <i>Check 2:</i> 'a' == 'a'? Yes. Check "cec".<br>
+    <i>Check 3:</i> 'c' == 'c'? Yes. Check "e".<br>
+    <i>Base Case:</i> "e" is length 1. <b>TRUE!</b>
+</div>
+<b>Final Result:</b> "racecar" is a palindrome.`
+    },
+    {
+        id: "reverse-string-recursion",
+        title: "Reverse String",
+        category: "Concepts - Recursion",
+        problem: "Take a word and flip it completely backwards using recursion. 'apple' becomes 'elppa'.",
+        solution: "Similar to the sum of digits, we 'peel' the word! We take the very first character and move it to the *end* of the reversed version of 'everything else'. So, `reverse('apple')` is just `reverse('pple') + 'a'`. This chain of logic continues until we hit the last letter. As the recursion 'unwinds', it glues the letters back together in the opposite order.",
+        optimality: "This elegant logic achieves <b>O(N) Time complexity</b> because we process each character once. It uses <b>O(N) Space</b> to store the stack of characters and the resulting substrings. It's a classic demonstration of how recursive thinking can transform a sequence.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def reverse(s):\n    if len(s) <= 1: return s\n    return reverse(s[1:]) + s[0]</pre>",
+        stepByStep: `<b>Input:</b> "cat"<br><br>
+<b>The Reversal Chain:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Step 1:</i> reverse("at") + "c"<br>
+    <i>Step 2:</i> reverse("t") + "a"<br>
+    <i>Base:</i> "t"
+</div>
+<b>The Snap-Back:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    "t" + "a" = "ta"<br>
+    "ta" + "c" = <b>"tac"</b>
+</div>
+<b>Final Result:</b> "tac"`
+    },
+    {
+        id: "string-subsequences-recursion",
+        title: "String Subsequences",
+        category: "Concepts - Recursion",
+        problem: "Find every single possible 'Subsequence' of a string. A subsequence is a new string formed by deleting zero or more characters from the original string. For 'abc', the subsequences include 'a', 'ab', 'ac', 'bc', etc.",
+        solution: "We solve this using a 'Choice Tree' recursion! For every character in the string, we have two simple choices: 'Include it' OR 'Exclude it'. We branch the recursion for both choices. By the time we reach the end of the string, every unique path through these choices represents one possible subsequence. This exhaustive search ensures we don't miss a single one!",
+        optimality: "Because every character has 2 choices, there are $2^N$ possible subsequences. This means the algorithm runs in <b>O(2^N) Time complexity</b>. While this grows very fast for long strings, it is the mathematically required time to find every unique combination. It uses <b>O(N) Space</b> for the recursion depth.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def subsets(s, current=\"\", res=[]):\n    if not s: \n        res.append(current)\n        return\n    # Choice 1: Include s[0]\n    subsets(s[1:], current + s[0], res)\n    # Choice 2: Exclude s[0]\n    subsets(s[1:], current, res)</pre>",
+        stepByStep: `<b>Input:</b> "ab"<br><br>
+<b>The Choice Tree:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Root:</i> Start with ""<br>
+    <i>Lvl 1 (a):</i> Choose 'a' → "a" | Skip 'a' → ""<br>
+    <i>Lvl 2 (b):</i> From "a" choose 'b' → "ab" | From "a" skip 'b' → "a"<br>
+    <i>Lvl 2 (b):</i> From "" choose 'b' → "b" | From "" skip 'b' → ""
+</div>
+<b>Final Result:</b> ["ab", "a", "b", ""]`
+    },
+    {
+        id: "sum-of-natural-numbers-recursion",
+        title: "Natural Number Sum",
+        category: "Concepts - Recursion",
+        problem: "Calculate the sum of all positive integers from 1 up to N. For example, if N is 5, the sum is $1+2+3+4+5=15$.",
+        solution: "We define the sum of N numbers as $N + (Sum of N-1)$. This recursive definition allows us to stack the numbers one on top of the other until we hit the base case of 0. Then, we add all the stacked numbers as we return. It's the numerical equivalent of building a tower of blocks and then counting them as you take them down.",
+        optimality: "This approach runs in <b>O(N) Time complexity</b> and <b>O(N) Space</b>. While the mathematical formula $(N(N+1))/2$ is even faster (O(1)), this recursive method is a perfect 'Hello World' for understanding how state is maintained across function calls.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def sumNatural(n):\n    if n == 0: return 0\n    return n + sumNatural(n - 1)</pre>",
+        stepByStep: `<b>Input:</b> n = 3<br><br>
+<b>Building the Stack:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    3 + sum(2)<br>
+    2 + sum(1)<br>
+    1 + sum(0)<br>
+    Base: 0
+</div>
+<b>Collapsing the Stack:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    1 + 0 = 1<br>
+    2 + 1 = 3<br>
+    3 + 3 = <b>6</b>
+</div>
+<b>Final Result:</b> 6`
+    },
+    {
+        id: "count-digits-recursion",
+        title: "Digit Counter",
+        category: "Concepts - Recursion",
+        problem: "Count exactly how many digits are in a number using recursion. For 12345, the answer is 5.",
+        solution: "We use a 'Chop and Count' strategy! Every time we call the function, we chop off the last digit (using `// 10`) and add 1 to our count. We keep chopping until the number hits 0. The total number of 'chops' we made is exactly the number of digits in the original number.",
+        optimality: "This is a flawlessly efficient <b>O(D) Time complexity</b> solution, where D is the number of digits. It uses <b>O(D) Space</b> for the recursion stack. It's the standard recursive way to measure the size of a decimal integer.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def countDigits(n):\n    if n < 10: return 1\n    return 1 + countDigits(n // 10)</pre>",
+        stepByStep: `<b>Input:</b> 543<br><br>
+<b>Chopping Away:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Call 1:</i> count(543) → 1 + count(54)<br>
+    <i>Call 2:</i> count(54) → 1 + count(5)<br>
+    <i>Base:</i> count(5) → 1
+</div>
+<b>Tallying:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    1 + 1 + 1 = <b>3</b>
+</div>
+<b>Final Result:</b> 3 digits.`
+    },
+    {
+        id: "print-n-to-1-recursion",
+        title: "Print N to 1",
+        category: "Concepts - Recursion",
+        problem: "Print a sequence of numbers from N down to 1 using recursion without using any loops.",
+        solution: "In recursion, order is everything! To print descending, we print the current number <i>before</i> we pass the torch to the next recursive call. This ensures that the biggest number is dealt with first, followed by N-1, and so on, until we hit the base case.",
+        optimality: "This approach runs in <b>O(N) Time complexity</b> as each number is printed exactly once. It uses <b>O(N) Space</b> for the recursion stack. It's the perfect way to understand the 'Forward' phase of a recursive process.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def printNto1(n):\n    if n <= 0: return\n    print(n)\n    printNto1(n - 1)</pre>",
+        stepByStep: `<b>Input:</b> n = 3<br><br>
+<b>Printing Order:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Current n is 3:</i> Print 3. Recurse(2).<br>
+    <i>Current n is 2:</i> Print 2. Recurse(1).<br>
+    <i>Current n is 1:</i> Print 1. Recurse(0).<br>
+    <i>Base Case:</i> Stop.
+</div>
+<b>Final Output:</b> 3, 2, 1`
+    },
+    {
+        id: "print-1-to-n-recursion",
+        title: "Print 1 to N",
+        category: "Concepts - Recursion",
+        problem: "Print a sequence of numbers from 1 up to N using recursion without using any loops.",
+        solution: "To print ascending, we use the 'Snap-Back' property of the call stack! We make the recursive call first, which keeps diving deeper until it hits 0. Only then, as the calls finish and 'pop' off the stack in reverse order, do we actually print the number. It's like leaving a trail of breadcrumbs and only picking them up on the way back out of the forest!",
+        optimality: "This approach runs in <b>O(N) Time complexity</b> and <b>O(N) Space</b>. It is a brilliant example of how 'Deferred Execution' works in recursive programming.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def print1toN(n):\n    if n <= 0: return\n    print1toN(n - 1)\n    print(n)</pre>",
+        stepByStep: `<b>Input:</b> n = 3<br><br>
+<b>The Depth Dive:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    Call(3) → Call(2) → Call(1) → Base(0).<br>
+    (Nothing has been printed yet!)
+</div>
+<b>The Return Trip:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Back in Call(1):</i> Print 1.<br>
+    <i>Back in Call(2):</i> Print 2.<br>
+    <i>Back in Call(3):</i> Print 3.
+</div>
+<b>Final Output:</b> 1, 2, 3`
+    }
 ];
 
 function initSite() {
