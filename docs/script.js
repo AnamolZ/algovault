@@ -1296,6 +1296,72 @@ const algorithms = [
 </div>
 <b>Final Result:</b> A perfectly aligned staircase!`
     },
+    {
+        id: "taum-bday",
+        title: "Taum and B'day<br><a href='https://www.hackerrank.com/challenges/taum-and-bday/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Simulation",
+        problem: "Taum wants to buy gifts for Diksha! He needs <b>B</b> black gifts and <b>W</b> white gifts. The local shop sells black gifts for <b>bc</b> and white gifts for <b>wc</b>. However, they also offer a 'conversion' service: for a fee <b>z</b>, they can turn any black gift into a white one, or vice versa. Taum is on a budget—help him find the absolute minimum he needs to spend.",
+        solution: "We solve this by comparing the direct price of each gift against the 'conversion' alternative. <br>• For a **black gift**: Is it cheaper to buy it for <b>bc</b>, or buy a white one for <b>wc</b> and convert it for <b>z</b>? <br>• For a **white gift**: Is it cheaper to buy it for <b>wc</b>, or buy a black one for <b>bc</b> and convert it for <b>z</b>? <br><br>We calculate these two optimized prices, multiply them by the required counts, and add them together!",
+        optimality: "This 'Economic Choice' approach is perfectly optimal, running in <b>O(1) Constant Time</b>. We perform exactly two comparisons and one addition regardless of how many billions of gifts Taum needs to buy. It uses <b>O(1) Space</b>.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def taumBday(b, w, bc, wc, z):\n    # Decide the best price for each color\n    best_bc = min(bc, wc + z)\n    best_wc = min(wc, bc + z)\n    \n    return (b * best_bc) + (w * best_wc)</pre>",
+        stepByStep: `<b>Input:</b> B=3, W=5, bc=3, wc=4, z=1<br><br>
+<b>Checking the Market:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Black Gift:</i> Buy direct (3) or buy white+convert (4+1=5). Best: <b>3</b>.<br>
+    <i>White Gift:</i> Buy direct (4) or buy black+convert (3+1=4). Best: <b>4</b>.<br>
+    <i>Wait!</i> In this case, direct is best for both.
+</div>
+<b>Final Result:</b> (3*3) + (5*4) = 9 + 20 = <b>29</b>`
+    },
+    {
+        id: "time-conversion",
+        title: "Time Conversion<br><a href='https://www.hackerrank.com/challenges/time-conversion/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Simulation",
+        problem: "You are given a time string in the 12-hour AM/PM format (e.g., 07:05:45PM). Your mission is to convert it into the 24-hour military format (19:05:45). Accuracy is critical, especially around the tricky 12:00 mark where the rules for AM and PM are quite different!",
+        solution: "We solve this by splitting the string and inspecting the 'AM/PM' suffix. <br>• **If PM**: If the hour is 12, it stays 12. If it's anything else (1-11), we add 12 to convert it to the range 13-23. <br>• **If AM**: If the hour is 12 (midnight), we change it to '00'. If it's anything else, we keep it exactly as is. <br><br>Finally, we strip the suffix and join the parts back together with colons.",
+        optimality: "This 'String Parser' strategy is perfectly optimal, running in <b>O(1) Constant Time</b> because time strings are always a fixed length (10 characters). It uses <b>O(1) Space</b> to store the temporary string parts.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def timeConversion(s):\n    period = s[-2:]\n    hh, mm, ss = s[:-2].split(':')\n    \n    if period == 'PM':\n        if hh != '12':\n            hh = str(int(hh) + 12)\n    else: # AM\n        if hh == '12':\n            hh = '00'\n            \n    return f\"{hh}:{mm}:{ss}\"</pre>",
+        stepByStep: `<b>Input:</b> "12:01:00AM"<br><br>
+<b>Converting to Military:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Step 1:</i> Suffix is 'AM'.<br>
+    <i>Step 2:</i> Hour is '12'. Since it's AM, '12' becomes '00'.<br>
+    <i>Step 3:</i> Minutes '01' and Seconds '00' stay the same.
+</div>
+<b>Final Result:</b> "00:01:00"`
+    },
+    {
+        id: "utopian-tree",
+        title: "Utopian Tree<br><a href='https://www.hackerrank.com/challenges/utopian-tree/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Simulation",
+        problem: "A Utopian Tree goes through two very different growth cycles every year! In the Spring, its height doubles ($x2$). In the Summer, its height increases by 1 meter ($+1$). If the tree starts at 1 meter tall at the beginning of Spring, what will its height be after <b>n</b> growth cycles?",
+        solution: "We can solve this by literally simulating the tree's life! We start with a height of 1 and loop from cycle 1 to <b>n</b>. If the cycle number is odd (Spring), we double the height. If it's even (Summer), we add 1. <br><br>While simulation is intuitive, there's also a secret 'Mathematical Secret': the height after <b>n</b> cycles can be found directly using powers of 2 (e.g., $2^{(ceil(n/2)+1)} - (n \\% 2 + 1)$ logic). But for a small number of cycles, simulation is perfectly clear!",
+        optimality: "This 'Life Cycle Simulation' runs in <b>O(N) Time complexity</b>, where N is the number of cycles. Since N is typically small (up to 60), the computer finishes this in less than a microsecond. It uses <b>O(1) Space</b> to store the height variable.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def utopianTree(n):\n    height = 1\n    for i in range(1, n + 1):\n        if i % 2 == 1:\n            height *= 2\n        else:\n            height += 1\n    return height</pre>",
+        stepByStep: `<b>Input:</b> 4 cycles<br><br>
+<b>Seasons in Order:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Start:</i> Height = 1<br>
+    <i>Cycle 1 (Spring):</i> 1 * 2 = 2<br>
+    <i>Cycle 2 (Summer):</i> 2 + 1 = 3<br>
+    <i>Cycle 3 (Spring):</i> 3 * 2 = 6<br>
+    <i>Cycle 4 (Summer):</i> 6 + 1 = 7
+</div>
+<b>Final Result:</b> 7 meters`
+    },
+    {
+        id: "valid-regex",
+        title: "Valid Regex<br><a href='https://www.hackerrank.com/challenges/incorrect-regex/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Simulation",
+        problem: "You are given several strings, and you need to determine if each one is a valid 'Regular Expression' (Regex). A regex is valid if a program (like a search engine or language compiler) can actually use it to find patterns without crashing or throwing an error due to bad notation.",
+        solution: "The most reliable way to check validity is to 'Try it out'! We take the input string and attempt to compile it using the language's built-in Regex library (like `re.compile` in Python). We wrap this call in a **Try-Except** block: <br>• If it compiles successfully, the string is a valid regex. <br>• If the library throws an error (indicating bad syntax like unclosed brackets or mismatched operators), we catch the error and mark the string as invalid.",
+        optimality: "This 'Library Validation' approach is optimal, running in <b>O(L) Time complexity</b> where L is the length of the string, as the internal compiler must scan the entire string. Using the built-in library is best because it guarantees your answer matches exactly how the computer would actually behave. it uses <b>O(L) Space</b> for the compiled object.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>import re\ndef isValid(pattern):\n    try:\n        re.compile(pattern)\n        return True\n    except re.error:\n        return False</pre>",
+        stepByStep: `<b>Test Case 1:</b> ".*\+"<br>
+<b>Validation:</b> Attempting to compile... Success! <b>Valid</b>.<br><br>
+<b>Test Case 2:</b> ".*++"<br>
+<b>Validation:</b> Attempting to compile... Error! (Consecutive quantifiers). <b>Invalid</b>.`
+    },
 ];
 
 function initSite() {
