@@ -298,152 +298,135 @@ const algorithms = [
         id: "picking-numbers",
         title: "Picking Numbers<br><a href='https://www.hackerrank.com/challenges/picking-numbers/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Arrays",
-        problem: "You are given a big array of numbers, and your task is to play a 'picking' game. You want to pick out as many numbers as possible to form a brand new group. But there is a strict rule: **No two numbers in your new group can have a difference greater than 1!**<br><br>This means your new group can only contain identical numbers, or numbers that are exactly 1 step apart (like a mix of 4s and 5s). You can't have 4s, 5s, AND 6s, because 6 - 4 = 2, which breaks the rule! What is the record for the maximum amount of numbers you can pick that perfectly obey this rule?",
-        solution: "Instead of trying to pull combinations of numbers out of the array, we can solve this with a genius counting trick! We know the rule stringently limits us to two adjacent numbers (like 4s and 5s). We also know from the problem constraints that the numbers will never be bigger than 100.<br><br>So, we instantly create an array of 101 empty buckets! We loop through our numbers one time and drop them into their matching buckets. If we see a 4, we drop a tally in Bucket 4!<br><br>Once all the tallies are placed, finding the biggest group is incredibly easy! We just slide a two-bucket window across our buckets. We look at Bucket 1 + Bucket 2. Then Bucket 2 + Bucket 3. Then Bucket 3 + Bucket 4! The absolute highest combined total of any two adjacent buckets is mathematically guaranteed to be our answer!",
-        optimality: "This 'Frequency Array' trick is a legendary optimization technique! It completely destroys sorting or nested loops, resolving the problem in brutal <b>O(N) Time complexity</b> to tally up the numbers, followed by an instant O(K) pass over the 100 buckets. Because the max number size is completely locked to 100 by the problem rules, the memory requirement is a staggeringly tiny <b>O(1) Space</b> to hold precisely 101 integer tallies!",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def pickingNumbers(a):\n    frequency = [0] * 101\n    for x in a:\n        frequency[x] += 1\n    \n    max_count = 0\n    for i in range(1, 101):\n        max_count = max(max_count, frequency[i] + frequency[i - 1])\n        \n    return max_count</pre>",
-        stepByStep: `<b>Input Array:</b> [4, 6, 5, 3, 3, 1]<br>
-<b>Phase 1: Fill the 100 Buckets!</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Bucket 1:</i> 1 item.<br>
-    <i>Bucket 2:</i> 0 items.<br>
-    <i>Bucket 3:</i> 2 items.<br>
-    <i>Bucket 4:</i> 1 item.<br>
-    <i>Bucket 5:</i> 1 item.<br>
-    <i>Bucket 6:</i> 1 item.
+        problem: "<b>Core Objective:</b> Find the maximum length of a subset where the absolute difference between any two elements is $\leq 1$.<br><br><b>Mathematical Constraint:</b> This rule implies the subset can only contain at most two distinct integers, $\{n, n+1\}$, for any $n$.",
+        solution: "<b>Algorithmic Strategy (Frequency Bucketing):</b><br>Rather than evaluating combinations, the problem is solved by analyzing the <b>Frequency Distribution</b> of the input. <br><br>1. <b>Histogram Construction:</b> Iterate through the array and populate a frequency array (or hash map) representing counts for each integer encountered.<br>2. <b>Sliding Pairwise Summation:</b> The magnitude of the largest valid subset is the maximum value of $Frequency(i) + Frequency(i-1)$ across all valid integers $i$.<br>3. <b>Deterministic Pass:</b> A single pass through the frequency buckets yields the result in linear time.",
+        optimality: "<b>Efficiency Metrics:</b><br>• <b>Time:</b> O(N). Building the frequency map is O(N), followed by a constant-time O(K) pass where $K \leq 100$.<br>• <b>Space:</b> O(1). Since the range of input values is strictly bounded at 100, the auxiliary storage remains constant regardless of array size $N$.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def pickingNumbers(a):\n    frequency = [0] * 101\n    for x in a:\n        frequency[x] += 1\n    \n    max_len = 0\n    # Adjacent bucket summation\n    for i in range(1, 101):\n        max_len = max(max_len, frequency[i] + frequency[i-1])\n    return max_len</pre>",
+        stepByStep: `<b>Algorithmic Trace:</b><br>
+<b>Input:</b> [1, 1, 2, 2, 4, 4, 5, 5, 5]<br><br>
+<b>Execution Phases:</b>
+<div style="padding-left: 20px; border-left: 2px solid #34c759; margin-left: 10px; margin-bottom: 10px;">
+    <i>Histogram:</i> {1:2, 2:2, 4:2, 5:3}.<br>
+    <i>Pair [1,2]:</i> Sum = 2 + 2 = 4.<br>
+    <i>Pair [2,3]:</i> Sum = 2 + 0 = 2.<br>
+    <i>Pair [4,5]:</i> Sum = 2 + 3 = <b>5</b>.
 </div>
-<b>Phase 2: Slide the Two-Bucket Window!</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Mix 1s and 2s:</i> 1 + 0 = 1.<br>
-    <i>Mix 2s and 3s:</i> 0 + 2 = 2.<br>
-    <i>Mix 3s and 4s:</i> 2 + 1 = <b>3</b>. (This is a group of two 3s and one 4. They obey the rule!)<br>
-    <i>Mix 4s and 5s:</i> 1 + 1 = 2.<br>
-    <i>Mix 5s and 6s:</i> 1 + 1 = 2.
-</div>
-<b>Final Printed Answer:</b> The highest adjacent sum we found was <b>3</b>.`
+<b>Max Subset Length:</b> 5`
     },
     {
         id: "plus-minus",
         title: "Plus Minus<br><a href='https://www.hackerrank.com/challenges/plus-minus/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Arrays",
-        problem: "Imagine you have a bag of numbers containing positive integers, negative integers, and zeros. Your task is to reach into the bag and find out exactly what proportion of the numbers fall into each of these three categories!<br><br>For example, if you have 6 numbers and 3 of them are positive, the 'positive ratio' is 3 out of 6, or 0.500000. You need to calculate the ratios for all three types (Positives, Negatives, and Zeros) and print them out clearly.",
-        solution: "To solve this, we just need to do a single sweep through our list of numbers! We keep three separate counters (like three tally marks) in our head: one for positives, one for negatives, and one for zeros. <br><br>As we look at each number, we check its sign and add 1 to the correct tally. Once we've looked at every single number, we simply divide each total tally by the total number of items we counted. The magic is in the formatting—we make sure to display the answer with exactly 6 decimal places to satisfy the picky math requirements!",
-        optimality: "This is the most efficient way possible to solve the problem, running in <b>O(N) Time complexity</b>. Since we have to look at every number at least once to know its sign, we can't go faster than O(N). We also use <b>O(1) Space</b> because we only ever keep three small counter variables, regardless of whether the bag has 10 numbers or 10 million numbers!",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def plusMinus(arr):\n    n = len(arr)\n    positive = 0\n    negative = 0\n    zero = 0\n    \n    for x in arr:\n        if x > 0:\n            positive += 1\n        elif x < 0:\n            negative += 1\n        else:\n            zero += 1\n            \n    print(f\"{positive/n:.6f}\")\n    print(f\"{negative/n:.6f}\")\n    print(f\"{zero/n:.6f}\")</pre>",
-        stepByStep: `<b>Input Array:</b> [-4, 3, -9, 0, 4, 1] (Total 6 numbers)<br><br>
-<b>Phase 1: Tallying the Numbers</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Check -4:</i> Negative! (Neg: 1, Pos: 0, Zero: 0)<br>
-    <i>Check 3:</i> Positive! (Neg: 1, Pos: 1, Zero: 0)<br>
-    <i>Check -9:</i> Negative! (Neg: 2, Pos: 1, Zero: 0)<br>
-    <i>Check 0:</i> Zero! (Neg: 2, Pos: 1, Zero: 1)<br>
-    <i>Check 4:</i> Positive! (Neg: 2, Pos: 2, Zero: 1)<br>
-    <i>Check 1:</i> Positive! (Neg: 2, Pos: 3, Zero: 1)
+        problem: "<b>Core Objective:</b> Calculate the fractional distribution of positive elements, negative elements, and zeros within a given integer vector.<br><br><b>Precision Requirement:</b> Results must be formatted as decimal strings with exactly six decimal places of precision.",
+        solution: "<b>Algorithmic Strategy (Linear Classification):</b><br>The solution utilizes <b>Conditional Categorization</b> to partition the dataset in a single pass.<br><br>1. <b>Iterative Evaluation:</b> Traverse the array, incrementing one of three counters (pos, neg, zero) based on the scalar value of each element.<br>2. <b>Normalization:</b> Divide each accumulator by the total element count $N$ to derive the categorical density.<br>3. <b>Formatted Output:</b> Apply fixed-point arithmetic or string formatting to ensure the required decimal precision.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N). A single linear sweep is mathematically required to inspect every element.<br>• <b>Space:</b> O(1). Regardless of input magnitude, only three integer counters and the input length are stored.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def plusMinus(arr):\n    n = len(arr)\n    p, m, z = 0, 0, 0\n    for x in arr:\n        if x > 0: p += 1\n        elif x < 0: m += 1\n        else: z += 1\n    \n    print(f\"{p/n:.6f}\\n{m/n:.6f}\\n{z/n:.6f}\")</pre>",
+        stepByStep: `<b>Computational Trace:</b><br>
+<b>Input:</b> [-1, -1, 0, 1, 1] (N=5)<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 20px solid #afafaf; margin-left: 10px; margin-bottom: 10px;">
+    <i>Classification:</i> 2 Positives, 2 Negatives, 1 Zero.<br>
+    <i>Positive Ratio:</i> 2/5 = 0.400000.<br>
+    <i>Negative Ratio:</i> 2/5 = 0.400000.<br>
+    <i>Zero Ratio:</i> 1/5 = 0.200000.
 </div>
-<b>Phase 2: Calculating Ratios</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Positive Ratio:</i> 3 / 6 = <b>0.500000</b><br>
-    <i>Negative Ratio:</i> 2 / 6 = <b>0.333333</b><br>
-    <i>Zero Ratio:</i> 1 / 6 = <b>0.166667</b>
-</div>
-<b>Final Result:</b> Each ratio is printed on its own line.`
+<b>Output stream successfully generated.</b>`
     },
     {
         id: "simple-array-sum",
         title: "Simple Array Sum<br><a href='https://www.hackerrank.com/challenges/simple-array-sum/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Arrays",
-        problem: "Imagine you have a list of numbers—maybe they are receipts, scores, or measurements—and you simply want to know the grand total. Your task is to add every single number in the list together to find the final sum!",
-        solution: "To find the sum, we use a simple 'accumulator' strategy. We start with a total of 0. Then, we walk through the list one by one, picking up each number and adding it to our running total. By the time we reach the end of the list, our accumulator holds the sum of every number we encountered!",
-        optimality: "This is the perfectly optimal way to sum a list, running in <b>O(N) Time complexity</b>. Because we must visit every number at least once to know its value, we cannot mathematically solve this faster than O(N). It uses <b>O(1) Space</b> because we only need one variable to store the running total, no matter how many millions of numbers are in the list.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def simpleArraySum(ar):\n    total = 0\n    for x in ar:\n        total += x\n    return total</pre>",
-        stepByStep: `<b>Input Array:</b> [1, 2, 3, 4, 10, 11]<br><br>
-<b>Walking through the list:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Start:</i> Total = 0<br>
-    <i>Add 1:</i> Total = 1<br>
-    <i>Add 2:</i> Total = 3<br>
-    <i>Add 3:</i> Total = 6<br>
-    <i>Add 4:</i> Total = 10<br>
-    <i>Add 10:</i> Total = 20<br>
-    <i>Add 11:</i> Total = 31
+        problem: "<b>Core Objective:</b> Calculate the arithmetic sum of all integer elements within a given linear array.",
+        solution: "<b>Algorithmic Strategy (Accumulation):</b><br>This utilizes the <b>Cumulative Summation</b> pattern, a foundational primitive in computer science.<br><br>1. <b>State Initialization:</b> Define a scalar accumulator variable (e.g., <code>total</code>) initialized to zero.<br>2. <b>Linear Iteration:</b> Traverse the array sequentially. At each element, perform a scalar addition to the accumulator.<br>3. <b>Terminal Return:</b> After the final element is processed, the accumulator contains the global sum.",
+        optimality: "<b>Complexity Profile:</b><br>• <b>Time:</b> O(N). Linear time is strictly required as every element must be visited at least once to determine its value.<br>• <b>Space:</b> O(1). The solution requires only one auxiliary variable, regardless of the size of the input dataset.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def simpleArraySum(ar):\n    accumulator = 0\n    for element in ar:\n        accumulator += element\n    return accumulator</pre>",
+        stepByStep: `<b>Computational Trace:</b><br>
+<b>Input:</b> [1, 2, 3, 4]<br><br>
+<b>Iteration Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ffcc00; margin-left: 10px; margin-bottom: 10px;">
+    <i>Index 0:</i> Sum = 0 + 1 = 1.<br>
+    <i>Index 1:</i> Sum = 1 + 2 = 3.<br>
+    <i>Index 2:</i> Sum = 3 + 3 = 6.<br>
+    <i>Index 3:</i> Sum = 6 + 4 = 10.
 </div>
-<b>Final Answer:</b> 31`
+<b>Final Result:</b> 10`
     },
     {
         id: "sock-merchant",
         title: "Sales by Match<br><a href='https://www.hackerrank.com/challenges/sock-merchant/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Arrays",
-        problem: "Imagine you are doing laundry and you have a giant pile of socks of various colors. Your goal is to find all the matching pairs! <br><br>Each sock has a color ID number. For every two socks that have the same color ID, you have found one matching pair. How many total matching pairs can you pull out of the pile?",
-        solution: "To solve this like a human would, we walk through the pile and pick up socks one at a time. We keep a 'waiting table' (a **Set**) where we put socks that are currently single. <br><br>When we pick up a new sock, we check the table: 'Do I already have a sock of this color waiting?' If yes, we've found a pair! We increment our tally and remove the partner from the table. If no, we simply place the new sock on the table to wait for its match. By the time the pile is empty, we know exactly how many pairs we found!",
-        optimality: "This 'Single Pass Matcher' strategy is perfectly efficient, operating in <b>O(N) Time complexity</b> because we only look at each sock exactly once. It uses <b>O(N) Space</b> in the worst case (if every single sock in the pile is a different color), though in reality, the space used is only as large as the number of unique colors currently waiting for a match.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def sockMerchant(ar):\n    unpaired_socks = set()\n    pairs = 0\n\n    for color in ar:\n        if color in unpaired_socks:\n            pairs += 1\n            unpaired_socks.discard(color)\n        else:\n            unpaired_socks.add(color)\n            \n    return pairs</pre>",
-        stepByStep: `<b>Input Pile:</b> [10, 20, 20, 10, 10, 30, 50, 10, 20]<br><br>
-<b>Sorting the Pile:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Pick 10:</i> No partner on table. Table: {10}. Pairs: 0<br>
-    <i>Pick 20:</i> No partner on table. Table: {10, 20}. Pairs: 0<br>
-    <i>Pick 20:</i> Found a Match! Remove 20 from table. Table: {10}. <b>Pairs: 1</b><br>
-    <i>Pick 10:</i> Found a Match! Remove 10 from table. Table: {}. <b>Pairs: 2</b><br>
-    <i>Pick 10:</i> No partner on table. Table: {10}. Pairs: 2<br>
-    <i>Pick 30:</i> No partner on table. Table: {10, 30}. Pairs: 2<br>
-    <i>Pick 50:</i> No partner on table. Table: {10, 30, 50}. Pairs: 2<br>
-    <i>Pick 10:</i> Found a Match! Remove 10 from table. Table: {30, 50}. <b>Pairs: 3</b><br>
-    <i>Pick 20:</i> No partner on table. Table: {30, 50, 20}. Pairs: 3
+        problem: "<b>Pair Extraction:</b> Given a collection of elements (represented by color IDs), determine the maximum number of matched pairs that can be formed.",
+        solution: "<b>Algorithmic Strategy (Hash-Set State Machine):</b><br>The problem is modeled as a <b>Streaming Complement Search</b>.<br><br>1. <b>Active Tracking:</b> Maintain a set of 'unpaired' elements encountered so far.<br>2. <b>Sequential Matching:</b> For each incoming element:<br>• If it already exists in the unpaired set, a pair is identified. Increment the pair tally and remove the element from the set (restoring it to a balanced state).<br>• If it is not in the set, add it to the unpaired collection to await a future match.<br>3. <b>Terminal State:</b> The final tally represents the global pair count.",
+        optimality: "<b>Complexity Metrics:</b><br>• <b>Time:</b> O(N). A single pass through the array with O(1) average-case set lookups and modifications.<br>• <b>Space:</b> O(U). Auxiliary memory scales with the number of unique elements awaiting a match ($U \leq N$).<br><br><b>Efficiency Note:</b> This approach is mathematically optimal because it processes each element exactly once and avoids the O(N log N) overhead of sorting.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def sockMerchant(n, ar):\n    unpaired = set()\n    pairs = 0\n    for item in ar:\n        if item in unpaired:\n            pairs += 1\n            unpaired.remove(item)\n        else:\n            unpaired.add(item)\n    return pairs</pre>",
+        stepByStep: `<b>Algorithmic Trace:</b><br>
+<b>Input:</b> [10, 20, 20, 10, 30]<br><br>
+<b>Processing Cycle:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ff3b30; margin-left: 10px; margin-bottom: 10px;">
+    <i>Item 10:</i> Not in set. Set: {10}. Pairs: 0.<br>
+    <i>Item 20:</i> Not in set. Set: {10, 20}. Pairs: 0.<br>
+    <i>Item 20:</i> <b>Match found!</b> Set: {10}. Pairs: 1.<br>
+    <i>Item 10:</i> <b>Match found!</b> Set: {}. Pairs: 2.<br>
+    <i>Item 30:</i> Not in set. Set: {30}. Pairs: 2.
 </div>
-<b>Final Answer:</b> 3 pairs found!`
+<b>Final Result:</b> 2`
     },
     {
         id: "subarray-division",
         title: "Subarray Division<br><a href='https://www.hackerrank.com/challenges/the-birthday-bar/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Arrays",
-        problem: "Lily wants to share a chocolate bar with Ron for his birthday! The bar is a row of squares, each with a number on it. She wants to give him a contiguous segment of the bar such that:<br>1. The length of the segment matches his birth month (<b>m</b>).<br>2. The sum of the numbers on the squares equals his birth day (<b>d</b>).<br><br>How many ways can Lily break off a piece of the chocolate bar for Ron?",
-        solution: "We solve this by sliding a 'window' of length <b>m</b> across the chocolate bar! For every possible starting position, we grab a segment of length <b>m</b> and calculate its sum. If that sum matches the magic birthday <b>d</b>, we count it as a success. We simply slide the window from the left side of the bar all the way to the right until we run out of chocolate.",
-        optimality: "This 'Sliding Window' approach is very efficient, running in <b>O(N * M) Time complexity</b> in its simplest form (where N is the bar length). While we could optimize this to O(N) using a 'Running Sum' (adding the new element and subtracting the old one), for the small constraints of this birthday problem, the simple window sum is incredibly clear and fast. It uses <b>O(1) Space</b> for our counting tally.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def birthday(s, d, m):\n    count = 0\n    for i in range(len(s) - m + 1):\n        if sum(s[i:i + m]) == d:\n            count += 1\n    return count</pre>",
-        stepByStep: `<b>Input:</b> Bar [1, 2, 1, 3, 2], d=3, m=2<br><br>
-<b>Scanning the Bar:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Window 1 ([1, 2]):</i> Sum is 3. <b>Success!</b> (Count: 1)<br>
-    <i>Window 2 ([2, 1]):</i> Sum is 3. <b>Success!</b> (Count: 2)<br>
-    <i>Window 3 ([1, 3]):</i> Sum is 4. No.<br>
-    <i>Window 4 ([3, 2]):</i> Sum is 5. No.
+        problem: "<b>Segment Identification:</b> Given an array of integers, count the number of contiguous subarrays of length $m$ whose elements sum up to a target value $d$.",
+        solution: "<b>Algorithmic Strategy (Sliding Window):</b><br>The problem is an application of a <b>Fixed-Size Sliding Window</b>.<br><br>1. <b>Initial Window:</b> Calculate the sum of the first $m$ elements.<br>2. <b>Window Propagation:</b> Iteratively slide the window to the right, subtracting the leftmost (exiting) element and adding the new rightmost (entering) element. This maintains the current window sum in constant time.<br>3. <b>Target Matching:</b> During each step, compare the current window sum to $d$. Increment the result counter upon a match.",
+        optimality: "<b>Complexity Profile:</b><br>• <b>Time:</b> O(N). By using the sliding window subtraction/addition technique, we avoid redundant O(M) summation at each step.<br>• <b>Space:</b> O(1). Only local variables for the window sum and tally are required.<br><br><b>Conclusion:</b> This approach is asymptotically optimal, ensuring linear execution speed irrespective of the window size $m$.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def birthday(s, d, m):\n    count = 0\n    current_sum = sum(s[:m])\n    if current_sum == d: count += 1\n    \n    for i in range(m, len(s)):\n        current_sum += s[i] - s[i - m]\n        if current_sum == d:\n            count += 1\n    return count</pre>",
+        stepByStep: `<b>Execution Trace:</b><br>
+<b>Bar:</b> [2, 2, 1, 3, 2], d=4, m=2<br><br>
+<b>Window Sequence:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5856d6; margin-left: 10px; margin-bottom: 10px;">
+    <i>Window 0 ([2, 2]):</i> Sum = 4. <b>Success!</b> Tally: 1.<br>
+    <i>Window 1 ([2, 1]):</i> Sum = 3. Tally: 1.<br>
+    <i>Window 2 ([1, 3]):</i> Sum = 4. <b>Success!</b> Tally: 2.<br>
+    <i>Window 3 ([3, 2]):</i> Sum = 5. Tally: 2.
 </div>
-<b>Final Result:</b> 2 ways to share the chocolate!`
+<b>Final Result:</b> 2`
     },
     {
         id: "jumping-on-the-clouds",
         title: "Jumping on the Clouds<br><a href='https://www.hackerrank.com/challenges/jumping-on-the-clouds/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Arrays",
-        problem: "You are playing a mobile game where you jump from cloud to cloud! There are two types of clouds: safe cumulus clouds (marked as <b>0</b>) and dangerous thunderheads (marked as <b>1</b>). You start on the first cloud and your goal is to reach the very last cloud using the fewest jumps possible. From any cloud, you can jump either 1 or 2 steps ahead, but you MUST land on a safe cloud. What is the minimum number of jumps you need?",
-        solution: "This is a 'Greedy' problem! Since we want to reach the end as fast as possible, we should always try to take the biggest leap (2 steps) whenever it's safe to do so. <br><br>Our algorithm starts at the first cloud. At each step, it looks 2 clouds ahead. If that cloud is safe and exists, we take the big jump! If not, we are forced to take a single step jump to the next cloud. We keep doing this until we land on the final cloud, counting each jump as we go.",
-        optimality: "This 'Greedy Strategy' is perfectly optimal, achieving <b>O(N) Time complexity</b> because we visit each cloud at most once. It also uses <b>O(1) Space</b> as we only need to track our current position and the jump count. There is no need for complex pathfinding because we always prefer the longest possible move.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def jumpingOnClouds(c):\n    jumps = 0\n    i = 0\n    while i < len(c) - 1:\n        # Try jumping 2 steps first\n        if i + 2 < len(c) and c[i + 2] == 0:\n            i += 2\n        else:\n            i += 1\n        jumps += 1\n    return jumps</pre>",
-        stepByStep: `<b>Input Clouds:</b> [0, 0, 1, 0, 0, 1, 0]<br><br>
-<b>Making the Jumps:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>At Index 0:</i> Cloud 2 is a Thunderhead (1). Must jump to Index 1. (Jumps: 1)<br>
-    <i>At Index 1:</i> Cloud 3 is Safe (0). Take a big jump to Index 3! (Jumps: 2)<br>
-    <i>At Index 3:</i> Cloud 5 is a Thunderhead (1). Must jump to Index 4. (Jumps: 3)<br>
-    <i>At Index 4:</i> Cloud 6 is Safe (0). Take a big jump to Index 6! (Jumps: 4)
+        problem: "<b>Shortest Path Optimization:</b> Navigate a 1D cloud array from the start to the terminal cloud using the minimum number of jumps. <br><br><b>Constraint Logic:</b><br>• Permissible step sizes: 1 or 2.<br>• Restricted elements: Jumps cannot terminate on a 'thunderhead' cloud (index value 1).",
+        solution: "<b>Algorithmic Strategy (Greedy Look-Ahead):</b><br>Because the goal is global minimization, a <b>Greedy Search</b> with a 2-step look-ahead is optimal for this specific topology.<br><br>1. <b>Evaluation:</b> At current index $i$, prioritize a 2-step jump by checking if $i+2$ is within bounds and contains a safe cloud (0).<br>2. <b>Execution:</b> If safe, commit to the 2-step jump; otherwise, proceed with a mandatory 1-step jump.<br>3. <b>Termination:</b> Continue until the target index ($N-1$) is reached.",
+        optimality: "<b>Efficiency Profile:</b><br>• <b>Time:</b> O(N). The array is traversed at most once.<br>• <b>Space:</b> O(1). Only the current index and jump tally are persisted in memory.<br><br><b>Conclusion:</b> The greedy property holds here because taking the largest possible step never precludes reaching the goal, effectively reducing the sub-problem dimension at each decision point.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def jumpingOnClouds(c):\n    jumps, i = 0, 0\n    while i < len(c) - 1:\n        # Greedy check for 2-step leap\n        if i + 2 < len(c) and c[i+2] == 0:\n            i += 2\n        else:\n            i += 1\n        jumps += 1\n    return jumps</pre>",
+        stepByStep: `<b>Algorithmic Trace:</b><br>
+<b>Clouds:</b> [0, 0, 1, 0, 0, 1, 0]<br><br>
+<b>Processing Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5856d6; margin-left: 10px; margin-bottom: 10px;">
+    <i>Pos 0:</i> Path [0+2] blocked (value 1). Move to Pos 1. Tally: 1.<br>
+    <i>Pos 1:</i> Path [1+2] clear (value 0). Leap to Pos 3. Tally: 2.<br>
+    <i>Pos 3:</i> Path [3+2] blocked (value 1). Move to Pos 4. Tally: 3.<br>
+    <i>Pos 4:</i> Path [4+2] clear (value 0). Leap to Pos 6. Tally: 4.
 </div>
-<b>Final Result:</b> 4 jumps to reach the finish line!`
+<b>Terminal State Reached. Result:</b> 4.`
     },
     {
         id: "sequence-equation",
         title: "Sequence Equation<br><a href='https://www.hackerrank.com/challenges/permutation-equation/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Arrays",
-        problem: "You are given a sequence of <b>n</b> integers where each number from 1 to <b>n</b> appears exactly once (a permutation). Your goal is to find an 'inverse of an inverse'! <br><br>Specifically, for each value <b>x</b> from 1 to <b>n</b>, you need to find an integer <b>y</b> such that the value at position <b>y</b> (let's call it <b>p(y)</b>) points to another position which contains the value <b>x</b>. In math terms: find <b>y</b> such that <b>p(p(y)) = x</b>.",
-        solution: "We can think of this as a 'Double Search'. For each number <b>x</b> (starting from 1), we first find its position in the array. Let's say 1 is at index 3. Now we have a new target: 3. We then search the array again to find the position of *that* index. If 3 is at index 2, then our final answer for 1 is 2! <br><br>By repeating this two-step lookup for every number from 1 to <b>n</b>, we build our final list of answers.",
-        optimality: "This solution uses direct indexing or searching, resulting in <b>O(N²) Time complexity</b> if we use `.index()` inside a loop. While O(N²) is acceptable for small constraints, we could optimize this to <b>O(N)</b> by pre-calculating an 'Inverse Map' (a dictionary where keys are values and values are their positions). This would allow us to perform the double-lookup in constant time. Given the problem's scope, the double-lookup logic is the most intuitive way to grasp the requirement.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def permutationEquation(p):\n    n = len(p)\n    result = []\n    for x in range(1, n + 1):\n        # Step 1: Find where 'x' is\n        pos1 = p.index(x) + 1\n        # Step 2: Find where 'pos1' is\n        pos2 = p.index(pos1) + 1\n        result.append(pos2)\n    return result</pre>",
-        stepByStep: `<b>Input Permutation (p):</b> [2, 3, 1] (Indices: 1:2, 2:3, 3:1)<br><br>
-<b>Solving for x = 1, 2, 3:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>For x = 1:</i> 1 is at Index 3. Now find where 3 is. 3 is at Index 2. <b>Result: 2</b><br>
-    <i>For x = 2:</i> 2 is at Index 1. Now find where 1 is. 1 is at Index 3. <b>Result: 3</b><br>
-    <i>For x = 3:</i> 3 is at Index 2. Now find where 2 is. 2 is at Index 1. <b>Result: 1</b>
+        problem: "<b>Core Objective:</b> For a given permutation array $P$ of length $n$, find a sequence of values $y$ such that $P(P(y)) = x$ for every $x \in \{1, 2, ..., n\}$.",
+        solution: "<b>Algorithmic Strategy (Functional Inversion):</b><br>The problem requires resolving a <b>Double Nested Lookup</b> in a permutation sequence.<br><br>1. <b>Mapping Construction:</b> To avoid redundant searches, build an inverse mapping $Inv(x) = \text{index of } x$ such that $P[Inv(x)] = x$.<br>2. <b>Double-Inverse Lookup:</b> For each value $x$, the required position $y$ is derived by applying the inverse mapping twice: $y = Inv(Inv(x))$.<br>3. <b>Result Generation:</b> Collate the resulting $y$ values into a terminal sequence.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N). Constructing the inverse map takes linear time, and each subsequent double-lookup is O(1).<br>• <b>Space:</b> O(N) to store the auxiliary inverse mapping array or hash map.<br><br><b>Technical Superiority:</b> Using an explicit mapping converts a potential O(N²) quadratic search into a linear-time operation, ensuring scalability for large permutations.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def permutationEquation(p):\n    # 1-based indexing correction\n    # Map value to its 1-based index\n    pos_map = {val: i + 1 for i, val in enumerate(p)}\n    \n    res = []\n    for x in range(1, len(p) + 1):\n        # Double lookup: y = p^-1(p^-1(x))\n        first_jump = pos_map[x]\n        second_jump = pos_map[first_jump]\n        res.append(second_jump)\n    return res</pre>",
+        stepByStep: `<b>Validation Scenario:</b><br>
+<b>Permutation P:</b> [2, 3, 1] (Indices: 1:2, 2:3, 3:1)<br><br>
+<b>Inverse Map (Value -> Index):</b> {2:1, 3:2, 1:3}<br><br>
+<b>Lookup Operations:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ff2d55; margin-left: 10px; margin-bottom: 10px;">
+    <i>For x=1:</i> Inv(1) = 3. Inv(3) = 2. <b>Result:</b> 2.<br>
+    <i>For x=2:</i> Inv(2) = 1. Inv(1) = 3. <b>Result:</b> 3.<br>
+    <i>For x=3:</i> Inv(3) = 2. Inv(2) = 1. <b>Result:</b> 1.
 </div>
-<b>Final Result:</b> [2, 3, 1]`
+<b>Collated Result:</b> [2, 3, 1]`
     },
     {
         id: "play-with-words",
