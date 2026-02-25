@@ -89,37 +89,19 @@ const algorithms = [
         id: "acm-team",
         title: "ACM ICPC Team<br><a href='https://www.hackerrank.com/challenges/acm-icpc-team/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Arrays",
-        problem: "Imagine you are assembling a 2-person dream team for a giant trivia tournament! You have a list of people, and for each person, you know exactly which trivia topics they have studied (represented by a string of `1`s for 'Yes' and `0`s for 'No').<br><br>When two people form a team, their knowledge combines. If Person A knows History and Person B knows Science, the team knows exactly 2 topics. Your job is to pair up all possible 2-person teams and find out two things:<br>1. What is the absolute **maximum** number of topics any single team can know?<br>2. How many different 2-person teams can claim that top spot?",
-        solution: "To find the ultimate team, we literally test every possible pairing! We take Person 1 and pair them with Person 2, Person 3... all the way to the end. Then we do the same for Person 2, and so on.<br><br>But dealing with strings of '1's and '0's is slow. Instead, we use a computer superpower called **Bitwise Math**. We convert their knowledge strings into binary numbers. If we want to combine Person A's knowledge and Person B's knowledge, we just fuse them together using the Bitwise OR Operator (`|`). In binary math, `1 | 0 = 1` and `1 | 1 = 1`. This instantly gives us a combined 'binary string' representing all the topics that team knows.<br><br>Then, we just count the `1`s in that new binary number (this is called counting set bits!). We track the highest count we've seen, and if we see a tie, we just add 1 to our 'teams tied for first' tally.",
-        optimality: "Checking every pairing takes <b>O(N²) Time</b>, where N is the number of people. While O(N²) usually sounds slow, we don't have a choice—we *must* check every unique pairing to be mathematically certain we found the best one! However, because we convert the strings into binary integers, comparing their combined knowledge (`a | b`) takes <b>O(1) Time</b> rather than scanning string arrays, making the algorithm incredibly fast in practice. It takes <b>O(N) Space</b> to store the list of binary integers.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def acmTeam(topic_strings, number_of_topics):\n    topic_bitmasks = [int(topic, 2) for topic in topic_strings]\n    max_topics_known = 0\n    max_teams_count = 0\n    n = len(topic_bitmasks)\n\n    for i in range(n):\n        mask_a = topic_bitmasks[i]\n        for j in range(i + 1, n):\n            combined_topics = mask_a | topic_bitmasks[j]\n            topics_known_count = combined_topics.bit_count()\n            \n            if topics_known_count > max_topics_known:\n                max_topics_known = topics_known_count\n                max_teams_count = 1\n            elif topics_known_count == max_topics_known:\n                max_teams_count += 1\n\n    return max_topics_known, max_teams_count</pre>",
-        stepByStep: `<b>Input Array:</b> ["10101", "11100", "11010"]<br><br>
-<b>Convert to Binary Math:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Person 0:</i> 10101 (Knows topics 1, 3, 5)<br>
-    <i>Person 1:</i> 11100 (Knows topics 1, 2, 3)<br>
-    <i>Person 2:</i> 11010 (Knows topics 1, 2, 4)
+        problem: "<b>Core Objective:</b> Determine the maximum number of topics covered by any two-person pairing and the frequency of teams achieving this maximal coverage.",
+        solution: "<b>Mechanism (Exhaustive Geometric Pairing with Bitwise Optimization):</b><br>The algorithm identifies the global maximum coverage by evaluating the union of topic knowledge across all possible pairings.<br><br>1. <b>Bitmask Mapping:</b> Convert each respondent's binary knowledge string into a large integer (bitmask).<br>2. <b>Pairwise Interaction:</b> Iterate through every unique team combination $(i, j)$ using a nested loop structure.<br>3. <b>Bitwise Union:</b> Calculate the combined knowledge using the Bitwise OR operator ($mask_a | mask_b$).<br>4. <b>Population Count:</b> Determine the number of set bits (1s) in the resulting union.<br>5. <b>Extrema Tracking:</b> Update the global maximum coverage and maintain a frequency tally for teams reaching that peak.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N²) where $N$ is the number of participants. Evaluating all $\binom{N}{2}$ pairs is mathematically required to guarantee optimality.<br>• <b>Space:</b> O(N) to store the bitmask representations. Bitwise operations ensure the comparison phase is extremely efficient.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def acmTeam(topic_strings, number_of_topics):\n    # Optimization: Map strings to bitmasks for O(1) union operations\n    topic_bitmasks = [int(topic, 2) for topic in topic_strings]\n    max_topics_known = 0\n    max_teams_count = 0\n    n = len(topic_bitmasks)\n\n    for i in range(n):\n        mask_a = topic_bitmasks[i]\n        for j in range(i + 1, n):\n            # Union of knowledge sets\n            combined_topics = mask_a | topic_bitmasks[j]\n            topics_known_count = combined_topics.bit_count()\n            \n            if topics_known_count > max_topics_known:\n                max_topics_known = topics_known_count\n                max_teams_count = 1\n            elif topics_known_count == max_topics_known:\n                max_teams_count += 1\n\n    return max_topics_known, max_teams_count</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> ["10101", "11100", "11010"]<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5856d6; margin-left: 10px; margin-bottom: 10px;">
+    <i>Pair (0, 1):</i> 10101 | 11100 = 11101 (4 topics).<br>
+    <i>Pair (0, 2):</i> 10101 | 11010 = 11111 (5 topics). <b>New Max.</b><br>
+    <i>Pair (1, 2):</i> 11100 | 11010 = 11110 (4 topics).
 </div>
-
-<b>Pairing Team: Person 0 + Person 1</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Action:</i> Combine using OR: <code>10101 | 11100 = 11101</code><br>
-    <i>Result:</i> Team knows <b>4 topics</b>. Total Max = 4. Winning Teams = 1.
-</div>
-
-<b>Pairing Team: Person 0 + Person 2</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Action:</i> Combine using OR: <code>10101 | 11010 = 11111</code><br>
-    <i>Result:</i> Team knows <b>5 topics</b>. New Max! Total Max = 5. Winning Teams = 1.
-</div>
-
-<b>Pairing Team: Person 1 + Person 2</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Action:</i> Combine using OR: <code>11100 | 11010 = 11110</code><br>
-    <i>Result:</i> Team knows <b>4 topics</b>. Less than max.<br>
-</div>
-
-<b>Final Answer!</b> The max topics known is 5, and exactly 1 team achieved it.`
+<b>Final Result:</b> Max Topics: 5, Teams: 1.`
     },
     {
         id: "append-and-delete",
@@ -432,25 +414,20 @@ const algorithms = [
         id: "play-with-words",
         title: "Play with Words<br><a href='https://www.hackerrank.com/challenges/strplay/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Dynamic Programming",
-        problem: "Imagine you have a long string of letters, like a magic scroll. You want to cut this scroll at exactly one point into two separate pieces. Then, for each piece, you want to find the longest possible hidden message that reads the same forwards and backwards (a palindrome). Finally, you multiply the lengths of those two hidden messages together. Where should you cut the scroll to make that product as large as possible?",
-        solution: "To solve this, we use **Dynamic Programming** to find the 'Longest Palindromic Subsequence' (LPS) for every possible segment of the string. We build a magic table where we calculate: 'What is the longest palindrome in this tiny 2-letter piece? What about this 3-letter piece?' until we know the LPS for every segment. Once we have our table, we try cutting the string at every single possible position. For each cut, we look up our table to find the best palindrome on the left and the best one on the right, multiply them, and keep track of the record-breaking product!",
-        optimality: "This strategy is highly efficient for such a complex task, achieving <b>O(N²) Time complexity</b>. Building the table takes N² operations, and checking all cut points takes only N more. It uses <b>O(N²) Space</b> to store the table. While it uses more memory than a simple loop, it is mathematically the fastest way to solve this 'two-part' palindrome problem because it avoids re-calculating the same palindromes over and over again.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def playWithWords(s):\n    n = len(s)\n    dp = [[0] * n for _ in range(n)]\n    \n    # Build LPS table\n    for i in range(n - 1, -1, -1):\n        dp[i][i] = 1\n        for j in range(i + 1, n):\n            if s[i] == s[j]:\n                dp[i][j] = dp[i + 1][j - 1] + 2\n            else:\n                dp[i][j] = max(dp[i + 1][j], dp[i][j - 1])\n\n    # Maximize product of non-overlapping LPS pieces\n    max_product = 0\n    for i in range(n - 1):\n        product = dp[0][i] * dp[i + 1][n - 1]\n        max_product = max(max_product, product)\n            \n    return max_product</pre>",
-        stepByStep: `<b>Input String:</b> "baaa"<br><br>
-<b>Phase 1: Build the LPS Table</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Single letters:</i> All have length 1.<br>
-    <i>Pair "aa":</i> Match! Length becomes 2.<br>
-    <i>Segment "aaa":</i> Outer "a"s match + middle "a" = 3.<br>
-    <i>Segment "baa":</i> No outer match. Best is "aa" (length 2).
+        problem: "<b>Core Objective:</b> Maximize the product of lengths of two non-overlapping longest palindromic subsequences (LPS) within a string.",
+        solution: "<b>Mechanism (Dual-Substructure Dynamic Programming):</b><br>The algorithm leverages the overlapping sub-problem nature of palindromic sequences to pre-calculate all possible LPS lengths.<br><br>1. <b>Tabulation Phase:</b> Construct a 2D DP table where $dp[i][j]$ stores the LPS length for the substring spanning from index $i$ to $j$.<br>2. <b>Recurrence Relation:</b> If characters at boundaries match ($s[i] == s[j]$), $dp[i][j] = dp[i+1][j-1] + 2$. Otherwise, $dp[i][j] = \max(dp[i+1][j], dp[i][j-1])$.<br>3. <b>Partition Optimization:</b> Iterate through all potential split indices $k \in [0, n-1]$. For each $k$, calculate the product of the LPS of the left prefix ($dp[0][k]$) and the right suffix ($dp[k+1][n-1]$).",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N²) for table construction, followed by $O(N)$ for partition evaluation.<br>• <b>Space:</b> O(N²) to store the tabulation results.<br><br><b>Strategic Merit:</b> Dynamic Programming transforms an exponential search space into a quadratic one by memoizing the symmetry profiles of all substrings.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def playWithWords(s):\n    n = len(s)\n    dp = [[0] * n for _ in range(n)]\n    \n    # Optimal Substructure: LPS for all substrings [i, j]\n    for i in range(n - 1, -1, -1):\n        dp[i][i] = 1\n        for j in range(i + 1, n):\n            if s[i] == s[j]:\n                dp[i][j] = dp[i + 1][j - 1] + 2\n            else:\n                dp[i][j] = max(dp[i + 1][j], dp[i][j - 1])\n\n    # Optimal Partitioning: Maximize product of disjoint LPS segments\n    max_product = 0\n    for i in range(n - 1):\n        product = dp[0][i] * dp[i + 1][n - 1]\n        max_product = max(max_product, product)\n            \n    return max_product</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> "baaa"<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ff9500; margin-left: 10px; margin-bottom: 10px;">
+    <i>Tabulation:</i> LPS("ba")=1, LPS("aaa")=3, LPS("aa")=2.<br>
+    <i>Cut at Index 0:</i> LPS("b") * LPS("aaa") = 1 * 3 = <b>3</b>.<br>
+    <i>Cut at Index 1:</i> LPS("ba") * LPS("aa") = 1 * 2 = 2.<br>
+    <i>Cut at Index 2:</i> LPS("baa") * LPS("a") = 2 * 1 = 2.
 </div>
-<b>Phase 2: Testing the Cut Points</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Cut 1 [b | aaa]:</i> Left LPS: 1 ("b"), Right LPS: 3 ("aaa"). <b>Product: 3</b><br>
-    <i>Cut 2 [ba | aa]:</i> Left LPS: 1 ("b" or "a"), Right LPS: 2 ("aa"). <b>Product: 2</b><br>
-    <i>Cut 3 [baa | a]:</i> Left LPS: 2 ("aa"), Right LPS: 1 ("a"). <b>Product: 2</b>
-</div>
-<b>Final Answer:</b> The maximum product is <b>3</b>.`
+<b>Final Result:</b> 3`
     },
     {
         id: "a-very-big-sum",
@@ -1446,23 +1423,18 @@ const algorithms = [
         id: "sum-of-digits-recursion",
         title: "Sum of Digits",
         category: "Concepts - Recursion",
-        problem: "Calculate the sum of all digits in a number. For example, if the input is 234, the answer should be $2 + 3 + 4 = 9$.",
-        solution: "We use recursion to peel the number like an onion, one digit at a time! We take the last digit (using `number % 10`) and add it to the 'Sum of Digits' of whatever is left (using `number // 10`). We keep doing this until there are no digits left (the number becomes 0). The recursion then adds all the 'peeled' digits together as it returns.",
-        optimality: "This approach is perfectly efficient with <b>O(D) Time complexity</b>, where D is the number of digits. Since we must look at every digit once, it's impossible to go faster. It uses <b>O(D) Space</b> for the recursion stack. It's a fundamental example of how recursion can break down numerical data structures.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def sumDigits(n):\n    if n == 0: return 0\n    return (n % 10) + sumDigits(n // 10)</pre>",
-        stepByStep: `<b>Input:</b> 234<br><br>
-<b>Peeling the Onion:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Call 1:</i> 4 + sumDigits(23)<br>
-    <i>Call 2:</i> 3 + sumDigits(2)<br>
-    <i>Call 3:</i> 2 + sumDigits(0)<br>
-    <i>Base:</i> 0
-</div>
-<b>Recombining:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    2 + 0 = 2<br>
-    3 + 2 = 5<br>
-    4 + 5 = <b>9</b>
+        problem: "<b>Core Objective:</b> Recursively compute the decimal sum of all digits within a non-negative integer.",
+        solution: "<b>Mechanism (Modular Extraction and Recursive Summation):</b><br>The algorithm decomposes the integer by isolating its least significant digit (LSD) in each recursive step.<br><br>1. <b>Base Case:</b> If $n == 0$, return 0. This concludes the summation.<br>2. <b>Extraction:</b> Retrieve the last digit using the modulo operator ($n \pmod{10}$).<br>3. <b>Reduction:</b> Invoke the function with the truncated integer ($n // 10$).<br>4. <b>Accumulation:</b> Return the sum of the current LSD and the result of the recursive call.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(D) where $D$ is the number of digits ($\lfloor \log_{10} n \rfloor + 1$). Every digit is processed exactly once.<br>• <b>Space:</b> O(D). The call stack depth is proportional to the number of digits.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def sumDigits(n):\n    # Base case: All digits processed\n    if n == 0: return 0\n    # Modular extraction and linear reduction\n    return (n % 10) + sumDigits(n // 10)</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> 234<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5ac8fa; margin-left: 10px; margin-bottom: 10px;">
+    <i>Frame 1:</i> 4 + sumDigits(23)<br>
+    <i>Frame 2:</i> 3 + sumDigits(2)<br>
+    <i>Frame 3:</i> 2 + sumDigits(0)<br>
+    <i>Return:</i> 0 $\to$ 2 $\to$ 5 $\to$ 9.
 </div>
 <b>Final Result:</b> 9`
     },
@@ -1470,39 +1442,37 @@ const algorithms = [
         id: "is-palindrome-recursion",
         title: "Palindrome Check",
         category: "Concepts - Recursion",
-        problem: "Determine if a word or phrase is a 'Palindrome'—meaning it reads exactly the same forwards and backwards (like 'level' or 'racecar').",
-        solution: "Recursion allows us to check symmetry from the 'outside-in'! We check if the first and last letters match. If they don't, it's definitely not a palindrome. If they DO match, we strip them off and recursively ask the same question about the inner part of the word. We stop when we are left with 0 or 1 letters (which are always symmetrical). It's like checking the layers of a mirrored reflection.",
-        optimality: "The recursive checker runs in <b>O(N) Time complexity</b>, where N is the length of the string. We only ever look at each pair of characters once. It uses <b>O(N) Space</b> for the recursion stack and substring creation. It's the most intuitive way to express the recursive symmetry of palindromic structures.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def isPalindrome(s):\n    if len(s) <= 1: return True\n    return s[0] == s[-1] and isPalindrome(s[1:-1])</pre>",
-        stepByStep: `<b>Input:</b> "racecar"<br><br>
-<b>Symmetry Inspection:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Check 1:</i> 'r' == 'r'? Yes. Check "aceca".<br>
-    <i>Check 2:</i> 'a' == 'a'? Yes. Check "cec".<br>
-    <i>Check 3:</i> 'c' == 'c'? Yes. Check "e".<br>
-    <i>Base Case:</i> "e" is length 1. <b>TRUE!</b>
+        problem: "<b>Core Objective:</b> Determine string symmetry through recursive boundary value comparison.",
+        solution: "<b>Mechanism (Outside-In Convergent Verification):</b><br>The algorithm evaluates the equality of characters at symmetrical offsets from the center.<br><br>1. <b>Base Case:</b> If the string length is $\le 1$, return True (vacuously symmetrical).<br>2. <b>Symmetry Check:</b> Compare the first character $s[0]$ and the last character $s[-1]$.<br>3. <b>Recursive Leap:</b> If they match, strip the boundaries and invoke the function on the remaining substring $s[1:-1]$.<br>4. <b>Asymmetry Detection:</b> If any pair mismatches, the recursion terminates with False.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N). Each pair of characters is compared once.<br>• <b>Space:</b> O(N). While the call stack is $O(N/2)$, substring slicing in languages with immutable strings typically creates new objects, contributing to linear space overhead.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def isPalindrome(s):\n    # Base case: Symmetrical structure verified\n    if len(s) <= 1: return True\n    # Boundary comparison and recursive reduction\n    return s[0] == s[-1] and isPalindrome(s[1:-1])</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> "racecar"<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5856d6; margin-left: 10px; margin-bottom: 10px;">
+    <i>Step 1:</i> 'r' == 'r'? True. Res: isPalindrome("aceca").<br>
+    <i>Step 2:</i> 'a' == 'a'? True. Res: isPalindrome("cec").<br>
+    <i>Step 3:</i> 'c' == 'c'? True. Res: isPalindrome("e").<br>
+    <i>Base:</i> len("e") $\le$ 1. <b>True.</b>
 </div>
-<b>Final Result:</b> "racecar" is a palindrome.`
+<b>Final Result:</b> True`
     },
     {
         id: "reverse-string-recursion",
         title: "Reverse String",
         category: "Concepts - Recursion",
-        problem: "Take a word and flip it completely backwards using recursion. 'apple' becomes 'elppa'.",
-        solution: "Similar to the sum of digits, we 'peel' the word! We take the very first character and move it to the *end* of the reversed version of 'everything else'. So, `reverse('apple')` is just `reverse('pple') + 'a'`. This chain of logic continues until we hit the last letter. As the recursion 'unwinds', it glues the letters back together in the opposite order.",
-        optimality: "This elegant logic achieves <b>O(N) Time complexity</b> because we process each character once. It uses <b>O(N) Space</b> to store the stack of characters and the resulting substrings. It's a classic demonstration of how recursive thinking can transform a sequence.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def reverse(s):\n    if len(s) <= 1: return s\n    return reverse(s[1:]) + s[0]</pre>",
-        stepByStep: `<b>Input:</b> "cat"<br><br>
-<b>The Reversal Chain:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Step 1:</i> reverse("at") + "c"<br>
-    <i>Step 2:</i> reverse("t") + "a"<br>
-    <i>Base:</i> "t"
-</div>
-<b>The Snap-Back:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    "t" + "a" = "ta"<br>
-    "ta" + "c" = <b>"tac"</b>
+        problem: "<b>Core Objective:</b> Perform a string reversal operation using a recursive tail-accumulation approach.",
+        solution: "<b>Mechanism (Head-to-Tail Transposition):</b><br>The algorithm reverses a string by progressively moving the leading character to the final position of the resulting sub-problem.<br><br>1. <b>Base Case:</b> If the string length is $\le 1$, return the string as is.<br>2. <b>Divide:</b> Extract the 'tail' (all characters after the first).<br>3. <b>Conquer:</b> Recursively reverse the tail.<br>4. <b>Reassemble:</b> Append the original 'head' (first character) to the result of the reversed tail.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N²) in environments with immutable strings (like Python/Java), due to the $O(N)$ cost of substring slicing and concatenation at each of the $N$ recursive levels.<br>• <b>Space:</b> O(N). Required for the recursion stack and buffer allocations.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def reverse(s):\n    # Base case: Atomic unit reached\n    if len(s) <= 1: return s\n    # Recurse on tail and append head to the end\n    return reverse(s[1:]) + s[0]</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> "cat"<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ff9500; margin-left: 10px; margin-bottom: 10px;">
+    <i>Stack:</i> reverse("at") + 'c'<br>
+    <i>Stack:</i> reverse("t") + 'a'<br>
+    <i>Return:</i> 't' + 'a' $\to$ "ta"<br>
+    <i>Return:</i> "ta" + 'c' $\to$ "tac"
 </div>
 <b>Final Result:</b> "tac"`
     },
@@ -1510,17 +1480,17 @@ const algorithms = [
         id: "string-subsequences-recursion",
         title: "String Subsequences",
         category: "Concepts - Recursion",
-        problem: "Find every single possible 'Subsequence' of a string. A subsequence is a new string formed by deleting zero or more characters from the original string. For 'abc', the subsequences include 'a', 'ab', 'ac', 'bc', etc.",
-        solution: "We solve this using a 'Choice Tree' recursion! For every character in the string, we have two simple choices: 'Include it' OR 'Exclude it'. We branch the recursion for both choices. By the time we reach the end of the string, every unique path through these choices represents one possible subsequence. This exhaustive search ensures we don't miss a single one!",
-        optimality: "Because every character has 2 choices, there are $2^N$ possible subsequences. This means the algorithm runs in <b>O(2^N) Time complexity</b>. While this grows very fast for long strings, it is the mathematically required time to find every unique combination. It uses <b>O(N) Space</b> for the recursion depth.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def subsets(s, current=\"\", res=[]):\n    if not s: \n        res.append(current)\n        return\n    # Choice 1: Include s[0]\n    subsets(s[1:], current + s[0], res)\n    # Choice 2: Exclude s[0]\n    subsets(s[1:], current, res)</pre>",
-        stepByStep: `<b>Input:</b> "ab"<br><br>
-<b>The Choice Tree:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Root:</i> Start with ""<br>
-    <i>Lvl 1 (a):</i> Choose 'a' → "a" | Skip 'a' → ""<br>
-    <i>Lvl 2 (b):</i> From "a" choose 'b' → "ab" | From "a" skip 'b' → "a"<br>
-    <i>Lvl 2 (b):</i> From "" choose 'b' → "b" | From "" skip 'b' → ""
+        problem: "<b>Core Objective:</b> Generate all possible subsequences of a given string (the power set of characters) using recursive branching.",
+        solution: "<b>Mechanism (Combinatorial Inclusion-Exclusion Tree):</b><br>The algorithm traverses the string, making a binary choice for each character.<br><br>1. <b>Branching:</b> At each character $s[0]$, the recursion splits into two paths: <b>Include</b> (add $s[0]$ to the current result) and <b>Exclude</b> (skip $s[0]$).<br>2. <b>Reduction:</b> Recurse with the remaining 'tail' $s[1:]$.<br>3. <b>Convergence:</b> When the string is empty, the current accumulated path is a valid subsequence. This ensures $2^n$ unique outcomes are explored.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(2^N). This is mathematically necessary as there are $2^n$ unique subsequences for a string of length $n$.<br>• <b>Space:</b> O(N) recursion depth, plus $O(N \cdot 2^N)$ to store all resulting subsequences.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def subsets(s, current=\"\", res=[]):\n    # Base case: All characters processed\n    if not s: \n        res.append(current)\n        return\n    # Optimal Substructure: Choice 1 (Include) vs Choice 2 (Exclude)\n    subsets(s[1:], current + s[0], res)\n    subsets(s[1:], current, res)</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> "ab"<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #afafaf; margin-left: 10px; margin-bottom: 10px;">
+    <i>Root:</i> Start "".<br>
+    <i>'a' Choice:</i> ["a", ""]<br>
+    <i>'b' Choice:</i> ["ab", "a", "b", ""]
 </div>
 <b>Final Result:</b> ["ab", "a", "b", ""]`
     },
@@ -1528,23 +1498,16 @@ const algorithms = [
         id: "sum-of-natural-numbers-recursion",
         title: "Natural Number Sum",
         category: "Concepts - Recursion",
-        problem: "Calculate the sum of all positive integers from 1 up to N. For example, if N is 5, the sum is $1+2+3+4+5=15$.",
-        solution: "We define the sum of N numbers as $N + (Sum of N-1)$. This recursive definition allows us to stack the numbers one on top of the other until we hit the base case of 0. Then, we add all the stacked numbers as we return. It's the numerical equivalent of building a tower of blocks and then counting them as you take them down.",
-        optimality: "This approach runs in <b>O(N) Time complexity</b> and <b>O(N) Space</b>. While the mathematical formula $(N(N+1))/2$ is even faster (O(1)), this recursive method is a perfect 'Hello World' for understanding how state is maintained across function calls.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def sumNatural(n):\n    if n == 0: return 0\n    return n + sumNatural(n - 1)</pre>",
-        stepByStep: `<b>Input:</b> n = 3<br><br>
-<b>Building the Stack:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    3 + sum(2)<br>
-    2 + sum(1)<br>
-    1 + sum(0)<br>
-    Base: 0
-</div>
-<b>Collapsing the Stack:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    1 + 0 = 1<br>
-    2 + 1 = 3<br>
-    3 + 3 = <b>6</b>
+        problem: "<b>Core Objective:</b> Recursively calculate the arithmetic series sum of the first $n$ natural numbers.",
+        solution: "<b>Mechanism (Recursive Deconstruction):</b><br>The algorithm leverages the recursive identity: $Sum(n) = n + Sum(n-1)$.<br><br>1. <b>Recursive Leap:</b> Accumulate the current value $n$ and defer the remaining summation to the next frame.<br>2. <b>Base Case:</b> When $n=0$, return 0 to stop the descent.<br>3. <b>Aggregation:</b> As the stack unwinds, each returned value is added to the local $n$.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N). Each number is added once.<br>• <b>Space:</b> O(N). The recursion depth is proportional to $n$. (Note: While $O(1)$ via $\frac{n(n+1)}{2}$ is optimal for calculation, this demonstrates state propagation).",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def sumNatural(n):\n    # Base Case\n    if n == 0: return 0\n    # Deconstruction: n + (sum of predecessors)\n    return n + sumNatural(n - 1)</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> n=3.<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 20px solid #5856d6; margin-left: 10px; margin-bottom: 10px;">
+    <i>Descent:</i> 3 + f(2) $\to$ 2 + f(1) $\to$ 1 + f(0).<br>
+    <i>Ascent:</i> 1 + 0 = 1; 2 + 1 = 3; 3 + 3 = 6.
 </div>
 <b>Final Result:</b> 6`
     },
@@ -1552,91 +1515,76 @@ const algorithms = [
         id: "count-digits-recursion",
         title: "Digit Counter",
         category: "Concepts - Recursion",
-        problem: "Count exactly how many digits are in a number using recursion. For 12345, the answer is 5.",
-        solution: "We use a 'Chop and Count' strategy! Every time we call the function, we chop off the last digit (using `// 10`) and add 1 to our count. We keep chopping until the number hits 0. The total number of 'chops' we made is exactly the number of digits in the original number.",
-        optimality: "This is a flawlessly efficient <b>O(D) Time complexity</b> solution, where D is the number of digits. It uses <b>O(D) Space</b> for the recursion stack. It's the standard recursive way to measure the size of a decimal integer.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def countDigits(n):\n    if n < 10: return 1\n    return 1 + countDigits(n // 10)</pre>",
-        stepByStep: `<b>Input:</b> 543<br><br>
-<b>Chopping Away:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Call 1:</i> count(543) → 1 + count(54)<br>
-    <i>Call 2:</i> count(54) → 1 + count(5)<br>
-    <i>Base:</i> count(5) → 1
+        problem: "<b>Core Objective:</b> Quantify the total number of digits within an integer using a recursive reduction strategy.",
+        solution: "<b>Mechanism (Logarithmic Successive Division):</b><br>The algorithm identifies digit count by measuring how many base-10 shifts are required to reach an atomic unit.<br><br>1. <b>Base Case:</b> If $n < 10$, return 1 (it is a single-digit number).<br>2. <b>Recursive Leap:</b> Add 1 to the count and recurse on the value reduced by one decimal place ($n // 10$).<br>3. <b>Aggregated Return:</b> Each level of recursion adds $1$ to the final tally.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(D) where $D$ is the number of digits. This is equivalent to $O(\log_{10} N)$.<br>• <b>Space:</b> O(D). The call stack mirrors the digit count.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def countDigits(n):\n    # Base case: Final digit identified\n    if n < 10: return 1\n    # Systemic reduction via floor division\n    return 1 + countDigits(n // 10)</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> 543.<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5ac8fa; margin-left: 10px; margin-bottom: 10px;">
+    <i>Recurse:</i> 1 + f(54).<br>
+    <i>Recurse:</i> 1 + f(5).<br>
+    <i>Base:</i> f(5) = 1.<br>
+    <i>Sum:</i> 1 + 1 + 1 = 3.
 </div>
-<b>Tallying:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    1 + 1 + 1 = <b>3</b>
-</div>
-<b>Final Result:</b> 3 digits.`
+<b>Final Result:</b> 3`
     },
     {
         id: "print-n-to-1-recursion",
         title: "Print N to 1",
         category: "Concepts - Recursion",
-        problem: "Print a sequence of numbers from N down to 1 using recursion without using any loops.",
-        solution: "In recursion, order is everything! To print descending, we print the current number <i>before</i> we pass the torch to the next recursive call. This ensures that the biggest number is dealt with first, followed by N-1, and so on, until we hit the base case.",
-        optimality: "This approach runs in <b>O(N) Time complexity</b> as each number is printed exactly once. It uses <b>O(N) Space</b> for the recursion stack. It's the perfect way to understand the 'Forward' phase of a recursive process.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def printNto1(n):\n    if n <= 0: return\n    print(n)\n    printNto1(n - 1)</pre>",
-        stepByStep: `<b>Input:</b> n = 3<br><br>
-<b>Printing Order:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Current n is 3:</i> Print 3. Recurse(2).<br>
-    <i>Current n is 2:</i> Print 2. Recurse(1).<br>
-    <i>Current n is 1:</i> Print 1. Recurse(0).<br>
-    <i>Base Case:</i> Stop.
+        problem: "<b>Core Objective:</b> Generate a descending numerical sequence from $N$ to $1$ using recursion as a sequence generator.",
+        solution: "<b>Mechanism (Pre-Order Recursive Side-Effect):</b><br>The algorithm executes the 'Print' operation <b>before</b> the recursive descent.<br><br>1. <b>Execution:</b> Output the current $n$.<br>2. <b>Recurrence:</b> Call the function for $n-1$.<br>3. <b>Order:</b> Because the print occurs before the call, the sequence naturally follows the downward path of the recursion depth.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N). Each number is visited and printed exactly once.<br>• <b>Space:</b> O(N) for the recursion stack.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def printNto1(n):\n    # Termination Condition\n    if n <= 0: return\n    # Pre-order Action: Print before recursing\n    print(n)\n    printNto1(n - 1)</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> n=3.<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #afafaf; margin-left: 10px; margin-bottom: 10px;">
+    <i>Step 1:</i> Print 3. Recurse(2).<br>
+    <i>Step 2:</i> Print 2. Recurse(1).<br>
+    <i>Step 3:</i> Print 1. Recurse(0).<br>
+    <i>Base:</i> Stop.
 </div>
-<b>Final Output:</b> 3, 2, 1`
+<b>Final Result:</b> 3, 2, 1`
     },
     {
         id: "print-1-to-n-recursion",
         title: "Print 1 to N",
         category: "Concepts - Recursion",
-        problem: "Print a sequence of numbers from 1 up to N using recursion without using any loops.",
-        solution: "To print ascending, we use the 'Snap-Back' property of the call stack! We make the recursive call first, which keeps diving deeper until it hits 0. Only then, as the calls finish and 'pop' off the stack in reverse order, do we actually print the number. It's like leaving a trail of breadcrumbs and only picking them up on the way back out of the forest!",
-        optimality: "This approach runs in <b>O(N) Time complexity</b> and <b>O(N) Space</b>. It is a brilliant example of how 'Deferred Execution' works in recursive programming.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def print1toN(n):\n    if n <= 0: return\n    print1toN(n - 1)\n    print(n)</pre>",
-        stepByStep: `<b>Input:</b> n = 3<br><br>
-<b>The Depth Dive:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    Call(3) → Call(2) → Call(1) → Base(0).<br>
-    (Nothing has been printed yet!)
+        problem: "<b>Core Objective:</b> Generate an ascending numerical sequence from $1$ to $N$ using the recursive 'Snap-Back' property.",
+        solution: "<b>Mechanism (Post-Order Recursive Side-Effect):</b><br>The algorithm executes the 'Print' operation <b>after</b> the recursive return phase.<br><br>1. <b>Deferred Action:</b> Recurse for $n-1$ first. This puts the current $n$ into a 'pending' state on the call stack.<br>2. <b>Termination:</b> Reach the base case ($n=0$).<br>3. <b>Unwinding:</b> As each call completes, the output operation for the local $n$ is finally executed. This results in the smallest values being printed first.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N). Linear traversal of the number range.<br>• <b>Space:</b> O(N). The call stack must preserve all $n$ values before printing begins.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def print1toN(n):\n    if n <= 0: return\n    # Post-order Action: Recurse first, print later\n    print1toN(n - 1)\n    print(n)</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> n=3.<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ff9500; margin-left: 10px; margin-bottom: 10px;">
+    <i>Downwards:</i> f(3) $\to$ f(2) $\to$ f(1) $\to$ f(0).<br>
+    <i>Upwards:</i> f(1) prints 1; f(2) prints 2; f(3) prints 3.
 </div>
-<b>The Return Trip:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Back in Call(1):</i> Print 1.<br>
-    <i>Back in Call(2):</i> Print 2.<br>
-    <i>Back in Call(3):</i> Print 3.
-</div>
-<b>Final Output:</b> 1, 2, 3`
+<b>Final Result:</b> 1, 2, 3`
     },
     {
         id: "jumping-on-the-clouds-min",
-        title: "Jumping on the Clouds: Minimum Jumps<br><a href='https://www.hackerrank.com/challenges/jumping-on-the-clouds/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        title: "Jumping on the Clouds<br><a href='https://www.hackerrank.com/challenges/jumping-on-the-clouds/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Arrays",
-        problem: "You are playing a game where you jump between safe clouds (0) and avoid thunderheads (1). Starting at cloud 0, your goal is to reach the final cloud in as few jumps as possible. You can only jump 1 or 2 steps at a time, and you can only land on clouds marked 0. What is the lowest number of jumps needed to win?",
-        solution: "To find the minimum number of jumps, we use a 'Greedy' approach. Greedy means always trying to make the biggest possible move (2 steps) first. <br><br>We start at index 0 and look at the cloud 2 steps ahead. If it exists and is safe (0), we jump there immediately. If it's a thunderhead or doesn't exist, we must jump only 1 step to the next safe cloud. By always preferring the 2-step jump, we mathematically guarantee that we reach the end in the smallest number of moves.",
-        optimality: "This strategy is perfectly optimal, completing in <b>O(N) Time</b> because we only visit each cloud once on our path. It uses <b>O(1) Space</b> as we only need two variables: one to track our current position and one to count our jumps. It is the fastest possible way to navigate the cloud array.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def jumpingOnCloudsMin(c):\n    jumps = 0\n    i = 0\n    while i < len(c) - 1:\n        # Priority: Jump 2 steps if safe\n        if i + 2 < len(c) and c[i + 2] == 0:\n            i += 2\n        else:\n            i += 1\n        jumps += 1\n    return jumps</pre>",
-        stepByStep: `<b>Input Array:</b> [0, 0, 1, 0, 0, 1, 0]<br><br>
-<b>Path Navigation:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Current Position 0:</i> Check index 2. It is a 1 (Thundercloud). <br>
-    <i>Action:</i> Must jump 1 step to index 1. <b>(Jump 1)</b>
-</div>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Current Position 1:</i> Check index 3. It is a 0 (Safe!). <br>
-    <i>Action:</i> Leap 2 steps to index 3. <b>(Jump 2)</b>
-</div>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Current Position 3:</i> Check index 5. It is a 1 (Thundercloud). <br>
-    <i>Action:</i> Must jump 1 step to index 4. <b>(Jump 3)</b>
-</div>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Current Position 4:</i> Check index 6. It is a 0 (Safe!). <br>
-    <i>Action:</i> Leap 2 steps to index 6 (The end!). <b>(Jump 4)</b>
+        problem: "<b>Core Objective:</b> Navigate a binary cloud array (0: safe, 1: thunderhead) to reach the final index using the minimum possible number of jumps.",
+        solution: "<b>Greedy Strategy (Maximum Step Prioritization):</b><br>The algorithm seeks to maximize the distance traveled per jump while respecting safety constraints.<br><br>1. <b>Look-Ahead Verification:</b> From current position $i$, first check the feasibility of a 2-step jump ($i+2$).<br>2. <b>Pivot Choice:</b> If index $i+2$ exists and is safe ($c[i+2] = 0$), prioritize this jump.<br>3. <b>Fall-back:</b> If the 2-step jump is invalid, execute a 1-step jump to index $i+1$.<br>4. <b>Iteration:</b> Repeat until the final index is reached, incrementing a global jump counter at each transition.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N). The array is traversed in a single linear pass.<br>• <b>Space:</b> O(1). Only scalar variables for state and tallying are required.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def jumpingOnCloudsMin(c):\n    jumps = 0\n    i = 0\n    while i < len(c) - 1:\n        # Greedy Priority: Jump 2 steps if destination exists and is safe\n        if i + 2 < len(c) and c[i + 2] == 0:\n            i += 2\n        else:\n            i += 1\n        jumps += 1\n    return jumps</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> [0, 0, 1, 0, 0, 1, 0]<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5ac8fa; margin-left: 10px; margin-bottom: 10px;">
+    <i>i=0:</i> Index 2 is Unsafe. Jump to 1. <b>Jumps: 1</b><br>
+    <i>i=1:</i> Index 3 is Safe. Jump to 3. <b>Jumps: 2</b><br>
+    <i>i=3:</i> Index 5 is Unsafe. Jump to 4. <b>Jumps: 3</b><br>
+    <i>i=4:</i> Index 6 is Safe. Jump to 6. <b>Jumps: 4</b>
 </div>
 <b>Final Result:</b> 4`
-    }
+    },
 ];
 
 function initSite() {
