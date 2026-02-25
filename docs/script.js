@@ -1333,21 +1333,18 @@ const algorithms = [
         id: "merge-sort",
         title: "Merge Sort",
         category: "Algorithms - Sorting",
-        problem: "Sorting massive datasets with absolute stability (meaning items with the same value stay in their original relative order). You need a reliable, parallelizable algorithm that handles data of any size consistently.",
-        solution: "Merge Sort follows the 'Divide and Conquer' philosophy. It recursively splits the list into halves until it's dealing with tiny, one-item lists (which are naturally sorted). Then, it 'merges' those tiny lists back together in the correct order. The magic happens in the merge step, where we compare the heads of two sorted lists and zip them into a single, perfectly ordered result.",
-        optimality: "Merge Sort is the gold standard for stability and scales perfectly with <b>O(N log N) Time complexity</b> across all scenarios. While it requires <b>O(N) Space</b> to create the temporary merged lists, its predictable performance and ease of parallelization (splitting work across multiple CPUs) make it the engine behind many industrial-strength sorting libraries.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def mergeSort(arr):\n    if len(arr) <= 1: return arr\n    mid = len(arr) // 2\n    L = mergeSort(arr[:mid])\n    R = mergeSort(arr[mid:])\n    \n    res, i, j = [], 0, 0\n    while i < len(L) and j < len(R):\n        if L[i] <= R[j]: res.append(L[i]); i += 1\n        else: res.append(R[j]); j += 1\n    return res + L[i:] + R[j:]</pre>",
-        stepByStep: `<b>Input array:</b> [38, 27, 43, 3]<br><br>
-<b>Phase 1: Divide</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    Split into [38, 27] and [43, 3].<br>
-    Split further into [38], [27], [43], [3].
-</div>
-<b>Phase 2: Conquer (Merge)</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    Merge [38] and [27] → [27, 38].<br>
-    Merge [43] and [3] → [3, 43].<br>
-    Merge [27, 38] and [3, 43] → [3, 27, 38, 43].
+        problem: "<b>Core Objective:</b> Sort a collection by recursively decomposing it into atomic units and reconstituting them in a balanced, sorted order.",
+        solution: "<b>Mechanism (Recursive Divide-and-Conquer):</b><br>Merge Sort leverages the efficiency of combining pre-sorted sequences.<br><br>1. <b>Recursive Split:</b> Bifurcate the array into $L$ and $R$ halves until scalar elements remain.<br>2. <b>Conquer:</b> Recursively sort both sub-arrays.<br>3. <b>Linear Merge:</b> Compare the heads of $L$ and $R$. Append the smaller element to a result buffer. This process ensures <b>Stability</b> (relative order of equals is preserved).",
+        optimality: "<b>Complexity Analysis:</b><br>• <b>Time:</b> O(N log N). The depth of the recursion tree is $log N$, and each level requires $O(N)$ work for merging.<br>• <b>Space:</b> O(N). Requires auxiliary buffers for the merging phase, making it less memory-efficient than in-place algorithms like Heap Sort.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def mergeSort(arr):\n    if len(arr) <= 1: return arr\n    # Divide: Find the midpoint and split\n    mid = len(arr) // 2\n    L = mergeSort(arr[:mid])\n    R = mergeSort(arr[mid:])\n    \n    # Conquer: Merge sorted halves\n    res, i, j = [], 0, 0\n    while i < len(L) and j < len(R):\n        if L[i] <= R[j]: \n            res.append(L[i]); i += 1\n        else: \n            res.append(R[j]); j += 1\n    return res + L[i:] + R[j:]</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> [38, 27, 43, 3]<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #afafaf; margin-left: 10px; margin-bottom: 10px;">
+    <i>Split:</i> [38, 27] | [43, 3].<br>
+    <i>Atomic:</i> [38], [27], [43], [3].<br>
+    <i>Merge 1:</i> [27, 38] and [3, 43].<br>
+    <i>Merge 2:</i> Final zipping $\to$ [3, 27, 38, 43].
 </div>
 <b>Final Result:</b> [3, 27, 38, 43]`
     },
@@ -1355,66 +1352,55 @@ const algorithms = [
         id: "quick-sort",
         title: "Quick Sort",
         category: "Algorithms - Sorting",
-        problem: "Sorting large amounts of data as fast as humanly possible on average. You need an 'in-place' algorithm that uses CPU caches efficiently and outperforms most other sorting methods in the real world.",
-        solution: "Quick Sort picks a 'pivot' element and partitions the rest of the array into two piles: those smaller than the pivot and those larger. It then recursively applies the same logic to those piles. By the time the recursion finishes, the entire array is sorted! Its speed comes from the fact that it does very few unnecessary swaps and works entirely within the original memory space.",
-        optimality: "Quick Sort is legendary for its <b>O(N log N) Average-case Time complexity</b>, often beating Merge Sort and Heap Sort in practice due to lower low-level overhead. While it can theoretically hit <b>O(N²)</b> in extremely rare 'unbalanced' cases (solved by picking a random pivot), its <b>O(log N) Space complexity</b> (for the recursion stack) and sheer raw speed make it the default choice for most modern programming languages.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def quickSort(arr):\n    if len(arr) <= 1: return arr\n    pivot = arr[len(arr) // 2]\n    L = [x for x in arr if x < pivot]\n    M = [x for x in arr if x == pivot]\n    R = [x for x in arr if x > pivot]\n    return quickSort(L) + M + quickSort(R)</pre>",
-        stepByStep: `<b>Input array:</b> [10, 80, 30, 90, 40, 50, 70]<br><br>
-<b>Picking the Pivot:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Pivot chosen:</i> 90 (at index 3).<br>
-    <i>Partition:</i> [10, 80, 30, 40, 50, 70] | [90] | []<br>
-    <i>Recurse:</i> Sort the left side [10, 80, 30, 40, 50, 70].
+        problem: "<b>Core Objective:</b> Rapidly sort an array by partitioning elements around a pivot, achieving high cache-efficiency and minimizing data movement.",
+        solution: "<b>Mechanism (Heuristic-Driven Partitioning):</b><br>Quick Sort is an <b>In-Place</b> divide-and-conquer algorithm.<br><br>1. <b>Pivot Selection:</b> Choose an element as the 'pivot' (ideally using the Median-of-Three heuristic).<br>2. <b>Partitioning:</b> Reorganize the array so elements < pivot are on the left and elements > pivot are on the right.<br>3. <b>Recursion:</b> Apply the procedure to the left and right partitions independently.<br>4. <b>Conquer:</b> The array is implicitely sorted upon reaching the base cases.",
+        optimality: "<b>Complexity Analysis:</b><br>• <b>Time:</b> O(N log N) average case. While it can degrade to <b>O(N²)</b> for pathological inputs (e.g., already sorted arrays with poor pivot choice), it is often the fastest algorithm in practice due to spatial locality.<br>• <b>Space:</b> O(log N) for the recursion stack.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def quickSort(arr):\n    if len(arr) <= 1: return arr\n    # Select a pivot (Middle element heuristic)\n    pivot = arr[len(arr) // 2]\n    # Partition into low, equal, and high sub-arrays\n    L = [x for x in arr if x < pivot]\n    M = [x for x in arr if x == pivot]\n    R = [x for x in arr if x > pivot]\n    \n    return quickSort(L) + M + quickSort(R)</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> [10, 80, 30, 90, 40]<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5ac8fa; margin-left: 10px; margin-bottom: 10px;">
+    <i>Pivot:</i> 30.<br>
+    <i>Partition:</i> [10] | [30] | [80, 90, 40].<br>
+    <i>Sub-Pivot (R):</i> 90.<br>
+    <i>Sub-Partition (R):</i> [80, 40] | [90] | [].
 </div>
-<b>Final Result:</b> [10, 30, 40, 50, 70, 80, 90]`
+<b>Final Result:</b> [10, 30, 40, 80, 90]`
     },
     {
         id: "cavity-map",
         title: "Cavity Map<br><a href='https://www.hackerrank.com/challenges/cavity-map/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Matrix",
-        problem: "Imagine you have a top-down map of a terrain, represented by a grid of numbers showing heights. You want to identify 'cavities'—special deep spots in the terrain. A spot is a cavity if it isn't on the edge of the map and its height is strictly greater than all four of its immediate neighbors (Up, Down, Left, and Right). Once found, you need to mark these spots with an 'X' to warn travelers!",
-        solution: "We solve this by scanning the inner portion of the grid (skipping the very first and last rows and columns). For every inner cell, we perform a 'Four-Way Check'. We compare the current height against the heights of the cells directly above, below, to the left, and to the right. If the central cell is 'The King of the Hill' (strictly greater than all four), we mark it as a cavity. We use a copy of the grid to store our 'X' marks so that we don't accidentally use an 'X' as a height value for the next check!",
-        optimality: "This 'Neighborhood Inspector' approach is perfectly optimal, running in <b>O(N²) Time complexity</b> where N is the side length of the square grid. Since we must examine almost every cell once, we cannot Mathematically solve this faster. It uses <b>O(N²) Space</b> to store the modified result grid, ensuring the original terrain data stays intact during the scan.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def cavityMap(grid):\n    n = len(grid)\n    res = [list(r) for r in grid]\n    for i in range(1, n-1):\n        for j in range(1, n-1):\n            v = grid[i][j]\n            if v > grid[i-1][j] and v > grid[i+1][j] and \\\n               v > grid[i][j-1] and v > grid[i][j+1]:\n                res[i][j] = 'X'\n    return [''.join(r) for r in res]</pre>",
-        stepByStep: `<b>Input Map:</b><br>
-1112<br>
-1912<br>
-1892<br>
-1234<br><br>
-<b>Scanning the Interior:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Spot (1,1) height 9:</i> Compare to 1, 1, 1, 8. All are smaller! Mark as <b>X</b>.<br>
-    <i>Spot (1,2) height 1:</i> Smaller than neighbors. Skip.<br>
-    <i>Spot (2,1) height 8:</i> Smaller than neighbors (9 is above). Skip.<br>
-    <i>Spot (2,2) height 9:</i> Compare to 1, 8, 3, 2. All are smaller! Mark as <b>X</b>.
+        problem: "<b>Core Objective:</b> Identify all 'cavities' within a 2D height map, where a cavity is defined as a non-edge cell that is strictly greater than its cardinal neighbors (North, South, East, West).",
+        solution: "<b>Algorithmic Strategy (Neighborhood Local Maximum Filter):</b><br>The algorithm iterates over the matrix sub-grid, excluding boundaries, and performs a density-based comparison.<br><br>1. <b>Boundary Exclusion:</b> Skip the first and last rows/columns (indices $0$ and $n-1$).<br>2. <b>Local Maxima Detection:</b> For each inner cell $(i, j)$, compare its height against $(i-1, j), (i+1, j), (i, j-1),$ and $(i, j+1)$.<br>3. <b>Symbolic Substitution:</b> If the cell is strictly higher than all four, replace its value with 'X' in a result buffer.<br>4. <b>Result Isolation:</b> Use a shallow copy or string concatenation to avoid interfering with ongoing neighbor checks.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N²). Every inner cell is visited once. This is asymptotically optimal as every element must be analyzed.<br>• <b>Space:</b> O(N²) for the result grid (though O(1) in-place is possible if modifying strings in-situ).",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def cavityMap(grid):\n    n = len(grid)\n    res = [list(r) for r in grid]\n    # Iterate through inner cells only\n    for i in range(1, n-1):\n        for j in range(1, n-1):\n            v = grid[i][j]\n            # Check all four cardinal neighbors\n            if v > grid[i-1][j] and v > grid[i+1][j] and \\\n               v > grid[i][j-1] and v > grid[i][j+1]:\n                res[i][j] = 'X'\n    return [''.join(r) for r in res]</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> [[1,1,1,2], [1,9,1,2], ...]<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5ac8fa; margin-left: 10px; margin-bottom: 10px;">
+    <i>Inner Spot (1,1) h=9:</i> Neighbors 1,1,1,8. <b>9 > all? Yes.</b> $\to$ 'X'.<br>
+    <i>Inner Spot (1,2) h=1:</i> Neighbor 9 is larger. Skipping.<br>
+    <i>Inner Spot (2,2) h=9:</i> Neighbors 1,8,3,2. <b>9 > all? Yes.</b> $\to$ 'X'.
 </div>
-<b>Final Warning Map:</b><br>
-1112<br>
-1X12<br>
-18X2<br>
-1234`
+<b>Final Result:</b> Grid with 'X' markers`
     },
     {
         id: "factorial-recursion",
         title: "Factorial (Recursion)",
         category: "Concepts - Recursion",
-        problem: "Calculate the factorial of a number ($n!$). Factorial is the product of all positive integers from 1 to $n$. For example, $5! = 5 \times 4 \times 3 \times 2 \times 1 = 120$.",
-        solution: "Recursion is the perfect way to represent the 'Russian Doll' nature of factorials! We define $n!$ as $n \\times (n-1)!$. This means to find $5!$, we just need to know $4!$ and multiply it by 5. We keep breaking the problem down until we hit our 'Base Case': the factorial of 1 (or 0) is simply 1. Once we hit that bottom point, the recursion 'unwinds', multiplying all the numbers back up to our answer.",
-        optimality: "The recursive approach reflects the mathematical definition perfectly, achieving <b>O(N) Time complexity</b> since we perform one multiplication for each number from 1 to N. It uses <b>O(N) Space</b> on the 'Call Stack' to keep track of each pending multiplication. For standard numbers, this is incredibly clean and readable code.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def factorial(n):\n    if n <= 1: return 1\n    return n * factorial(n - 1)</pre>",
-        stepByStep: `<b>Input:</b> n = 4<br><br>
-<b>The Execution Stack:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Call 1:</i> factorial(4) → 4 * factorial(3)<br>
-    <i>Call 2:</i> factorial(3) → 3 * factorial(2)<br>
-    <i>Call 3:</i> factorial(2) → 2 * factorial(1)<br>
-    <i>Call 4 (Base):</i> factorial(1) → 1
-</div>
-<b>Unwinding:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    Return 1 to Call 3: 2 * 1 = 2<br>
-    Return 2 to Call 2: 3 * 2 = 6<br>
-    Return 6 to Call 1: 4 * 6 = <b>24</b>
+        problem: "<b>Core Objective:</b> Compute the factorial $n!$ of a non-negative integer using a recursive strategy.",
+        solution: "<b>Mechanism (Recursive Linear Accumulation):</b><br>The algorithm defines $n!$ through its fundamental identity: $n! = n \times (n-1)!$.<br><br>1. <b>Base Case:</b> If $n \le 1$, return 1. This terminates the recursion.<br>2. <b>Recursive Leap:</b> Multiply the current value $n$ by the result of the function invoked with $n-1$.<br>3. <b>Convergence:</b> The stack grows linearly until the base case is reached, then collapses to compute the final product.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N). Each number from 1 to $n$ is processed exactly once.<br>• <b>Space:</b> O(N). The recursion depth is proportional to $n$, requiring stack space for each frame. (Note: Iterative or tail-recursive implementations can reduce this to O(1)).",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def factorial(n):\n    # Base case ensures termination\n    if n <= 1: return 1\n    # Recursive step reduces the problem size\n    return n * factorial(n - 1)</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> n=4.<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5856d6; margin-left: 10px; margin-bottom: 10px;">
+    <i>Stack:</i> fact(4) $\to$ 4 * fact(3)<br>
+    <i>Stack:</i> fact(3) $\to$ 3 * fact(2)<br>
+    <i>Stack:</i> fact(2) $\to$ 2 * fact(1)<br>
+    <i>Return:</i> 1 $\to$ 2 $\to$ 6 $\to$ 24.
 </div>
 <b>Final Result:</b> 24`
     },
@@ -1422,17 +1408,18 @@ const algorithms = [
         id: "gcd-recursion",
         title: "Greatest Common Divisor",
         category: "Concepts - Recursion",
-        problem: "Find the largest number that divides two integers perfectly without leaving a remainder. For example, the GCD of 48 and 18 is 6.",
-        solution: "We use the ancient and brilliant **Euclidean Algorithm** via recursion! The logic is simple: the GCD of two numbers (A and B) is the same as the GCD of B and the remainder of $A \\div B$. We keep 'swapping and modding' until the second number becomes 0. At that exact moment, the first number is our Greatest Common Divisor! It's like folding a piece of paper repeatedly until you find the largest square that fits perfectly.",
-        optimality: "The Euclidean algorithm is legendary for its efficiency, achieving <b>O(log(min(A, B))) Time complexity</b>—far faster than checking every possible divisor! It uses <b>O(log(min(A, B))) Space</b> for the recursion stack. It is the gold standard for GCD calculations in every modern computer system.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def gcd(a, b):\n    if b == 0: return a\n    return gcd(b, a % b)</pre>",
-        stepByStep: `<b>Input:</b> a = 48, b = 18<br><br>
-<b>The Euclidean Dance:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Round 1:</i> gcd(48, 18). Remainder (48%18) is 12.<br>
-    <i>Round 2:</i> gcd(18, 12). Remainder (18%12) is 6.<br>
-    <i>Round 3:</i> gcd(12, 6). Remainder (12%6) is 0.<br>
-    <i>Round 4:</i> gcd(6, 0). <b>Base Case reached!</b>
+        problem: "<b>Core Objective:</b> Determine the Greatest Common Divisor (GCD) of two integers using the Euclidean Algorithm.",
+        solution: "<b>Mechanism (Euclidean Modular Reduction):</b><br>The algorithm is based on the principle that the GCD of two numbers also divides their difference and remainder.<br><br>1. <b>Identity Property:</b> $gcd(a, b) = gcd(b, a \pmod b)$.<br>2. <b>Base Case:</b> When the divisor $b$ reaches 0, the current value of $a$ is the GCD.<br>3. <b>Recursive Swap:</b> Systematically reduce the problem scale by passing the remainder as the new divisor.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(log(min(A, B))). This is extremely efficient, as the numbers decrease geometrically.<br>• <b>Space:</b> O(log(min(A, B))) for the recursion stack.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def gcd(a, b):\n    # Euclidean property: gcd(a, b) = gcd(b, a % b)\n    if b == 0: return a\n    return gcd(b, a % b)</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> a=48, b=18.<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5ac8fa; margin-left: 10px; margin-bottom: 10px;">
+    <i>Iter 1:</i> gcd(48, 18). Remainder (48%18) = 12.<br>
+    <i>Iter 2:</i> gcd(18, 12). Remainder (18%12) = 6.<br>
+    <i>Iter 3:</i> gcd(12, 6). Remainder (12%6) = 0.<br>
+    <i>Iter 4:</i> gcd(6, 0). <b>GCD found.</b>
 </div>
 <b>Final Result:</b> 6`
     },
@@ -1440,22 +1427,20 @@ const algorithms = [
         id: "power-compute-recursion",
         title: "Fast Exponentiation",
         category: "Concepts - Recursion",
-        problem: "Calculate $X^N$ (X raised to the power of N) efficiently. While you could just multiply X by itself N times, a computer can do it much faster for large exponents!",
-        solution: "We use the 'Divide and Conquer' trick called **Exponentiation by Squaring**. Instead of calculating $2^8$ as $2 \\times 2 \\times 2...$, we realize that $2^8 = (2^4)^2$. And $2^4 = (2^2)^2$. By splitting the exponent in half at every step, we drastically reduce the work! If the exponent is odd (like $2^9$), we just calculate $(2^4)^2 \\times 2$. This recursive approach cuts the number of operations down significantly.",
-        optimality: "This optimized recursion achieves <b>O(log N) Time complexity</b>, which is a massive leap over the simple O(N) loop! While a standard loop might take a million steps for $2^{1000000}$, this method only takes about 20 steps. It uses <b>O(log N) Space</b> for the call stack, making it the fastest way to handle large powers in cryptography and higher math.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def power(x, n):\n    if n == 0: return 1\n    half = power(x, n // 2)\n    if n % 2 == 0: return half * half\n    return x * half * half</pre>",
-        stepByStep: `<b>Input:</b> 2^5<br><br>
-<b>Divide and Conquer:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Step 1:</i> Need 2^2 to find 2^5.<br>
-    <i>Step 2:</i> Need 2^1 to find 2^2.<br>
-    <i>Step 3:</i> Need 2^0 (is 1).<br>
-    <i>Recursive Climb:</i> <br>
-    2^1 = 2 * (1*1) = 2<br>
-    2^2 = (2*2) = 4<br>
-    2^5 = 2 * (4*4) = <b>32</b>
+        problem: "<b>Core Objective:</b> Efficiently compute $x^n$ (X raised to the power N) using a logarithmic decomposition strategy.",
+        solution: "<b>Mechanism (Binary Exponentiation Algorithm):</b><br>The algorithm minimizes multiplications by leveraging the mathematical identity: $x^n = (x^{n/2})^2$.<br><br>1. <b>Divide:</b> Recursively calculate $half = x^{\lfloor n/2 \rfloor}$.<br>2. <b>Conquer:</b> Multiply $half$ by itself. This 'squares' the previous result, doubling the exponent in a single operation.<br>3. <b>Parity Correction:</b> If $n$ is odd, perform one additional multiplication by $x$ to account for the truncated remainder.<br>4. <b>Base Case:</b> $x^0 = 1$.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(log N). The number of operations is proportional to the number of bits in the exponent.<br>• <b>Space:</b> O(log N) for the recursion stack.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def power(x, n):\n    # Base Case\n    if n == 0: return 1\n    # Divide: Calculate lower power once\n    half = power(x, n // 2)\n    # Conquer: Square the result\n    if n % 2 == 0: return half * half\n    # Correct for odd exponents\n    return x * half * half</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> x=2, n=10.<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ff9500; margin-left: 10px; margin-bottom: 10px;">
+    <i>Stack:</i> power(2, 10). half = power(2, 5).<br>
+    <i>Stack:</i> power(2, 5). half = power(2, 2). (Odd Correction $\to 32$)<br>
+    <i>Stack:</i> power(2, 2). half = power(2, 1). (Square $\to 4$)<br>
+    <i>Reduction:</i> 10 $\to$ 5 $\to$ 2 $\to$ 1 $\to$ 0 (Base).
 </div>
-<b>Final Result:</b> 32`
+<b>Final Result:</b> 1024`
     },
     {
         id: "sum-of-digits-recursion",
