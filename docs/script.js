@@ -143,84 +143,62 @@ const algorithms = [
         id: "beautiful-triplets",
         title: "Beautiful Triplets<br><a href='https://www.hackerrank.com/challenges/beautiful-triplets/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Arrays",
-        problem: "You are handed a list of numbers sorted from smallest to largest. Your goal is to find special groups of three numbers called 'Beautiful Triplets'.<br><br>For a group of three numbers (let's call them A, B, and C) to be 'Beautiful', they must be perfectly spaced apart by an exact magic distance `d`. <br><br>For example, if your magic distance `d` is 2, then `[1, 3, 5]` is a beautiful triplet because `3 - 1 = 2`, and `5 - 3 = 2`. The gaps match perfectly! How many totally unique beautiful triplets can you spot hiding in the list?",
-        solution: "The slow way to do this is to check every combination of 3 numbers. But we can be much smarter using a tool from math called a **Hash Map**!<br><br>We take all our numbers and put them in a tally chart (using a dictionary). Then we look at every unique number we collected—let's call it `A`. Since we know the 'magic gap' `d` ahead of time, we don't need to guess what `B` and `C` are! `B` *must* be `A + d`, and `C` *must* be `A + 2*d`.<br><br>So for every number `A`, we simply ask the tally chart: 'Do you have the number `A + d`? What about `A + 2*d`?'. If the chart has both, then we've found a Beautiful Triplet! We just multiply their tally counts together to see how many variations we can make, and add that to our total.",
-        optimality: "This Hash Map approach shatters the slow loop method, achieving blitz-fast <b>O(N) Time complexity</b>. Creating the tally chart requires looping over the list once, and checking the map for our 'ideal numbers' takes instant O(1) time checks! It requires exactly <b>O(U) Space</b>, where U is the amount of unique numbers tracked inside our lookup dictionary.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>from collections import Counter\n\ndef beautifulTriplets(arr, d):\n    counts = Counter(arr)\n    total = 0\n    for x in counts:\n        if (x + d) in counts and (x + 2 * d) in counts:\n            total += counts[x] * counts[x + d] * counts[x + 2 * d]\n    return total</pre>",
-        stepByStep: `<b>Input array:</b> [2, 2, 4, 4, 6], Magic Distance <code>d = 2</code><br><br>
-<b>Phase 1: Build the Tally Chart</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>We count the frequencies:</i><br>
-    The number '2' appears 2 times.<br>
-    The number '4' appears 2 times.<br>
-    The number '6' appears 1 time.
+        problem: "<b>Challenge Overview:</b> Identify the absolute count of 'Beautiful Triplets' within a strictly increasing sequence. <br><br><b>Definition:</b> A triplet $(i, j, k)$ is 'Beautiful' if and only if:<br>1. $a[j] - a[i] = d$<br>2. $a[k] - a[j] = d$<br>3. Indices follow $i < j < k$.",
+        solution: "<b>Efficiency Transformation:</b><br>While a triple-nested loop (O(N³)) is intuitive, the sorted nature of the input allows for <b>Hash-Map Optimized Lookups</b>.<br><br>1. <b>Frequency Aggregation:</b> First, we populate a Hash Map (dictionary) with the frequencies of all elements in the array.<br>2. <b>Ideal Value Prediction:</b> For every element <code>x</code> present in the map, we mathematically predict its companions. If <code>x</code> is our baseline, the triplet must consist of $(x, x+d, x+2d)$.<br>3. <b>Frequency Multiplication:</b> Instead of counting triplets individually, we multiply their occurrences: <code>count(x) * count(x+d) * count(x+2d)</code>. This handles duplicate values in the array simultaneously.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N) precisely. One linear pass to build the map, and one pass over the unique keys for O(1) hash-lookups.<br>• <b>Space:</b> O(N) to store the element frequencies.<br><br><b>Strategic Merit:</b> This strategy reduces the computational burden from cubic to linear time by leveraging the <b>Complementary Lookup Pattern</b>.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>from collections import Counter\n\ndef beautifulTriplets(d, arr):\n    counts = Counter(arr)\n    beautiful_count = 0\n    \n    for x in counts:\n        if (x + d) in counts and (x + 2*d) in counts:\n            beautiful_count += counts[x] * counts[x+d] * counts[x+2*d]\n            \n    return beautiful_count</pre>",
+        stepByStep: `<b>Mathematical Validation:</b><br>
+<b>Input:</b> [2, 2, 4, 4, 6], d = 2<br><br>
+<b>Map Population:</b> {2: 2, 4: 2, 6: 1}<br><br>
+<b>Verification Cycle:</b>
+<div style="padding-left: 20px; border-left: 2px solid #fd7e14; margin-left: 10px; margin-bottom: 10px;">
+    <i>Base x=2:</i> Needs 4 and 6. Both exist in map.<br>
+    <i>Combo Calculation:</i> <code>freq(2) * freq(4) * freq(6)</code> = 2 * 2 * 1 = <b>4 Triplets</b>.
 </div>
-<b>Phase 2: Check the Map!</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Checking '2':</i> We need a ` + "`4`" + ` (2+2) and a ` + "`6`" + ` (2+4). Do we have them? Yes!<br>
-    <i>Math:</i> Multiply the tallies: <code>2 x 2 x 1 = 4</code> unique triplets formed!<br>
-    <i>Total jumps to:</i> 4
+<div style="padding-left: 20px; border-left: 2px solid #fd7e14; margin-left: 10px; margin-bottom: 10px;">
+    <i>Base x=4:</i> Needs 6 and 8. 8 is missing from map. <br>
+    <i>Result:</i> Skipped.
 </div>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Checking '4':</i> We need a ` + "`6`" + ` (4+2) and an ` + "`8`" + ` (4+4). Do we have them? No, ` + "`8`" + ` is missing.<br>
-    <i>Total stays at:</i> 4
-</div>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Checking '6':</i> We need an ` + "`8`" + ` (6+2) and a ` + "`10`" + ` (6+4). Do we have them? No.<br>
-    <i>Total stays at:</i> 4
-</div>
-<b>Final Answer!</b> We found exactly <b>4</b> Beautiful Triplets.`
+<b>Final Result:</b> 4.`
     },
     {
         id: "circular-array-rotation",
         title: "Circular Array Rotation<br><a href='https://www.hackerrank.com/challenges/circular-array-rotation/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Arrays",
-        problem: "You are given a list of integers and told to 'rotate' them to the right by exactly `k` steps. A 'rotation' just means taking the very last number off the end of your list and gluing it onto the very front of the list, over and over!<br><br>Once the list has been rotated `k` times, you are given a bunch of 'queries' (which are just index numbers). For each query index, you must print out exactly what number is now sitting in that spot of the rotated list.",
-        solution: "We could use a loop to move numbers one by one, but that would take forever if `k` was a million! Instead, we can use a clever Python trick to instantly perform all the rotations at once without ever using a loop.<br><br>First, if someone asked you to rotate a list of 5 things 5 whole times... it would end up looking exactly like the starting list. So we immediately use the Math Modulo Operator (`%`) to chop off the useless full circles. 104 rotations on a list of 5 is really just `104 % 5 = 4` rotations!<br><br>Next, we know exactly how to rebuild the array. If we do 4 rotations on a list, we know the exact *last* 4 numbers in the array are getting moved to the front. We just use Python's slice syntax `a[-k:]` to slice those numbers off the end, and glue them to the front of the remaining numbers `a[:-k]`. Boom! The list is perfectly rotated. We return a brand new list containing only the requested queries.",
-        optimality: "This is a flawlessly optimal solution. Performing the rotation happens in a massive leap using slicing, meaning it completes in <b>O(N) Time complexity</b> to reconstruct the single new array. From there, answering the queries using the new array takes instant O(1) lookups, mapping to <b>O(Q) Time</b> for all queries. The total space complexity requires <b>O(N)</b> to store the newly rotated array. Pure math wizardry!",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def circularArrayRotation(a, k, queries):\n    k %= len(a)\n    r = a[-k:] + a[:-k]\n    return [r[i] for i in queries]</pre>",
-        stepByStep: `<b>Input array:</b> [1, 2, 3], Rotations: <code>k = 2</code>, Queries: <code>[0, 1, 2]</code><br><br>
-<b>Phase 1: Optimizing the Rotations</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>We use Modulo math:</i> <code>2 % 3 length = 2</code> effective rotations. 
+        problem: "<b>Core Objective:</b> Perform <b>k</b> right-circular rotations on an array of length <b>N</b> and respond to <b>M</b> positional queries.<br><br><b>Definition:</b> A single right rotation shifts every element $a[i]$ to $a[i+1]$, and the tail element $a[n-1]$ to index $0$.",
+        solution: "<b>Algorithmic Paradigm (Virtual Rotation):</b><br>Performing <b>k</b> physical shifts (O(N*k)) is computationally inefficient. We employ <b>Modular Index Mapping</b> or <b>Slicing Reconstruction</b>.<br><br>1. <b>Minimal Rotation:</b> Since rotating <b>N</b> times returns the array to its original state, we calculate the effective rotation as <code>k_eff = k % n</code>.<br>2. <b>Slice-Based Reconstruction:</b> In Python, we can reconstruct the final array using slice operations. The tail segment <code>a[-k_eff:]</code> shifts to the head, and the original head segment <code>a[:-k_eff]</code> shifts to the tail.<br>3. <b>Query Resolution:</b> Map the requested indices directly to the reconstructed array.",
+        optimality: "<b>Complexity Profile:</b><br>• <b>Time:</b> O(N + M). Array reconstruction takes linear time O(N), and query retrieval is O(1) per query.<br>• <b>Space:</b> O(N) to store the rotated array structure.<br><br><b>Conclusion:</b> This approach circumvents the O(N*k) bottleneck entirely, making it impervious to extremely high rotation counts (where k » N).",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def circularArrayRotation(a, k, queries):\n    n = len(a)\n    k %= n\n    # Optimal rotation using Python Slicing\n    rotated = a[n-k:] + a[:n-k]\n    return [rotated[q] for q in queries]</pre>",
+        stepByStep: `<b>Rotation Trace:</b><br>
+<b>Input:</b> [1, 2, 3], k=2, queries=[0, 1, 2]<br><br>
+<b>Processing:</b>
+<div style="padding-left: 20px; border-left: 2px solid #007bff; margin-left: 10px; margin-bottom: 10px;">
+    <i>Reduction:</i> 2 % 3 = 2 effective rotations.<br>
+    <i>Slice Head:</i> <code>a[3-2:]</code> → <code>a[1:]</code> → [2, 3]<br>
+    <i>Slice Tail:</i> <code>a[:3-2]</code> → <code>a[:1]</code> → [1]<br>
+    <i>Reconstruction:</i> [2, 3] + [1] = <b>[2, 3, 1]</b>.
 </div>
-<b>Phase 2: The Array Slice Magic</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Slice off the end:</i> Grab the last 2 elements: <code>a[-2:]</code> = ` + "`[2, 3]`" + `<br>
-    <i>Slice off the rest:</i> Grab everything else: <code>a[:-2]</code> = ` + "`[1]`" + `<br>
-    <i>Glue them together:</i> <code>[2, 3] + [1] = [2, 3, 1]</code>! The array is fully rotated.
-</div>
-<b>Phase 3: Answering the Queries</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Query 0:</i> What is at index 0? <b>2</b><br>
-    <i>Query 1:</i> What is at index 1? <b>3</b><br>
-    <i>Query 2:</i> What is at index 2? <b>1</b><br>
-    <b>Final output returned is: [2, 3, 1]</b>!
-</div>`
+<b>Query Output:</b> [rotated[0]: 2, rotated[1]: 3, rotated[2]: 1].`
     },
     {
         id: "climbing-leaderboard",
         title: "Climbing the Leaderboard<br><a href='https://www.hackerrank.com/challenges/climbing-the-leaderboard/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Arrays",
-        problem: "Imagine you are playing an arcade game and you want to know your rank on the global leaderboard after every single game you play! The arcade uses 'Dense Ranking', which means ties are treated fairly. If the top scores are 100, 90, 90, and 80, the person with 100 is in 1st place, *both* people with 90 are in 2nd place, and the person with 80 is in 3rd place!<br><br>You are given a list of all the high scores currently on the board, and a list of your own scores from the games you played today (in the order you played them, getting better every game). Your job is to print out what your exact rank was after *each* game you finished.",
-        solution: "First, we clean up the arcade's leaderboard! Since ties share the same rank, we don't care about duplicate scores. We shrink the leaderboard down to only the unique scores, sorted from highest to lowest. If the unique scores are `[100, 90, 80]`, then 100 is Rank 1, 90 is Rank 2, and 80 is Rank 3!<br><br>Now, we could just check your score against the whole leaderboard every single time you play, but that is way too slow! Since your scores are *getting better* every game (ascending), we use a clever 'Two Pointer' trick. We start a pointer at the very *bottom* of the unique leaderboard. As you play games and your score increases, we just march the pointer *up* the leaderboard until we find a score bigger than yours. Your rank is exactly one spot below that pointer! Because we just keep marching up and never reset to the bottom, it's incredibly fast.",
-        optimality: "This Two Pointer approach is brilliantly optimal, achieving <b>O(N + M) Time</b> (where N is the leaderboard size and M is the number of games you played). Stripping the duplicates takes O(N), and since our pointer only ever moves upwards across the board and never restarts, we only examine the leaderboard once total across all your games! The space complexity is <b>O(N)</b> to store the cleaned-up unique leaderboard.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def climbingLeaderboard(ranked, player):\n    unique_ranked = sorted(list(set(ranked)), reverse=True)\n    results = []\n    i = len(unique_ranked) - 1\n    \n    for score in player:\n        while i >= 0 and score >= unique_ranked[i]:\n            i -= 1\n        \n        if i < 0:\n            results.append(1)\n        else:\n            results.append(i + 2)\n            \n    return results</pre>",
-        stepByStep: `<b>Leaderboard:</b> [100, 100, 50, 40, 40, 20]<br>
-<b>Your Scores:</b> [5, 25, 50, 120]<br><br>
-<b>Phase 1: Clean the Leaderboard</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Unique Scores:</i> <code>[100, 50, 40, 20]</code><br>
-    <i>Ranks:</i> 100 is Rank 1. 50 is Rank 2. 40 is Rank 3. 20 is Rank 4.
+        problem: "<b>Ranking Logic:</b> Implement a 'Dense Ranking' system for a leaderboard. In this system: <br>• Elements with identical scores share the same rank.<br>• The subsequent rank increment is exactly 1 (e.g., scores 100, 90, 90 result in ranks 1, 2, 2, and the next rank is 3).<br><br><b>Goal:</b> Given a leaderboard and a chronological sequence of player scores, determine the player's rank after each score update.",
+        solution: "<b>Advanced Strategy (Two-Pointer Optimization):</b><br>The leaderboard is sorted descending, and the player scores are provided in <i>strictly increasing order</i>. This dual-sorted nature allows for a <b>Monotonic Search</b>.<br><br>1. <b>Preprocessing:</b> Reduce the leaderboard to a unique set of scores while maintaining descending order. This unique set directly maps indices to dense ranks.<br>2. <b>Search Phase:</b> Instead of performing a Binary Search (O(log N)) for each player score, we use a 'Bottom-Up' pointer on the unique leaderboard. Since the player's scores only increase, we only need to move our leaderboard pointer <i>upward</i>. We never reset the pointer, ensuring each leaderboard element is compared once total.",
+        optimality: "<b>Efficiency Metrics:</b><br>• <b>Time:</b> O(N + M), where N is the original leaderboard length and M is the score sequence length. Single passes for deduplication and pointer traversal make this remarkably efficient.<br>• <b>Space:</b> O(N) auxiliary space to store the deduplicated unique leaderboard.<br><br><b>Professional Evaluation:</b> The Two-Pointer variant is superior to multiple binary searches when the query sequence is sorted, yielding a perfectly linear performance profile.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def climbingLeaderboard(ranked, player):\n    # Dense Ranking Setup\n    unique_ranked = sorted(list(set(ranked)), reverse=True)\n    i = len(unique_ranked) - 1\n    ranks = []\n    \n    for score in player:\n        # Monotonic Upward Search\n        while i >= 0 and score >= unique_ranked[i]:\n            i -= 1\n        ranks.append(i + 2)\n    return ranks</pre>",
+        stepByStep: `<b>Execution Trace:</b><br>
+<b>Unique Leaderboard:</b> [100, 50, 40, 20]<br>
+<b>Player Sequence:</b> [5, 25, 50, 120]<br><br>
+<b>Pointer Movement:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5856d6; margin-left: 10px; margin-bottom: 10px;">
+    <i>Score 5:</i> 5 < 20 (pointer index 3). Rank = 3+2 = <b>5</b>.<br>
+    <i>Score 25:</i> 25 >= 20. Pointer moves to index 2 (40). 25 < 40. Rank = 2+2 = <b>4</b>.<br>
+    <i>Score 50:</i> 50 >= 40. Pointer moves to index 1 (50). 50 >= 50. Pointer moves to index 0 (100). Rank = 0+2 = <b>2</b>.<br>
+    <i>Score 120:</i> 120 >= 100. Pointer moves to -1. Rank = -1+2 = <b>1</b>.
 </div>
-<b>Phase 2: Climbing the Ladder!</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Game 1 (Score 5):</i> Pointer starts at bottom (20). 5 is not bigger than 20. Pointer stops. Rank is <b>6</b>.<br>
-    <i>Game 2 (Score 25):</i> 25 is bigger than 20! Pointer moves up to 40. 25 is not bigger than 40. Pointer stops. Rank is <b>4</b>.<br>
-    <i>Game 3 (Score 50):</i> 50 is bigger than 40! Pointer moves up to 50. 50 is equal to 50! Pointer moves past it to 100. Pointer stops. Rank is <b>2</b>.<br>
-    <i>Game 4 (Score 120):</i> 120 is bigger than 100! Pointer moves up and falls off the top of the board! Rank is <b>1</b>!
-</div>
-<b>Final Printed Ranks:</b> 6, 4, 2, 1.`
+<b>Final Result:</b> [5, 4, 2, 1]`
     },
     {
         id: "compare-the-triplets",
