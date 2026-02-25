@@ -1279,38 +1279,35 @@ const algorithms = [
         id: "lisas-workbook",
         title: "Lisa's Workbook<br><a href='https://www.hackerrank.com/challenges/lisa-workbook/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Simulation",
-        problem: "Lisa has a math workbook! It has several chapters, and each chapter has a different number of problems. The catch? Only <b>k</b> problems fit on a single page. A problem is considered 'special' if its number within the chapter (1, 2, 3...) happens to be the same as the page number it's printed on. Help Lisa count all the special problems in her book.",
-        solution: "We solve this by simulating the printing of the book! We maintain a `current_page` counter starting at 1. We iterate through each chapter and calculate how many problems it has. <br><br>For each 'batch' of <b>k</b> problems on a page, we determine the range of problem numbers (e.g., problems 4 to 6). If the `current_page` number falls within that range (e.g., is page 5 also problem 5?), we increment our 'special' counter. We then turn the page and continue until every chapter is done.",
-        optimality: "This 'Page Turner' simulation runs in <b>O(N + P) Time complexity</b> where N is the number of chapters and P is the number of pages (which depends on total problems). Since we must 'check' every page once, this is the most efficient way to solve it. It uses <b>O(1) Space</b> as we only need to track the page and special counters.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def workbook(n, k, chapters):\n    page = 1\n    special = 0\n    for problems_in_chapter in chapters:\n        for start in range(1, problems_in_chapter + 1, k):\n            end = min(start + k - 1, problems_in_chapter)\n            if start <= page <= end:\n                special += 1\n            page += 1\n    return special</pre>",
-        stepByStep: `<b>Config:</b> k = 3 problems/page | <b>Chapter 1:</b> 5 problems<br><br>
-<b>Building the Workbook:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Page 1:</i> Problems 1, 2, 3. (Page 1 = Problem 1? <b>YES!</b>)<br>
-    <i>Page 2:</i> Problems 4, 5. (Page 2 is NOT in range 4-5. NO.)<br>
-    <i>Page 3:</i> (Start of next chapter...)
+        problem: "<b>Core Objective:</b> Count 'special' problems in a workbook, where a problem is special if its index within a chapter equals the global page number it is printed on.<br><br><b>Constraint:</b> Bach chapter has $n_i$ problems, and each page can contain at most $k$ problems.",
+        solution: "<b>Algorithmic Strategy (Pagination-Contextual Problem Indexing):</b><br>The algorithm simulates the pagination process, tracking problem indices relative to the global page state.<br><br>1. <b>Simulation Setup:</b> Initialize a global `page` counter and a `special` problem counter.<br>2. <b>Nested Traversal:</b> Iterate through each chapter. For each chapter, iterate through its problems, grouping them into batches of size $k$.<br>3. <b>Condition Validation:</b> For a batch of problems from index $p_{start}$ to $p_{end}$, check if $p_{start} \le page \le p_{end}$. If True, the problem index matching the page number exists on that page.<br>4. <b>State Update:</b> Increment the page counter after each batch.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N + P) where $N$ is the number of chapters and $P$ is the total number of pages in the book. This is linear relative to the output visualization (the pages).<br>• <b>Space:</b> O(1). Only scalar counters for pages and special problems are stored.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def workbook(n, k, arr):\n    page = 1\n    special_problems = 0\n    \n    for problems_in_chapter in arr:\n        # Iterate through problems in batches of k (one page per batch)\n        for p_start in range(1, problems_in_chapter + 1, k):\n            p_end = min(p_start + k - 1, problems_in_chapter)\n            # If the current page number falls in the range of problems on this page\n            if p_start <= page <= p_end:\n                special_problems += 1\n            page += 1\n            \n    return special_problems</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>k=3</b>. Chapter 1: 5 problems.<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5856d6; margin-left: 10px; margin-bottom: 10px;">
+    <i>Page 1:</i> Problems 1-3. <b>1 is in range? Yes.</b> (Special: 1)<br>
+    <i>Page 2:</i> Problems 4-5. <b>2 is in range? No.</b><br>
+    <i>Page 3:</i> (Start Chapter 2...)
 </div>
-<b>Final Result:</b> Lisa found 1 special problem so far!`
+<b>Final Result:</b> 1`
     },
     {
         id: "heap-sort",
         title: "Heap Sort",
         category: "Algorithms - Sorting",
-        problem: "Sorting a large list of numbers where you need a guaranteed O(N log N) performance regardless of the input data, unlike QuickSort which can occasionally hit a 'worst-case' slow point. You need an 'in-place' sort that doesn't use extra memory for a new list.",
-        solution: "The Heap Sort algorithm treats the array as a 'Binary Heap'—a special tree structure where every parent is larger than its children. First, we transform the messy array into a Max-Heap (a process called 'heapify'). Then, we repeatedly pluck the largest element (the root) and swap it with the last element of the unsorted section, shrinking the heap and building the sorted list from the back.",
-        optimality: "Heap Sort is a heavyweight champion of efficiency, delivering <b>O(N log N) Time complexity</b> in the Best, Average, AND Worst cases. Because it performs all operations directly within the original array, it uses <b>O(1) Space complexity</b>. While it might be slightly slower than QuickSort in random real-world data due to cache performance, its rock-solid guarantees make it ideal for systems where predictable performance is mission-critical.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def heapify(arr, n, i):\n    largest = i\n    l, r = 2*i + 1, 2*i + 2\n    if l < n and arr[l] > arr[largest]: largest = l\n    if r < n and arr[r] > arr[largest]: largest = r\n    if largest != i:\n        arr[i], arr[largest] = arr[largest], arr[i]\n        heapify(arr, n, largest)\n\ndef heapSort(arr):\n    n = len(arr)\n    for i in range(n // 2 - 1, -1, -1): heapify(arr, n, i)\n    for i in range(n-1, 0, -1):\n        arr[i], arr[0] = arr[0], arr[i]\n        heapify(arr, i, 0)\n    return arr</pre>",
-        stepByStep: `<b>Input array:</b> [4, 10, 3, 5, 1]<br><br>
-<b>Phase 1: Build the Max-Heap</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Action:</i> Rearrange array so parent > children.<br>
-    <i>Result:</i> [10, 5, 3, 4, 1]
-</div>
-<b>Phase 2: Sorting</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Step 1:</i> Swap root (10) with last (1). Result: [1, 5, 3, 4, 10]. Heapify unsorted part.<br>
-    <i>Step 2:</i> Largest in unsorted is 5. Swap with last in unsorted (4). Result: [4, 1, 3, 5, 10].<br>
-    <i>...Continue until sorted...</i>
+        problem: "<b>Core Objective:</b> Efficiently sort an array by leveraging the structural properties of a <b>Binary Heap</b>, ensuring guaranteed logarithmic performance for each element extraction.",
+        solution: "<b>Mechanism:</b> Heap Sort is an <b>In-Place Selection Sort</b> variant.<br><br>1. <b>Build Phase:</b> Transform the input array into a <b>Max-Heap</b> (where $parent \ge children$) using the 'heapify' procedure in $O(N)$ time.<br>2. <b>Extraction Phase:</b> Iteratively swap the root (maximum element) with the last unsorted element. This 'extracts' the largest value and places it in its final sorted position.<br>3. <b>Restoration:</b> Re-heapify the reduced heap to maintain the Max-Heap property. Repeat until the heap is empty.",
+        optimality: "<b>Complexity Analysis:</b><br>• <b>Time:</b> O(N log N) for Best, Average, and Worst cases. This algorithm provides high predictability, making it suitable for mission-critical systems.<br>• <b>Space:</b> O(1). All operations are performed directly within the input array via pointer manipulation.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def heapify(arr, n, i):\n    largest = i\n    l, r = 2*i + 1, 2*i + 2\n    # Preserve the Max-Heap property (parent > children)\n    if l < n and arr[l] > arr[largest]: largest = l\n    if r < n and arr[r] > arr[largest]: largest = r\n    if largest != i:\n        arr[i], arr[largest] = arr[largest], arr[i]\n        heapify(arr, n, largest)\n\ndef heapSort(arr):\n    n = len(arr)\n    # Phase 1: O(N) Build Heap\n    for i in range(n // 2 - 1, -1, -1): heapify(arr, n, i)\n    # Phase 2: O(N log N) Systematic Extraction\n    for i in range(n-1, 0, -1):\n        arr[i], arr[0] = arr[0], arr[i]\n        heapify(arr, i, 0)\n    return arr</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> [4, 10, 3, 5, 1]<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5ac8fa; margin-left: 10px; margin-bottom: 10px;">
+    <i>Build Heap:</i> [4, 10, 3, 5, 1] $\to$ [10, 5, 3, 4, 1].<br>
+    <i>Swap Root:</i> 10 $\leftrightarrow$ 1. Array: [1, 5, 3, 4, 10]. Heapify [1, 5, 3, 4].<br>
+    <i>Next Max:</i> 5. Swap with 4. Array: [4, 1, 3, 5, 10].
 </div>
 <b>Final Result:</b> [1, 3, 4, 5, 10]`
     },
@@ -1318,19 +1315,19 @@ const algorithms = [
         id: "insertion-sort",
         title: "Insertion Sort",
         category: "Algorithms - Sorting",
-        problem: "Sorting a small or nearly sorted list of items, like arranging a hand of playing cards from smallest to largest as you receive them one by one.",
-        solution: "Insertion Sort works exactly like sorting a hand of cards! We start with one card and assume it's sorted. Then, for every new card we pick up, we compare it to the cards already in our hand, shifting them to the right until we find the perfect slot to 'insert' the new card. We repeat this until every card is in its proper place.",
-        optimality: "For small datasets or lists that are already 'mostly' sorted, Insertion Sort is incredibly fast, achieving <b>O(N) Time complexity</b> in the best case. However, for large, random lists, it slows down to <b>O(N²)</b>. Its main advantage is its extreme simplicity and the fact that it uses <b>O(1) Space</b>, making it a favorite for 'online' sorting where data arrives incrementally.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def insertionSort(arr):\n    for i in range(1, len(arr)):\n        key = arr[i]\n        j = i - 1\n        while j >= 0 and key < arr[j]:\n            arr[j + 1] = arr[j]\n            j -= 1\n        arr[j + 1] = key\n    return arr</pre>",
-        stepByStep: `<b>Input array:</b> [12, 11, 13, 5, 6]<br><br>
-<b>Walking through the hand:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Card 11:</i> Smaller than 12. Shift 12 right and insert 11. [11, 12, 13, 5, 6]<br>
-    <i>Card 13:</i> Larger than 12. Keep it. [11, 12, 13, 5, 6]<br>
-    <i>Card 5:</i> Smaller than 13, 12, 11. Shift all three right and insert 5 at front. [5, 11, 12, 13, 6]<br>
-    <i>Card 6:</i> Smaller than 13, 12, 11. Shift those three right and insert 6 after 5. [5, 6, 11, 12, 13]
+        problem: "<b>Core Objective:</b> Incrementally build a sorted sub-segment of an array by inserting each new element into its correct relative position.",
+        solution: "<b>Mechanism (Iterative Array Partitioning):</b><br>The algorithm maintains a logical 'sorted' left portion and an 'unsorted' right portion.<br><br>1. <b>Key Selection:</b> Iterate from the second element. Designate this as the `key`.<br>2. <b>Backward Comparison:</b> Compare the `key` with elements in the sorted sub-segment (to its left).<br>3. <b>Shift Optimization:</b> While elements are larger than the `key`, shift them one position to the right.<br>4. <b>Insertion:</b> Place the `key` into the newly created vacuum.",
+        optimality: "<b>Complexity Analysis:</b><br>• <b>Time:</b> O(N²) average and worst case. However, it achieves <b>O(N)</b> for nearly sorted data, making it a superior 'online' sorting algorithm.<br>• <b>Space:</b> O(1). Stability is preserved ($L[i] \le R[j]$), and no auxiliary memory is required.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def insertionSort(arr):\n    for i in range(1, len(arr)):\n        key = arr[i]\n        j = i - 1\n        # Linear search for insertion point while shifting\n        while j >= 0 and key < arr[j]:\n            arr[j + 1] = arr[j]\n            j -= 1\n        arr[j + 1] = key\n    return arr</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> [12, 11, 13, 5]<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 20px solid #5856d6; margin-left: 10px; margin-bottom: 10px;">
+    <i>Key 11:</i> 11 < 12. Shift 12. Result: [11, 12, 13, 5].<br>
+    <i>Key 13:</i> 13 > 12. Position valid. Result: [11, 12, 13, 5].<br>
+    <i>Key 5:</i> 5 < 13, 12, 11. Shift all three. Result: [5, 11, 12, 13].
 </div>
-<b>Final Result:</b> [5, 6, 11, 12, 13]`
+<b>Final Result:</b> [5, 11, 12, 13]`
     },
     {
         id: "merge-sort",
