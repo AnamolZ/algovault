@@ -204,55 +204,39 @@ const algorithms = [
         id: "compare-the-triplets",
         title: "Compare the Triplets<br><a href='https://www.hackerrank.com/challenges/compare-the-triplets/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Arrays",
-        problem: "Alice and Bob each created a coding challenge, and a reviewer gave their challenges a rating from 1 to 100 in three distinct categories: Problem Clarity, Originality, and Difficulty. You are given Alice's three scores `[A1, A2, A3]` and Bob's three scores `[B1, B2, B3]`.<br><br>Your task is to find their total comparison points by comparing their scores category by category:<br>1. If Alice's score is higher, Alice gets 1 point.<br>2. If Bob's score is higher, Bob gets 1 point.<br>3. If they tied, neither gets a point.<br><br>You must calculate and return their final scores side-by-side as a single output array!",
-        solution: "This is a classic 'zip and compare' problem! We create a little scoreboard with Alice's Points = 0 and Bob's Points = 0. Then, we line their scores up side-by-side (zipping them) so we can look at Category 1 together, then Category 2, and finally Category 3.<br><br>For each category, we just use a basic `if` statement: Is Alice's number strictly bigger? Give her a point. Else, is Bob's strictly bigger? Give him a point. We completely ignore ties. At the very end, we bundle their total tallies into a list and return it!",
-        optimality: "This is as straightforward and optimal as algorithms get! Since we only ever look at 3 categories, the algorithm runs in <b>O(1) Time</b> (or O(N) if the list sizes were allowed to grow indefinitely, but they are locked to exactly 3). We simply loop exactly 3 times and do constant math. The auxiliary memory footprint is exactly <b>O(1) Space</b> because we are just maintaining two integer tally variables!",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>from itertools import zip_longest\n\ndef compareLists(list_a, list_b):\n    score_a = 0\n    score_b = 0\n\n    for val_a, val_b in zip_longest(list_a, list_b, fillvalue=0):\n        if val_a > val_b:\n            score_a += 1\n        elif val_b > val_a:\n            score_b += 1\n\n    return score_a, score_b</pre>",
-        stepByStep: `<b>Alice's Scores:</b> [5, 6, 7]<br>
-<b>Bob's Scores:</b> [3, 6, 10]<br><br>
-<b>Category 1: Clarity</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Compare:</i> Alice (5) vs Bob (3).<br>
-    <i>Result:</i> 5 > 3! Alice gets 1 point.<br>
-    <i>Current Score:</i> Alice: 1, Bob: 0.
+        problem: "<b>Core Objective:</b> Perform a vector-to-vector comparison between two triplets (Alice's and Bob's scores) and tally point-wise victories. <br><br><b>Scoring Logic:</b> For each index $i \in \{0, 1, 2\}$, a point is awarded to the individual with the higher scalar value. No points are awarded for equivalence.",
+        solution: "<b>Algorithmic Strategy (Parallel Tallying):</b><br>The solution utilizes a <b>Parallel Iteration</b> pattern to evaluate scores simultaneously across categories.<br><br>1. <b>Synchronization:</b> Align both input vectors using a singular loop or a 'zip' utility.<br>2. <b>Conditional Accumulation:</b> During each iteration, a comparison is performed. Alice's score is incremented if $A[i] > B[i]$, and Bob's if $B[i] > A[i]$.<br>3. <b>Terminal State:</b> The resulting scalar tallies are aggregated into a final result vector.",
+        optimality: "<b>Efficiency Metrics:</b><br>• <b>Time Complexity:</b> O(1). Since the input dimensions are strictly fixed at 3 categories, the operations are constant-time.<br>• <b>Space Complexity:</b> O(1). Minimal auxiliary memory is required to store the two integer accumulators.<br><br><b>Conclusion:</b> This approach is asymptotically optimal for fixed-dimension comparisons, ensuring instantaneous execution and zero memory overhead.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def compareTriplets(a, b):\n    alice = 0\n    bob = 0\n    for s1, s2 in zip(a, b):\n        if s1 > s2:\n            alice += 1\n        elif s2 > s1:\n            bob += 1\n    return [alice, bob]</pre>",
+        stepByStep: `<b>Comparative Trace:</b><br>
+<b>Alice:</b> [5, 6, 7], <b>Bob:</b> [3, 6, 10]<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5ac8fa; margin-left: 10px; margin-bottom: 10px;">
+    <i>Category 1 (5 vs 3):</i> 5 > 3. Score = [1, 0].<br>
+    <i>Category 2 (6 vs 6):</i> Equivalence detected. Score = [1, 0].<br>
+    <i>Category 3 (7 vs 10):</i> 10 > 7. Score = [1, 1].
 </div>
-<b>Category 2: Originality</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Compare:</i> Alice (6) vs Bob (6).<br>
-    <i>Result:</i> 6 == 6! It's a tie! Nobody gets a point.<br>
-    <i>Current Score:</i> Alice: 1, Bob: 0.
-</div>
-<b>Category 3: Difficulty</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Compare:</i> Alice (7) vs Bob (10).<br>
-    <i>Result:</i> 10 > 7! Bob gets 1 point.<br>
-    <i>Current Score:</i> Alice: 1, Bob: 1.
-</div>
-<b>Final Output returned:</b> <code>[1, 1]</code>`
+<b>Final Result:</b> [1, 1]`
     },
     {
         id: "cut-the-sticks",
         title: "Cut the Sticks<br><a href='https://www.hackerrank.com/challenges/cut-the-sticks/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Arrays",
-        problem: "You are given a pile of wooden sticks of different lengths. You are going to perform a series of cutting operations on them! In each operation, you must:<br>1. Look at all the sticks currently in the pile and find the absolute shortest one.<br>2. Note the length of that shortest stick (let's call it `x`).<br>3. Cut exactly `x` length off of every single stick in the pile.<br>4. Throw away any pieces of wood that are now length 0 or smaller.<br><br>Before each round of cutting begins, you must write down exactly how many sticks are still in the pile. You stop when all sticks have been completely destroyed!",
-        solution: "If we simulate the cuts by looping through the array and literally subtracting numbers, our computer has to do way too much math. What if we just sort the pile of sticks from smallest to largest first?<br><br>If the sticks are sorted like `[2, 2, 4, 8]`, we immediately know we have 4 sticks. The smallest stick is simply the first one in the line (a `2`). If we cut a length of 2 off of everything, we know exactly what happens: all the *other* sticks that are also size 2 will be completely destroyed, and everything bigger than 2 will survive! <br><br>So, instead of doing subtraction, we just walk down the sorted line. Every time we encounter a stick that is strictly bigger than the one behind it, it means a new round of cutting just started! We simply take the total number of sticks we started with, and subtract exactly how many sticks we have walked past so far. This instantly tells us how many sticks survived the last cut!",
-        optimality: "The sorting-based strategy leaps over brute-force simulation, capping out at <b>O(N log N) Time</b> strictly because we have to sort the array first. The actual 'cutting' logic operates in a blazing <b>O(N)</b> pass without any nested loops or inner subtractions. It requires <b>O(N) Space</b> to hold the returned list of counts. It's incredibly elegant and completely scales!",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def cutTheSticks(sticks):\n    if not sticks:\n        return []\n\n    sorted_sticks = sorted(sticks)\n    n = len(sorted_sticks)\n    cuts = [n]\n\n    for i in range(1, n):\n        if sorted_sticks[i] != sorted_sticks[i - 1]:\n            cuts.append(n - i)\n\n    return cuts</pre>",
-        stepByStep: `<b>Input Sticks:</b> [5, 4, 4, 2, 2, 8]<br>
-<b>Phase 1: Sort the Sticks!</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Sorted Array:</i> <code>[2, 2, 4, 4, 5, 8]</code><br>
-    <i>Total Sticks:</i> 6. We immediately write down <b>6</b> for the first round.<br>
+        problem: "<b>Iterative Reduction:</b> Perform a sequence of 'cutting' operations on a collection of sticks until all are exhausted. <br><br><b>Operation Workflow:</b><br>1. Identify the minimum stick length <i>min_val</i> in the current collection.<br>2. Reduce every stick's length by <i>min_val</i>.<br>3. Remove all sticks with length $\leq 0$.<br>4. Record the count of sticks prior to each operation.",
+        solution: "<b>Algorithmic Paradigm (Sorting-Based Jump Strategy):</b><br> Literal simulation of the cutting process (O(N²)) is inefficient. We utilize the <b>Sorted Incremental Invalidation</b> strategy.<br><br>1. <b>Pre-Sorting:</b> Sort the stick array in ascending order. This clusters identical lengths and ensures the shortest element is always at the lowest active index.<br>2. <b>Sequential Pointer Analysis:</b> Traverse the sorted array. A new cutting round occurs whenever we encounter an element strictly larger than its predecessor. At this junction, the number of sticks remaining is simply $(N - \text{current index})$.",
+        optimality: "<b>Efficiency Metrics:</b><br>• <b>Time:</b> O(N log N) for the initial sort; the subsequent linear pass is O(N).<br>• <b>Space:</b> O(N) to store the result sequence.<br><br><b>Merit:</b> This approach bypasses the need for repeated subtractions and filtering, handling millions of sticks efficiently through a single pass over the sorted data.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def cutTheSticks(ar):\n    ar.sort()\n    n = len(ar)\n    res = [n]\n    for i in range(1, n):\n        if ar[i] != ar[i-1]:\n            res.append(n-i)\n    return res</pre>",
+        stepByStep: `<b>Algorithmic Trace:</b><br>
+<b>Input:</b> [5, 4, 4, 2, 2, 8]<br><br>
+<b>Processing Cycle:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ff2d55; margin-left: 10px; margin-bottom: 10px;">
+    <i>Sorted State:</i> [2, 2, 4, 4, 5, 8]<br>
+    <i>Initialization:</i> Count = 6.<br>
+    <i>Transition at index 2 (4 > 2):</i> 6 - 2 = <b>4 sticks remain</b>.<br>
+    <i>Transition at index 4 (5 > 4):</i> 6 - 4 = <b>2 sticks remain</b>.<br>
+    <i>Transition at index 5 (8 > 5):</i> 6 - 5 = <b>1 stick remains</b>.
 </div>
-<b>Phase 2: Walk the Line</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Index 1 (Stick length 2):</i> Is it bigger than the stick before it (2)? No. Keep walking.<br>
-    <i>Index 2 (Stick length 4):</i> Is it bigger than the stick before it (2)? <b>YES!</b> This means a cut happened and all 2s died. How many survived? The total (6) minus the ones we walked past (2). We write down <b>4</b>.<br>
-    <i>Index 3 (Stick length 4):</i> Is it bigger than the previous (4)? No. Keep walking.<br>
-    <i>Index 4 (Stick length 5):</i> Is it bigger than the previous (4)? <b>YES!</b> A cut happened, killing the 4s. Total (6) minus passed (4). We write down <b>2</b>.<br>
-    <i>Index 5 (Stick length 8):</i> Is it bigger than the previous (5)? <b>YES!</b> A cut happened, killing the 5s. Total (6) minus passed (5). We write down <b>1</b>.<br>
-</div>
-<b>Final Printed List:</b> 6, 4, 2, 1.`
+<b>Final Sequence:</b> [6, 4, 2, 1]`
     },
     {
         id: "divisible-sum-pairs",
