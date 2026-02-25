@@ -3,100 +3,87 @@ const algorithms = [
         id: "counting-sort",
         title: "Counting Sort",
         category: "Algorithms - Sorting",
-        problem: "Sorting an array or list of integers efficiently when the range of potential values (maximum element value) is relatively small compared to the number of items. Comparison-based sorts like QuickSort or MergeSort cannot do better than O(N log N).",
-        solution: "The Counting Sort algorithm. It allocates an auxiliary array, count, of size max_val + 1. It tallies the occurrences of each number in the input array, and then overwrites or reconstructs the output array by iterating through the count array.",
-        optimality: "This solution is optimal for specific conditions—specifically, when the largest number in the array, K, is not significantly larger than the size of the array, N. It achieves O(N + K) time complexity, breaking the O(N log N) lower bound of comparison-based sorting. However, its space complexity is O(K), which can be memory-intensive if K is excessively large.",
-        example: "Input: [4, 2, 2, 8, 3, 3, 1]\n\n1. Find max K = 8\n2. Create count array length 9: [0, 0, 0, 0, 0, 0, 0, 0, 0]\n3. Tally frequencies: [0, 1, 2, 2, 1, 0, 0, 0, 1]\n4. Reconstruct: [1, 2, 2, 3, 3, 4, 8]"
+        problem: "<b>Core Objective:</b> Efficiently sort an array of integers when the range of potential values (K) is relatively small compared to the number of elements (N). <br><br><b>Constraint:</b> Traditional comparison-based sorting algorithms (QuickSort, MergeSort) are mathematically bound by the Ω(N log N) lower bound. Counting Sort seeks to bypass this by leveraging the specific nature of integers as indices, achieving linear time complexity.",
+        solution: "<b>Mechanism:</b> Counting Sort is a <i>non-comparison</i> sorting algorithm. <br><br>1. <b>Frequency Mapping:</b> We iterate through the input array and map each value to an auxiliary 'count' array, where the index matches the value.<br>2. <b>Aggregation:</b> Each index in the count array stores the frequency of that specific integer.<br>3. <b>Reconstruction:</b> By traversing the count array, we overwrite the original data or populate a new array in sorted order. For stable sorting, we can transform the count array into a prefix-sum array (cumulative counts) to determine the exact final position of each element.",
+        optimality: "<b>Complexity Analysis:</b><br>• <b>Time:</b> O(N + K), where N is the number of elements and K is the range of values. This is strictly linear when K = O(N).<br>• <b>Space:</b> O(K) for the auxiliary frequency array. <br><br><b>Efficiency Note:</b> This algorithm is the gold standard for large datasets with small ranges, but becomes memory-prohibitive if K » N (e.g., sorting [1, 10^9] with only 2 elements).",
+        example: "<b>Input: [4, 2, 2, 8, 3, 3, 1]</b><br><br>1. <b>Range Detection:</b> Max value K = 8.<br>2. <b>Bucket Initialization:</b> Array of size 9 initialized to zero.<br>3. <b>Linear Scan:</b> Frequencies computed: <code>[1:1, 2:2, 3:2, 4:1, 8:1]</code>.<br>4. <b>Ordered Output:</b> Reconstructing elements based on bucket indices: <code>[1, 2, 2, 3, 3, 4, 8]</code>."
     },
     {
         id: "jumping-clouds-revisited",
         title: "Jumping on the Clouds: Revisited<br><a href='https://www.hackerrank.com/challenges/jumping-on-the-clouds-revisited/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Arrays",
-        problem: "Imagine a game where a character stands on a circle of numbered clouds. The game starts at Cloud 0, and the player is given 100 Energy Points to begin with! The rules are simple:<br><br>1. You always jump forward exactly <b>k</b> steps at a time.<br>2. When you jump, you lose <b>1 Energy Point</b> because jumping is tiring work.<br>3. There are two types of clouds: Safe Clouds (marked as <b>0</b>) and Thunderclouds (marked as <b>1</b>).<br>4. If you land on a Thundercloud, you get electrocuted and lose an <b>extra 2 Energy Points</b> (so you lose 3 points total for that jump!).<br><br>Because the path is a circle, if you jump past the last cloud, you loop right back around to the beginning. The game finishes the exact moment you land back on Cloud 0 where you started. Your mission? Calculate exactly how much Energy you have left when the game ends!",
-        solution: "To solve this, we don't need any complex formulas! We just play the game using a 'loop' in our code, tracking the character exactly as they jump.<br><br>We start by setting our Energy to 100, and our Current Position to 0. Then, we calculate where the next jump lands. To handle the 'circle' part of the game perfectly, we use the Math Modulo Operator (`%`). This operator basically gives us the remainder of division. So if there are 8 clouds (0 to 7), and we jump from cloud 6 by 2 steps, `(6 + 2) % 8 = 0`. It wraps exactly back to 0!<br><br>Once we know the new cloud we landed on, we check if it is a `0` (subtract 1 energy) or a `1` (subtract 3 energy). We keep doing jumps in our loop until our position becomes 0 again. Then we stop the loop and return the final Energy.",
-        optimality: "This 'simulate the game' approach is perfect because it takes the absolute minimum amount of time possible. We don't examine every single cloud on the board—we only look at the exact clouds our character lands on! In big-O notation, we say this takes <b>O(N) Time</b>, meaning it is as fast as reading the input. It also uses <b>O(1) Space</b>, which means we only use two tiny variables (`e` for energy and `i` for position) instead of storing large amounts of data in memory. It is the gold standard solution for this problem.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def jumpingOnClouds(c, k):\n    e = 100\n    i = 0\n    n = len(c)\n\n    while True:\n        i = (i + k) % n\n        if c[i] == 1:\n            e -= 3\n        else:\n            e -= 1\n\n        if i == 0:\n            break\n\n    return e</pre>",
-        stepByStep: `<b>Round 1:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Current Position:</i> 0<br>
-    <i>Action:</i> Jump 2 steps <code>(0 + 2) % 8 = 2</code>. We land on <b>Cloud 2</b>.<br>
-    <i>Check:</i> Cloud 2 is a <code>1</code> (Thundercloud!).<br>
-    <i>Energy Math:</i> 100 - 3 = <b>97 Energy remaining</b>
+        problem: "<b>Challenge Overview:</b> A character navigates a circular array of <b>N</b> clouds starting from index 0. Initial energy is 100. <br><br><b>Movement Mechanics:</b><br>1. The character jumps forward in fixed intervals of <b>k</b> steps.<br>2. Each jump consumes 1 standard energy point.<br>3. Landing on a <b>Thundercloud (1)</b> incurs an additional penalty of 2 energy points (3 total).<br>4. The game terminates when the character returns to index 0.<br><br><b>Goal:</b> Determine the final energy level after the cycle is complete.",
+        solution: "<b>Algorithmic Strategy:</b> We utilize <b>Modular Arithmetic Simulation</b>. <br><br>Because the array is circular, any leap beyond the bounds must wrap back to the beginning. The formula <code>(current_index + k) % n</code> serves as the mathematical foundation, providing the exact index in a circular coordinate system. <br><br>We implement a <code>do-while</code> logic (or a <code>while True</code> with a break) to ensure the first jump occurs before checking the termination condition (returning to 0). During each iteration, we evaluate the state of <code>c[index]</code> to apply conditional energy penalties.",
+        optimality: "<b>Performance Profile:</b><br>• <b>Time Complexity:</b> O(N/gcd(N,k)). In the worst case where k and N are coprime, we visit every cloud once, yielding O(N). If k divides N, we visit only N/k clouds.<br>• <b>Space Complexity:</b> O(1). We perform the simulation in-place using only scalar variables for state management.<br><br><b>Conclusion:</b> This approach is mathematically optimal as it scales linearly with the number of steps in the sequence and requires constant auxiliary memory.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def jumpingOnClouds(c, k):\n    e = 100\n    i = 0\n    n = len(c)\n\n    while True:\n        i = (i + k) % n\n        # Standard cost (1) + Thundercloud penalty (2) if c[i] == 1\n        e -= 1 + (2 * c[i])\n\n        if i == 0:\n            break\n\n    return e</pre>",
+        stepByStep: `<b>Simulation Audit:</b><br>
+<b>Initial State:</b> Energy = 100, Position = 0, k = 2, n = 8<br><br>
+<b>Iteration 1:</b>
+<div style="padding-left: 20px; border-left: 2px solid #007bff; margin-left: 10px; margin-bottom: 10px;">
+    <i>Jump:</i> <code>(0 + 2) % 8 = 2</code>.<br>
+    <i>State:</i> Cloud 2 is a <b>1 (Thunderhead)</b>.<br>
+    <i>Energy:</i> 100 - (1+2) = <b>97</b>
 </div>
-<b>Round 2:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Current Position:</i> 2<br>
-    <i>Action:</i> Jump 2 steps <code>(2 + 2) % 8 = 4</code>. We land on <b>Cloud 4</b>.<br>
-    <i>Check:</i> Cloud 4 is a <code>0</code> (Safe Cloud).<br>
-    <i>Energy Math:</i> 97 - 1 = <b>96 Energy remaining</b>
+<b>Iteration 2:</b>
+<div style="padding-left: 20px; border-left: 2px solid #007bff; margin-left: 10px; margin-bottom: 10px;">
+    <i>Jump:</i> <code>(2 + 2) % 8 = 4</code>.<br>
+    <i>State:</i> Cloud 4 is a <b>0 (Cumulus)</b>.<br>
+    <i>Energy:</i> 97 - 1 = <b>96</b>
 </div>
-<b>Round 3:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Current Position:</i> 4<br>
-    <i>Action:</i> Jump 2 steps <code>(4 + 2) % 8 = 6</code>. We land on <b>Cloud 6</b>.<br>
-    <i>Check:</i> Cloud 6 is a <code>1</code> (Thundercloud!).<br>
-    <i>Energy Math:</i> 96 - 3 = <b>93 Energy remaining</b>
+<b>Iteration 3:</b>
+<div style="padding-left: 20px; border-left: 2px solid #007bff; margin-left: 10px; margin-bottom: 10px;">
+    <i>Jump:</i> <code>(4 + 2) % 8 = 6</code>.<br>
+    <i>State:</i> Cloud 6 is a <b>1 (Thunderhead)</b>.<br>
+    <i>Energy:</i> 96 - 3 = <b>93</b>
 </div>
-<b>Round 4:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Current Position:</i> 6<br>
-    <i>Action:</i> Jump 2 steps <code>(6 + 2) % 8 = 8 % 8 = 0</code>. We wrap around and land on <b>Cloud 0</b>.<br>
-    <i>Check:</i> Cloud 0 is intrinsically safe.<br>
-    <i>Energy Math:</i> 93 - 1 = <b>92 Energy remaining</b>
+<b>Iteration 4:</b>
+<div style="padding-left: 20px; border-left: 2px solid #007bff; margin-left: 10px; margin-bottom: 10px;">
+    <i>Jump:</i> <code>(6 + 2) % 8 = 0</code>. <b>Target Reached.</b><br>
+    <i>State:</i> Cloud 0 is safe.<br>
+    <i>Energy:</i> 93 - 1 = <b>92</b>
 </div>
-<b>Game Over!</b> We reached 0, so the loop terminates. The final answer is <b>92</b>.`
+<b>Terminal Result:</b> Cycle completed with <b>92</b> energy units remaining.`
     },
     {
         id: "birthday-cake-candles",
         title: "Birthday Cake Candles<br><a href='https://www.hackerrank.com/challenges/birthday-cake-candles/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Arrays",
-        problem: "Imagine you are celebrating a child's birthday. They are turning 4 years old, so there are 4 candles on their cake! The candles aren't all the same height, though. When the birthday child blows on the cake, they can only blow hard enough to blow out the **tallest** candles on the cake! Any smaller candles will stay lit.<br><br>Your job is to look at the group of candles, figure out how tall the tallest candle is, and then count exactly how many candles share that maximum height so we know how many get blown out!",
-        solution: "To solve this problem like a computer, we can do it in two easy sweeps (or 'loops') over the candles!<br><br>First, we need to find the tallest candle. We can do this by picking up the first candle and saying, 'This is the tallest I've seen so far!' Then, we look at every single other candle. If we find one taller, that becomes our new 'tallest'. By the time we look at the last candle, we know the exact maximum height.<br><br>Second, now that we know the magic maximum height, we just walk past the candles one more time from the beginning. Every time we see a candle that matches our magic max height, we add 1 to our 'blown out' tally. At the end, we return the tally!",
-        optimality: "This strategy takes <b>O(N) Time</b> and <b>O(1) Space</b>! We have to check every candle at least once to know which is tallest, making it mathematically impossible to solve faster than O(N). We also only keep two small numbers in our head—the maximum height and the counting tally—so it uses virtually zero extra memory.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def findMax(arr):\n    max_n = arr[0]\n    for x in arr:\n        if x > max_n:\n            max_n = x\n    return max_n\n\ndef birthdayCakeCandles(arr):\n    max_n = findMax(arr)\n    count = 0\n    for x in arr:\n        if x == max_n:\n            count += 1\n    return count</pre>",
-        stepByStep: `<b>Input Array:</b> [4, 4, 1, 3]<br><br>
-<b>Phase 1: Finding the Tallest Candle</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Current max guess:</i> 4 (the first candle)<br>
-    <i>Check next candle (4):</i> Not taller, max stays 4.<br>
-    <i>Check next candle (1):</i> Not taller, max stays 4.<br>
-    <i>Check next candle (3):</i> Not taller, max stays 4.<br>
-    <b>The tallest candle height is 4!</b>
+        problem: "<b>Case Study:</b> You are managing a dataset representing candle heights on a birthday cake. The objective is to identify how many candles possess the maximum height found in the set. <br><br><b>Constraint:</b> The algorithm must be efficient enough to process large input sizes (e.g., $10^5$ candles) within a limited time window.",
+        solution: "<b>Algorithmic Progression:</b><br>1. <b>Naive Approach:</b> Sort the array in descending order and count subsequent elements that match the first. This yields O(N log N) complexity.<br>2. <b>Current Solution:</b> We implement a <b>One-Pass Frequency Accumulator</b>. We maintain two state variables: <code>max_height</code> and <code>frequency</code>.<br>3. <b>Logic:</b> As we iterate through the array, if we encounter a height greater than the current <code>max_height</code>, we update <code>max_height</code> and reset <code>frequency</code> to 1. If the current height matches <code>max_height</code>, we increment <code>frequency</code>. This avoids the need for sorting or multiple passes.",
+        optimality: "<b>Efficiency Metrics:</b><br>• <b>Time:</b> O(N) precisely. We perform a single linear scan over the dataset.<br>• <b>Space:</b> O(1). We use exactly two integer variables for tracking, independent of input size.<br><br><b>Verdict:</b> This is the asymptotically optimal solution because any algorithm must examine each element at least once to determine the global maximum.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def birthdayCakeCandles(candles):\n    max_h = 0\n    count = 0\n    for h in candles:\n        if h > max_h:\n            max_h = h\n            count = 1\n        elif h == max_h:\n            count += 1\n    return count</pre>",
+        stepByStep: `<b>One-Pass Execution Trace:</b><br>
+<b>Input:</b> [4, 4, 1, 3]<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #28a745; margin-left: 10px; margin-bottom: 10px;">
+    <i>Candle 1 (4):</i> 4 > 0. New Max = 4. Count = 1.<br>
+    <i>Candle 2 (4):</i> 4 == 4. Count increments to 2.<br>
+    <i>Candle 3 (1):</i> 1 < 4. Ignore.<br>
+    <i>Candle 4 (3):</i> 3 < 4. Ignore.
 </div>
-<b>Phase 2: Counting the Tallest Candles</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Check candle 4:</i> It matches our max height! Tally = 1.<br>
-    <i>Check candle 4:</i> It matches our max height! Tally = 2.<br>
-    <i>Check candle 1:</i> Not the max height. Tally stays 2.<br>
-    <i>Check candle 3:</i> Not the max height. Tally stays 2.<br>
-    <b>Final Answer: 2 candles get blown out!</b>
-</div>`
+<b>Final Metric:</b> Maximum height is 4, appearing <b>2</b> times.`
     },
     {
         id: "mini-max-sum",
         title: "Mini-Max Sum<br><a href='https://www.hackerrank.com/challenges/mini-max-sum/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Arrays",
-        problem: "You are given a bucket containing exactly 5 numbers. Your goal is simple: pick up exactly 4 of those numbers and add them together. <br><br>But there is a twist! You need to calculate two different things:<br>1. What is the **absolute smallest** sum you can possibly make by picking 4 numbers?<br>2. What is the **absolute largest** sum you can possibly make by picking 4 numbers?<br><br>You must print both of those sums side-by-side as your final answer.",
-        solution: "Think about how easily we could solve this if the numbers were perfectly sorted in a line from smallest to largest!<br><br>If we sort the numbers, the easiest way to make the **smallest sum** is to just pick up the first 4 numbers (which are guaranteed to be the littlest). Similarly, the easiest way to make the **largest sum** is to just pick up the last 4 numbers (which are guaranteed to be the biggest).<br><br>So our code simply sorts the array of 5 numbers using a quick sorting trick. Then it grabs the first 4 pieces to calculate the <code>min_sum</code>, grabs the last 4 pieces to calculate the <code>max_sum</code>, and prints both!",
-        optimality: "Because there are strictly 5 numbers every single time, the 'sort and sum' strategy is astonishingly fast. In computer terms, it operates in <b>O(N log N) Time</b> due to the sorting step, but since N is locked at exactly 5, it runs in virtually constant O(1) real-world time. It's clean, foolproof, and completely avoids writing confusing combinations logic!",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def sorting(arr):\n    if len(arr) <= 1:\n        return arr\n    pivot = arr[len(arr) // 2]\n    left = [x for x in arr if x < pivot]\n    middle = [x for x in arr if x == pivot]\n    right = [x for x in arr if x > pivot]\n    return sorting(left) + middle + sorting(right)\n\ndef miniMaxSum(arr):\n    arr = sorting(arr)\n    min_n = sum(arr[:4])\n    max_n = sum(arr[1:])\n    return min_n, max_n</pre>",
-        stepByStep: `<b>Input Array:</b> [1, 3, 5, 7, 9] (Let's assume the array is already sorted for this example!)<br><br>
-<b>Calculating Minimum Sum</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Rule:</i> We must ignore the biggest number (9) to keep the sum as small as possible.<br>
-    <i>Action:</i> We add the 4 smallest numbers: <code>1 + 3 + 5 + 7</code><br>
-    <i>Result:</i> <b>16</b>
+        problem: "<b>Mathematical Objective:</b> Given an array of <b>N=5</b> integers, calculate the minimum and maximum possible sums obtainable by summing exactly <b>N-1</b> elements. <br><br><b>Output Format:</b> Display two space-separated integers representing the minimum and maximum calculates.",
+        solution: "<b>Optimized Analytical Strategy:</b><br>While sorting the array (O(N log N)) allows for easy selection of the first/last four elements, a more efficient <b>Single-Pass Arithmetic Approach</b> (O(N)) exists.<br><br>1. <b>Total Summation:</b> Calculate the sum of all five elements in the array.<br>2. <b>Extrema Detection:</b> Simultaneously identify the global Minimum (<code>minVal</code>) and global Maximum (<code>maxVal</code>).<br>3. <b>Subtraction Logic:</b><br>&nbsp;&nbsp;• <code>Minimum Sum = Total Sum - maxVal</code><br>&nbsp;&nbsp;• <code>Maximum Sum = Total Sum - minVal</code>",
+        optimality: "<b>Computational Efficiency:</b><br>• <b>Time Complexity:</b> O(N). Because N is restricted to 5, the operation is effectively O(1) in a real-world scenario.<br>• <b>Space Complexity:</b> O(1). No auxiliary data structures are required.<br><br><b>Conclusion:</b> By using arithmetic subtraction instead of sorting, we minimize CPU cycles and leverage basic algebra for a robust solution.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def miniMaxSum(arr):\n    total_sum = sum(arr)\n    min_val = min(arr)\n    max_val = max(arr)\n\n    print(f\"{total_sum - max_val} {total_sum - min_val}\")</pre>",
+        stepByStep: `<b>Mathematical Validation:</b><br>
+<b>Input Set:</b> [1, 3, 5, 7, 9]<br><br>
+<b>Computation Phase:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ef4444; margin-left: 10px; margin-bottom: 10px;">
+    <i>Step 1:</i> Total Sum = <code>1 + 3 + 5 + 7 + 9 = 25</code><br>
+    <i>Step 2:</i> Global Min = 1, Global Max = 9<br>
 </div>
-<b>Calculating Maximum Sum</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Rule:</i> We must ignore the smallest number (1) to keep the sum as big as possible.<br>
-    <i>Action:</i> We add the 4 biggest numbers: <code>3 + 5 + 7 + 9</code><br>
-    <i>Result:</i> <b>24</b>
+<b>Final Inference:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ef4444; margin-left: 10px; margin-bottom: 10px;">
+    <i>Min Sum:</i> 25 - 9 = <b>16</b> (1+3+5+7)<br>
+    <i>Max Sum:</i> 25 - 1 = <b>24</b> (3+5+7+9)
 </div>
-<b>Final Answer</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    We print both numbers separated by a space: <b>16 24</b>
-</div>`
+<b>Output:</b> 16 24`
     },
     {
         id: "acm-team",
@@ -138,27 +125,19 @@ const algorithms = [
         id: "append-and-delete",
         title: "Append and Delete<br><a href='https://www.hackerrank.com/challenges/append-and-delete/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Arrays",
-        problem: "You are playing a word game where you have a starting word (like `hackerhappy`), and you are trying to turn it into a target word (like `hackerrank`). But you only have exactly `k` magic moves to do it!<br><br>A magic move lets you do one of two things:<br>1. Delete the last letter of your word.<br>2. Stick a new letter onto the end of your word.<br><br>You must use **exactly** `k` moves. If your word matches the target word and you still have moves left over, you are allowed to delete letters that aren't there (deleting an empty word just keeps it empty). Can you reach exactly the target word in exactly `k` moves?",
-        solution: "To find out if it's possible, we don't actually need to play the game—we just do some smart math on the string lengths!<br><br>First, we count how many letters the two words have in common from the very beginning (their 'common prefix'). For `hackerhappy` and `hackerrank`, the first 6 letters (`hacker`) match perfectly. This means we *never* need to delete those letters if we don't have to.<br><br>Next, we calculate the absolute minimum number of moves required to change the words. We count the letters in the starting word that don't match (we must `Delete` them), and we count the letters in the target word that are missing (we must `Append` them). Minimum Moves = Deletions + Appends.<br><br>Finally, we check our rules: If we have enough moves `k` to completely erase both words and rebuild them from scratch, the answer is 'Yes'. Otherwise, if we can hit the exact move count by just bouncing back and forth on the last letter (which takes 2 moves per 'bounce'), the answer is also 'Yes'. Otherwise, it's 'No'!",
-        optimality: "This math trick operates in <b>O(N) Time</b> and <b>O(1) Space</b>! We only ever loop over the characters once to find the matching prefix length. After that, we just compare lengths using basic arithmetic. We don't magically construct strings in memory, meaning this uses virtually no space and runs instantaneously.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def appendAndDelete(s, t, k):\n    common_length = 0\n    for char_s, char_t in zip(s, t):\n        if char_s == char_t:\n            common_length += 1\n        else:\n            break\n            \n    total_len = len(s) + len(t)\n    min_moves = total_len - (2 * common_length)\n    \n    if k >= total_len:\n        return \"Yes\"\n    elif k >= min_moves and (k - min_moves) % 2 == 0:\n        return \"Yes\"\n    else:\n        return \"No\"</pre>",
-        stepByStep: `<b>Input Strings:</b> s = "ashley", t = "ash", k = 2<br><br>
-<b>Phase 1: Finding the Common Root</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Check:</i> Comparing "ashley" and "ash"...<br>
-    <i>Result:</i> Both start with "ash". That is <b>3 matching letters!</b>
+        problem: "<b>Case Objective:</b> Determine if string 's' can be transformed into string 't' in exactly <b>k</b> operations. <br><br><b>Permitted Operations:</b><br>1. Delete the terminal character of the string.<br>2. Append a character to the terminal end of the string.<br><br><b>Constraint:</b> Deleting from an empty string results in an empty string. The transformation must utilize exactly <b>k</b> operations.",
+        solution: "<b>Algorithmic Strategy (Prefix Math):</b><br>The problem is solved using <b>Common Prefix Analysis</b> rather than a literal simulation.<br><br>1. <b>Longest Common Prefix (LCP):</b> Calculate the length of the string segment that both 's' and 't' share from the start.<br>2. <b>Minimum Transformation Cost:</b> The minimum operations required is <code>(len(s) - LCP) + (len(t) - LCP)</code> (deleting unique 's' characters and appending 't' characters).<br>3. <b>Parity and Buffer Check:</b> If the available operations <b>k</b> are significantly larger than the combined lengths of both strings, we can always reach the target (by deleting both strings entirely). Otherwise, <b>k</b> must be at least the Minimum Cost, and the surplus operations $(k - Minimum Cost)$ must be even (allowing for 'add-then-remove' pairs that maintain the string state).",
+        optimality: "<b>Complexity Analysis:</b><br>• <b>Time Complexity:</b> O(N), where N is the length of the shorter string. We iterate once to find the LCP.<br>• <b>Space Complexity:</b> O(1). We use scalar variables to track lengths and prefix indices.<br><br><b>Conclusion:</b> This analytical approach is superior to simulation as it handles edge cases (like k being very large) with constant-time arithmetic checks.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def appendAndDelete(s, t, k):\n    common = 0\n    for c1, c2 in zip(s, t):\n        if c1 == c2: common += 1\n        else: break\n    \n    min_moves = (len(s) - common) + (len(t) - common)\n    \n    if k >= len(s) + len(t):\n        return \"Yes\"\n    if k >= min_moves and (k - min_moves) % 2 == 0:\n        return \"Yes\"\n    return \"No\"</pre>",
+        stepByStep: `<b>Algorithmic Trace:</b><br>
+<b>Input:</b> s="ashley", t="ash", k=2<br><br>
+<b>Execution Phase:</b>
+<div style="padding-left: 20px; border-left: 2px solid #00c0a3; margin-left: 10px; margin-bottom: 10px;">
+    <i>LCP Calculation:</i> s[0:3] == t[0:3] ("ash"). Common Length = 3.<br>
+    <i>Min Cost:</i> (6 - 3) + (3 - 3) = 3 operations.<br>
+    <i>Validation:</i> Required moves (3) > available moves (2).
 </div>
-<b>Phase 2: Calculating Minimum Moves</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Rule:</i> We must delete "ley" from "ashley" (3 letters). We don't need to append anything. <br>
-    <i>Math:</i> <code>(6 total length + 3 total length) - (2 * 3 matching letters) = 9 - 6 = 3</code>.<br>
-    <i>Result:</i> We absolutely need <b>3 minimum moves</b>.
-</div>
-<b>Phase 3: The Verdict</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Check:</i> Our magic move limit is <code>k = 2</code>. We need <code>3</code>.<br>
-    <i>Result:</i> 2 is less than 3! We don't have enough magic moves. Return <b>"No"</b>.
-</div>`
+<b>Terminal Verdict:</b> Return <b>"No"</b>.`
     },
     {
         id: "beautiful-triplets",
