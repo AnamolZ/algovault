@@ -922,61 +922,58 @@ const algorithms = [
         id: "bon-appetit",
         title: "Bill Division (Bon Appétit)<br><a href='https://www.hackerrank.com/challenges/bon-appetit/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Simulation",
-        problem: "Anna and Brian are sharing a meal! Brian orders a few items, and Anna decides not to eat one specific item (at index <b>k</b>). Brian calculates the bill and tells Anna how much she owes. Your job is to determine if Brian's math is correct. Did he accurately subtract the item Anna didn't eat from her half of the bill? If yes, print 'Bon Appetit'. If not, print the amount Brian owes Anna.",
-        solution: "We solve this by calculating Anna's actual fair share ourselves! We take the whole list of items, remove the cost of the item at index <b>k</b>, and divide the remaining total by 2. This is what Anna *actually* owes. We then compare our 'Fair Share' to the 'Charged Amount' Brian told her. If they match, she is happy! If they don't, we simply return the difference (Charged - Fair).",
-        optimality: "This 'Fair Share Audit' approach is optimal, running in <b>O(N) Time complexity</b> to sum the bill items. It uses <b>O(1) Space</b> as we only need to store the total sum and the calculated shares.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def bonAppetit(bill, k, b):\n    actual_total = sum(bill) - bill[k]\n    anna_fair_share = actual_total // 2\n    \n    if b == anna_fair_share:\n        print('Bon Appetit')\n    else:\n        print(b - anna_fair_share)</pre>",
-        stepByStep: `<b>Input:</b> Bill [3, 10, 2], k=1 (Anna didn't eat item costs 10), Charged=12<br><br>
-<b>Auditing the Bill:</b>
-<div style="padding-left: 20px; border-left: 20px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Step 1:</i> Items Anna ate: [3, 2]. Total: 5.<br>
-    <i>Step 2:</i> Anna's fair share: 5 / 2 = 2.5 (but we use integer 2 or 5 total).<br>
-    <i>Step 3:</i> Wait, Brian charged 12?! Anna only owes 2.<br>
-    <i>Math:</i> 12 - 2 = 10.
+        problem: "<b>Core Objective:</b> Verify the mathematical accuracy of a split bill where one participant excludes a specific shared item.<br><br><b>Technical Check:</b> Given a list of costs, an index $k$ of the excluded item, and a charged amount $b$, determine if $b = (\sum cost - cost[k]) / 2$.",
+        solution: "<b>Algorithmic Strategy (Arithmetic Fairness Audit):</b><br>The algorithm calculates the true fair share through <b>Selective Summation</b>.<br><br>1. <b>Summation:</b> Aggregate the total cost of all items consumed. Subtract the cost of the item at index $k$.<br>2. <b>Parity Check:</b> Divide the result by 2 to find the exact liability. Compare this 'Fair Share' against the 'Charged Amount' $b$.<br>3. <b>Discrepancy Reporting:</b> If they match, the calculation is correct ('Bon Appetit'). Otherwise, return the difference $|b - FairShare|$.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N). The bill items are summed in a single linear pass.<br>• <b>Space:</b> O(1). Only scalar variables for products and sums are persisted.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def bonAppetit(bill, k, b):\n    # Calculate Anna's actual debt\n    actual_total = (sum(bill) - bill[k]) // 2\n    \n    if actual_total == b:\n        print(\"Bon Appetit\")\n    else:\n        print(b - actual_total)</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> bill=[3, 10, 2, 9], k=1, b=12<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5856d6; margin-left: 10px; margin-bottom: 10px;">
+    <i>Total Bill:</i> 3+10+2+9 = 24.<br>
+    <i>Anna Share:</i> (24 - 10) / 2 = 7.<br>
+    <i>Check:</i> 12 != 7.<br>
+    <i>Refund:</i> 12 - 7 = 5.
 </div>
-<b>Final Result:</b> 10 (Brian owes Anna 10 back!)`
+<b>Final Result:</b> 5`
     },
     {
         id: "breaking-records",
         title: "Breaking the Records<br><a href='https://www.hackerrank.com/challenges/breaking-best-and-worst-records/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Simulation",
-        problem: "Maria is a basketball player who wants to track her season statistics! After every game, she writes down her score. She wants to know how many times during the season she broke her 'Highest Score' record and how many times she broke her 'Lowest Score' record. Note: The record set in the very first game of the season doesn't count as 'breaking' a record.",
-        solution: "We solve this by keeping track of her 'Best' and 'Worst' scores using two variables. We start both at her very first game's score. Then, for every game after that, we compare her new score to our current records. If a score is strictly higher than the record, we update the 'Best' and increment our 'High Record' tally. If it's strictly lower, we update the 'Worst' and increment our 'Low Record' tally. We finish when we've seen every game in the season.",
-        optimality: "This 'Record Monitor' strategy is perfectly optimal, achieving <b>O(N) Time complexity</b> because we process each game score exactly once. It uses <b>O(1) Space</b> to store her two current records and two counters. It is the most efficient way to track statistics over time.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def breakingRecords(scores):\n    high = low = scores[0]\n    hi_count = lo_count = 0\n    \n    for s in scores[1:]:\n        if s > high:\n            high = s\n            hi_count += 1\n        elif s < low:\n            low = s\n            lo_count += 1\n            \n    return hi_count, lo_count</pre>",
-        stepByStep: `<b>Scores:</b> [10, 5, 20, 20, 4, 30]<br><br>
-<b>Season Simulation:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Game 1 (10):</i> Initial Records: High=10, Low=10.<br>
-    <i>Game 2 (5):</i> 5 < 10. New Low! Record broken. (Low=5, Count=1).<br>
-    <i>Game 3 (20):</i> 20 > 10. New High! Record broken. (High=20, Count=1).<br>
-    <i>Game 4 (20):</i> 20 is not > 20. No record broken.<br>
-    <i>Game 5 (4):</i> 4 < 5. New Low! Record broken. (Low=4, Count=2).<br>
-    <i>Game 6 (30):</i> 30 > 20. New High! Record broken. (High=30, Count=2).
+        problem: "<b>Core Objective:</b> Count the number of times seasonal performance records (minimum and maximum) are surpassed over a sequence of events.<br><br><b>Constraint Context:</b> The performance in the first event establishes the initial records and does not count as a 'break'.",
+        solution: "<b>Algorithmic Strategy (Stateful Extremum Tracking):</b><br>The algorithm maintains two <b>Dynamic Bounds</b> that are updated as the sequence is processed.<br><br>1. <b>Initialization:</b> Set $min\_record$ and $max\_record$ to the value of the first event.<br>2. <b>Iterative Comparison:</b> For each subsequent event $s$:<br>&nbsp;&nbsp;• If $s > max\_record$, update the maximum and increment the 'high' counter.<br>&nbsp;&nbsp;• If $s < min\_record$, update the minimum and increment the 'low' counter.<br>3. <b>Final Tally:</b> Return the tuple of counters.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N). The sequence is traversed once.<br>• <b>Space:</b> O(1). Only four scalar variables (two records, two counters) are required.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def breakingRecords(scores):\n    # Initialize records with the first score\n    minimum = maximum = scores[0]\n    min_count = max_count = 0\n    \n    for score in scores[1:]:\n        if score > maximum:\n            maximum = score\n            max_count += 1\n        elif score < minimum:\n            minimum = score\n            min_count += 1\n            \n    return [max_count, min_count]</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Scores:</b> [12, 24, 10, 24]<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ff9500; margin-left: 10px; margin-bottom: 10px;">
+    <i>Game 1:</i> High=12, Low=12.<br>
+    <i>Game 2 (24):</i> 24 > 12. <b>New High!</b> (Count=1).<br>
+    <i>Game 3 (10):</i> 10 < 12. <b>New Low!</b> (Count=1).<br>
+    <i>Game 4 (24):</i> 24 is equal to High. No break.
 </div>
-<b>Final Result:</b> [2, 2]`
+<b>Final Result:</b> [1, 1]`
     },
     {
         id: "apples-and-oranges",
         title: "Apples and Oranges<br><a href='https://www.hackerrank.com/challenges/apple-and-orange/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Simulation",
-        problem: "Sam's house is located between points <b>s</b> and <b>t</b> on a number line. He has an apple tree at point <b>a</b> and an orange tree at point <b>b</b>. When a fruit falls, it lands some distance <b>d</b> from its tree. Your goal is to determine exactly how many apples and how many oranges land on Sam's house (inclusive of the boundaries <b>s</b> and <b>t</b>).",
-        solution: "We solve this by simulating the drop for every single fruit! For each apple, we calculate its landing position by adding its fall distance to the tree's position <b>a</b>. We then check if that calculated position is between <b>s</b> and <b>t</b>. We repeat the exact same process for the oranges using the orange tree's position <b>b</b>. We keep two separate tallies and return them as the final answer.",
-        optimality: "This 'Position Mapper' approach is perfectly optimal, running in <b>O(M + N) Time complexity</b>, where M is the number of apples and N is the number of oranges. Since we must evaluate every fruit's landing spot once, we cannot mathematically solve this faster. It uses <b>O(1) Space</b> to store the two counting variables.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def countApplesAndOranges(s, t, a, b, apples, oranges):\n    apple_on_house = sum(1 for d in apples if s <= a + d <= t)\n    orange_on_house = sum(1 for d in oranges if s <= b + d <= t)\n    print(apple_on_house)\n    print(orange_on_house)</pre>",
-        stepByStep: `<b>Input:</b> House [7, 10], Apple Tree at 4, Orange Tree at 12<br>
-<b>Apples falling:</b> [2, 3, -4]<br>
-<b>Oranges falling:</b> [3, -2, -4]<br><br>
-<b>Simulating the Fruit Drops:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Apple 1:</i> 4 + 2 = 6. (Not on house [7, 10])<br>
-    <i>Apple 2:</i> 4 + 3 = 7. (ON HOUSE!)<br>
-    <i>Apple 3:</i> 4 + (-4) = 0. (Not on house)<br>
-    <i>Orange 1:</i> 12 + 3 = 15. (Not on house)<br>
-    <i>Orange 2:</i> 12 + (-2) = 10. (ON HOUSE!)<br>
-    <i>Orange 3:</i> 12 + (-4) = 8. (ON HOUSE!)
+        problem: "<b>Core Objective:</b> Quantify the number of fruits that land within a specified spatial interval $[s, t]$ on a 1D coordinate system, given their relative displacement from two distinct origin points (trees $a$ and $b$).",
+        solution: "<b>Algorithmic Strategy (Linear Coordinate Transformation):</b><br>The algorithm iterates through each fruit's displacement, mapping it to a global coordinate system.<br><br>1. <b>Relative to Absolute:</b> For each fruit displacement $d$ from tree $T$, the landing coordinate is $X = T_{pos} + d$.<br>2. <b>Interval Inclusion Test:</b> Check if $s \le X \le t$.<br>3. <b>Concurrent Aggregation:</b> Maintain independent tallies for both fruit types (apples from tree $a$, oranges from tree $b$).",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(M + N), where $M$ and $N$ represent the fruit counts. Each displacement is processed once.<br>• <b>Space:</b> O(1). Only two scalar counters are required.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def countApplesAndOranges(s, t, a, b, apples, oranges):\n    # Count included coordinates via list comprehension\n    apple_count = sum(1 for d in apples if s <= a + d <= t)\n    orange_count = sum(1 for d in oranges if s <= b + d <= t)\n    \n    print(apple_count)\n    print(orange_count)</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>House:</b> [7, 11]. Tree A (Apple): 5. Tree B (Orange): 15.<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #34c759; margin-left: 10px; margin-bottom: 10px;">
+    <i>Apple at -2:</i> 5 + (-2) = 3. <b>OUT.</b><br>
+    <i>Apple at 3:</i> 5 + 3 = 8. <b>IN.</b><br>
+    <i>Orange at 5:</i> 15 + 5 = 20. <b>OUT.</b><br>
+    <i>Orange at -6:</i> 15 + (-6) = 9. <b>IN.</b>
 </div>
-<b>Final Result:</b> 1 apple and 2 oranges.`
+<b>Final Result:</b> 1 Apple, 1 Orange`
     },
     {
         id: "counting-valleys",
