@@ -777,77 +777,72 @@ const algorithms = [
         id: "save-the-prisoner",
         title: "Save the Prisoner!<br><a href='https://www.hackerrank.com/challenges/save-the-prisoner/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Math",
-        problem: "A group of prisoners are sitting in a circle, and the jailer is handing out treats. He starts at a specific seat and hands them out one by one. The catch? The very last treat is actually a 'bad' one! You need to warn the prisoner who is about to receive that last, unlucky piece of candy.",
-        solution: "This is a classic 'Circular Distribution' problem. We use the <b>Modulo Operator (%)</b> to wrap around the circle. <br><br>The formula is simplified as: `((s + m - 2) % n) + 1`. <br>• We subtract 1 because the first candy goes to the starting person (they've already taken 1 candy before we start 'walking'). <br>• We subtract another 1 to convert to a '0-indexed' system for the computer. <br>• Finally, we add 1 back at the very end to return a human-style ID (starting from 1).",
-        optimality: "This 'One-Shot Math' approach is perfectly optimal, running in <b>O(1) Constant Time</b>. We don't need to simulate handing out thousands of candies; we just calculate the destination instantly. It uses <b>O(1) Space</b>.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def saveThePrisoner(n, m, s):\n    # n = prisoners, m = candies, s = start\n    # (s + m - 2) logic handles the circle and indexing\n    result = ((s + m - 2) % n) + 1\n    return result</pre>",
-        stepByStep: `<b>Prisoners:</b> 3, <b>Candies:</b> 7, <b>Start:</b> 2<br><br>
-<b>Tracking the Candies:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Candy 1:</i> Seat 2<br>
-    <i>Candy 2:</i> Seat 3<br>
-    <i>Candy 3:</i> Seat 1 (Wrap around!)<br>
-    <i>Candy 4:</i> Seat 2<br>
-    <i>Candy 5:</i> Seat 3<br>
-    <i>Candy 6:</i> Seat 1<br>
-    <i>Candy 7:</i> <b>Seat 2</b> (The Unlucky One!)
+        problem: "<b>Core Objective:</b> Identify the seat number of the prisoner who receives the terminal 'candy' in a circular distribution of $m$ items among $n$ participants, starting at seat $s$.",
+        solution: "<b>Algorithmic Strategy (Modular Offset Reconstruction):</b><br>The solution employs <b>Residue Class Arithmetic</b> to simulate the wrap-around behavior without iteration.<br><br>1. <b>Zero-Indexing:</b> Shift the start and count systems to 0-indexed for clean modular logic: $(s - 1) + (m - 1)$.<br>2. <b>Modular Reduction:</b> Compute $( (s-1) + (m-1) ) \pmod n$ to find the relative offset from the origin.<br>3. <b>Human-Readable Restoration:</b> Add 1 to return the result to the 1-based seat numbering schema. Simplified: $(s + m - 2) \pmod n + 1$.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(1). The result is derived in a single arithmetic evaluation.<br>• <b>Space:</b> O(1). No auxiliary storage memory is required.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def saveThePrisoner(n, m, s):\n    # Calculate terminal seat using modular arithmetic\n    return ((s + m - 2) % n) + 1</pre>",
+        stepByStep: `<b>Computational Trace:</b><br>
+<b>Input:</b> n=5, m=2, s=1<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ff3b30; margin-left: 10px; margin-bottom: 10px;">
+    <i>Base Calc:</i> 1 + 2 - 2 = 1.<br>
+    <i>Modular:</i> 1 % 5 = 1.<br>
+    <i>Result:</i> 1 + 1 = 2.
 </div>
-<b>Final Result:</b> 2`
+<b>Final Result:</b> Seat 2`
     },
     {
         id: "solve-me-first",
         title: "Solve Me First<br><a href='https://www.hackerrank.com/challenges/solve-me-first/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Math",
-        problem: "Welcome to the world of algorithms! Your first quest is simple: you are given two numbers, and you need to find their sum. It's the 'Hello World' of competitive programming.",
-        solution: "We solve this by using the most fundamental operation in mathematics: **Addition**. We take the first number `a`, the second number `b`, and combine them using the `+` operator. Simple, elegant, and the foundation of everything else we build here!",
-        optimality: "This approach is the theoretical limit of efficiency, running in <b>O(1) Constant Time</b>. Combining two integers is a single CPU operation. It uses <b>O(1) Space</b> as well.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def solveMeFirst(a, b):\n    return a + b</pre>",
-        stepByStep: `<b>Input:</b> a = 7, b = 3<br><br>
-<b>The Calculation:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Equation:</i> 7 + 3 = <b>10</b>
+        problem: "<b>Core Objective:</b> Implement the fundamental arithmetic summation of two scalar integers, $a$ and $b$.",
+        solution: "<b>Algorithmic Strategy (Linear Accumulation):</b><br>The operation is a <b>Primitive CPU Instruction</b>.<br><br>1. <b>Aggregation:</b> Utilize the addition operator ($+$) to derive the combined value.<br>2. <b>Verification:</b> In high-level languages, assume standard integer overflow protections or arbitrary precision as applicable.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(1). Addition is a near-instantaneous atomic operation.<br>• <b>Space:</b> O(1). No auxiliary stack or heap allocation is necessary beyond the return register.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def solveMeFirst(a, b):\n    # Basic scalar summation\n    return a + b</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> a = 15, b = 25<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5ac8fa; margin-left: 10px; margin-bottom: 10px;">
+    <i>Summation:</i> 15 + 25 = <b>40</b>.
 </div>
-<b>Final Result:</b> 10`
+<b>Terminal Result:</b> 40`
     },
     {
         id: "sherlock-and-squares",
         title: "Sherlock and Squares<br><a href='https://www.hackerrank.com/challenges/sherlock-and-squares/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Math",
-        problem: "Sherlock Holmes is looking for square numbers (like 4, 9, 16) hidden within a range of numbers from `a` to `b`. Your job is to count exactly how many square numbers exist in that range without counting them manually one by one.",
-        solution: "Instead of checking every number in the range (which could be millions!), we use math to find the answer almost instantly. <br><br>We find the square root of the ending number (`sqrt(b)`) and the square root of the number just before the start (`sqrt(a-1)`). The difference between these two square roots tells us exactly how many integers were squared to land in that range. It's like finding how many milestones are between two distances on a highway!",
-        optimality: "This 'Square Root Identity' approach is optimal, running in <b>O(1) Constant Time</b>. We perform two square root calculations regardless of how large the range is. It uses <b>O(1) Space</b>.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def squares(a, b):\n    # Count of squares up to b minus squares up to a-1\n    return int(b**0.5) - int((a-1)**0.5)</pre>",
-        stepByStep: `<b>Input Range:</b> [3, 9]<br><br>
-<b>Counting Squares:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Step 1:</i> Find sqrt(9) = <b>3</b>. (There are 3 squares up to 9: 1, 4, 9)<br>
-    <i>Step 2:</i> Find sqrt(3-1) = sqrt(2) ≈ <b>1.41</b>. Take the floor: <b>1</b>. (There is 1 square up to 2: 1)<br>
-    <i>Step 3:</i> Subtract: 3 - 1 = <b>2</b>.
+        problem: "<b>Core Objective:</b> Count the number of perfect squares within a closed interval $[a, b]$.<br><br><b>Technical Challenge:</b> Naive iteration through the range is inefficient for large intervals. An analytical solution using inverse operations is required.",
+        solution: "<b>Algorithmic Strategy (Discrete Square Root Counting):</b><br>The algorithm identifies the range of integers whose squares fall within $[a, b]$.<br><br>1. <b>Lower Boundary:</b> The smallest integer $x$ such that $x^2 \ge a$ is $\lceil \sqrt{a} \rceil$.<br>2. <b>Upper Boundary:</b> The largest integer $y$ such that $y^2 \le b$ is $\lfloor \sqrt{b} \rfloor$.<br>3. <b>Range Derivation:</b> The count of such integers is $( \lfloor \sqrt{b} \rfloor - \lceil \sqrt{a} \rceil ) + 1$. Alternatively, calculated as $\lfloor \sqrt{b} \rfloor - \lfloor \sqrt{a-1} \rfloor$.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(1). The calculation depends only on two square root operations regardless of interval width.<br>• <b>Space:</b> O(1). No auxiliary memory is consumed.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>import math\n\ndef squares(a, b):\n    # Count squares by finding integers in root range\n    upper = math.floor(math.sqrt(b))\n    lower = math.ceil(math.sqrt(a))\n    return upper - lower + 1</pre>",
+        stepByStep: `<b>Mathematical Trace:</b><br>
+<b>Input:</b> a=24, b=49<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ffcc00; margin-left: 10px; margin-bottom: 10px;">
+    <i>Square Root b:</i> $\sqrt{49} = 7$. $\lfloor 7 \rfloor = 7$.<br>
+    <i>Square Root a:</i> $\sqrt{24} \approx 4.89$. $\lceil 4.89 \rceil = 5$.<br>
+    <i>Count:</i> $7 - 5 + 1 = 3$.
 </div>
-<b>Final Result:</b> 2 (The squares are 4 and 9)`
+<b>Final Result:</b> 3 (Squares are 25, 36, 49)`
     },
     {
         id: "diagonal-difference",
         title: "Diagonal Difference<br><a href='https://www.hackerrank.com/challenges/diagonal-difference/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Matrix",
-        problem: "Imagine you're looking at a square grid of numbers. Your task is to find two special paths: the 'Main Diagonal' (from top-left to bottom-right) and the 'Side Diagonal' (from top-right to bottom-left). Sum up the numbers in each path, and find the absolute difference between those two sums. It's like finding the balance between two crossing lines!",
-        solution: "We solve this by walking through the rows of our square grid once. <br><br>For each row `i`, we pick two numbers:<br>1. The one where row and column index are the same: `matrix[i][i]`. This is our **Main Diagonal** (Primary).<br>2. The one where the column index counts backwards from the end: `matrix[i][n-i-1]`. This is our **Side Diagonal** (Secondary).<br><br>We keep two running totals, subtract them at the end, and take the absolute value to ensure our result is positive.",
-        optimality: "This 'One-Pass Scanner' approach is optimal, running in <b>O(N) Time complexity</b> where N is the number of rows (size of the square). Since we must look at each diagonal element once, we can't do it any faster! It uses <b>O(1) Space</b> to store our two running sums.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def diagonalDifference(matrix):\n    n = len(matrix)\n    primary_sum = 0\n    secondary_sum = 0\n    \n    for i in range(n):\n        primary_sum += matrix[i][i]\n        secondary_sum += matrix[i][n - i - 1]\n        \n    return abs(primary_sum - secondary_sum)</pre>",
-        stepByStep: `<b>Input Matrix:</b><br>
-[ 1, 2, 3 ]<br>
-[ 4, 5, 6 ]<br>
-[ 9, 8, 9 ]<br><br>
-<b>Calculating Diagonals:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Row 0:</i> Primary picks 1, Secondary picks 3.<br>
-    <i>Row 1:</i> Primary picks 5, Secondary picks 5.<br>
-    <i>Row 2:</i> Primary picks 9, Secondary picks 9.<br>
-    <br>
-    <i>Primary Total:</i> 1 + 5 + 9 = <b>15</b><br>
-    <i>Secondary Total:</i> 3 + 5 + 9 = <b>17</b>
+        problem: "<b>Core Objective:</b> Calculate the absolute difference between the sums of the two diagonals of a square matrix.<br><br><b>Mathematical Logic:</b> For a square matrix $M$ of size $n$, the primary diagonal elements are $M[i][i]$ and the secondary diagonal elements are $M[i][n-i-1]$.",
+        solution: "<b>Algorithmic Strategy (Single-Pass Index Logic):</b><br>The algorithm iterates through the matrix rows once, simultaneously accumulating both diagonal sums.<br><br>1. <b>Diagonal Access:</b> For row $i$, access $M[i][i]$ for the primary sum and $M[i][n-i-1]$ for the secondary sum.<br>2. <b>Aggregation:</b> Update running totals for both diagonals.<br>3. <b>Magnitude Calculation:</b> Return $|PrimarySum - SecondarySum|$.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N). A single pass over the rows processes both diagonals simultaneously.<br>• <b>Space:</b> O(1). Only two summation variables are required.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def diagonalDifference(arr):\n    n = len(arr)\n    p_sum = s_sum = 0\n    \n    for i in range(n):\n        p_sum += arr[i][i]\n        s_sum += arr[i][n - i - 1]\n        \n    return abs(p_sum - s_sum)</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> 3x3 Matrix<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #34c759; margin-left: 10px; margin-bottom: 10px;">
+    <i>Row 0:</i> Primary [0][0], Secondary [0][2].<br>
+    <i>Row 1:</i> Primary [1][1], Secondary [1][1].<br>
+    <i>Row 2:</i> Primary [2][2], Secondary [2][0].<br>
+    <i>Calculation:</i> abs(Sum1 - Sum2).
 </div>
-<b>Final Result:</b> |15 - 17| = <b>2</b>`
+<b>Final Result:</b> Absolute Difference`
     },
     {
         id: "forming-magic-square",
