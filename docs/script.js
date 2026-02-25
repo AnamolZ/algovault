@@ -1243,31 +1243,37 @@ const algorithms = [
         id: "valid-regex",
         title: "Valid Regex<br><a href='https://www.hackerrank.com/challenges/incorrect-regex/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Simulation",
-        problem: "You are given several strings, and you need to determine if each one is a valid 'Regular Expression' (Regex). A regex is valid if a program (like a search engine or language compiler) can actually use it to find patterns without crashing or throwing an error due to bad notation.",
-        solution: "The most reliable way to check validity is to 'Try it out'! We take the input string and attempt to compile it using the language's built-in Regex library (like `re.compile` in Python). We wrap this call in a **Try-Except** block: <br>• If it compiles successfully, the string is a valid regex. <br>• If the library throws an error (indicating bad syntax like unclosed brackets or mismatched operators), we catch the error and mark the string as invalid.",
-        optimality: "This 'Library Validation' approach is optimal, running in <b>O(L) Time complexity</b> where L is the length of the string, as the internal compiler must scan the entire string. Using the built-in library is best because it guarantees your answer matches exactly how the computer would actually behave. it uses <b>O(L) Space</b> for the compiled object.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>import re\ndef isValid(pattern):\n    try:\n        re.compile(pattern)\n        return True\n    except re.error:\n        return False</pre>",
-        stepByStep: `<b>Test Case 1:</b> ".*\+"<br>
-<b>Validation:</b> Attempting to compile... Success! <b>Valid</b>.<br><br>
-<b>Test Case 2:</b> ".*++"<br>
-<b>Validation:</b> Attempting to compile... Error! (Consecutive quantifiers). <b>Invalid</b>.`
+        problem: "<b>Core Objective:</b> Determine the syntactic validity of a given string as a Regular Expression (Regex) pattern.",
+        solution: "<b>Algorithmic Strategy (Exception-Driven Verification):</b><br>The algorithm leverages the host language's regex engine to perform full lexical and syntactic validation.<br><br>1. <b>Compilation Attempt:</b> Pass the string to the $re.compile$ (or equivalent) function.<br>2. <b>Error Trapping:</b> Utilize a try-except structure to catch compilation failures (e.g., mismatched delimiters, invalid quantifiers).<br>3. <b>Boolean Verification:</b> Return True if compilation succeeds; False if a syntax error is raised.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(L). The regex engine must scan the pattern of length $L$ to validate its grammar.<br>• <b>Space:</b> O(L). The internal representation of the pattern requires memory proportional to its size.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>import re\n\ndef is_valid_regex(pattern):\n    try:\n        re.compile(pattern)\n        return True\n    except re.error:\n        return False</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> ".*++"<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ff3b30; margin-left: 10px; margin-bottom: 10px;">
+    <i>Action:</i> re.compile(".*++").<br>
+    <i>State:</i> Triggering re.error (multiple repeat).<br>
+    <i>Result:</i> False.
+</div>
+<b>Final Result:</b> Invalid`
     },
     {
         id: "viral-advertising",
         title: "Viral Advertising<br><a href='https://www.hackerrank.com/challenges/strange-advertising/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Simulation",
-        problem: "A company starts an advertising campaign! On the first day, they show the ad to 5 people. Exactly half (rounded down) like the ad and share it with 3 of their friends the following day. This pattern repeats daily. Your goal is to find out the *cumulative* number of people who liked the ad after **n** days.",
-        solution: "We solve this by simulating the campaign day by day. We keep track of two variables: `shared` (people shown the ad today) and `cumulative` (total likes so far). <br><br>Each day:<br>1. Half the people who saw it like it: `liked = shared // 2`.<br>2. Add these to our running total: `cumulative += liked`.<br>3. These people each share it with 3 friends for tomorrow: `shared = liked * 3`.<br><br>We repeat this for **n** days and return the cumulative total.",
-        optimality: "This 'Daily Tally' simulation runs in <b>O(N) Time complexity</b> where N is the number of days. Since N is typically small, this is extremely efficient. It uses <b>O(1) Space</b> to store the counters. It's the most direct and accurate way to model the growth of a viral trend.",
+        problem: "<b>Core Objective:</b> Calculate the cumulative number of 'likes' for an advertisement after $n$ days, based on a fixed sharing and adoption ratio.",
+        solution: "<b>Algorithmic Strategy (Viral Growth Simulation):</b><br>The algorithm models adoption as a day-over-day propagation function.<br><br>1. <b>Adoption Ratio:</b> On any given day, the number of 'likes' is $\lfloor recipients / 2 \rfloor$.<br>2. <b>Sharing Constant:</b> Each individual who likes the ad shares it with 3 distinct friends for the following day ($recipients_{next} = likes \times 3$).<br>3. <b>Iterative Accumulation:</b> Maintain a running sum of total likes across the $n$ day period.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N). The simulation performs $n$ iterations.<br>• <b>Space:</b> O(1). Only two scalar variables (shared and cumulative) are stored.",
         codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def viralAdvertising(n):\n    shared = 5\n    cumulative = 0\n    for _ in range(n):\n        liked = shared // 2\n        cumulative += liked\n        shared = liked * 3\n    return cumulative</pre>",
-        stepByStep: `<b>Input:</b> n = 3 days<br><br>
-<b>Campaign Progress:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Day 1:</i> Shared with 5. Likes: 5//2 = 2. Total Likes: <b>2</b>. Next day shared: 2*3=6.<br>
-    <i>Day 2:</i> Shared with 6. Likes: 6//2 = 3. Total Likes: 2+3 = <b>5</b>. Next day shared: 3*3=9.<br>
-    <i>Day 3:</i> Shared with 9. Likes: 9//2 = 4. Total Likes: 5+4 = <b>9</b>. Next day shared: 4*3=12.
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> n=3.<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #afafaf; margin-left: 10px; margin-bottom: 10px;">
+    <i>Day 1:</i> Shared with 5. Likes: 2. Cumulative: 2.<br>
+    <i>Day 2:</i> Shared with 6 (2*3). Likes: 3. Cumulative: 5.<br>
+    <i>Day 3:</i> Shared with 9 (3*3). Likes: 4. Cumulative: 9.
 </div>
-<b>Final Result:</b> 9 cumulative likes.`
+<b>Final Result:</b> 9`
     },
     {
         id: "lisas-workbook",
