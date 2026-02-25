@@ -885,38 +885,38 @@ const algorithms = [
         id: "angry-professor",
         title: "Angry Professor<br><a href='https://www.hackerrank.com/challenges/angry-professor/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Simulation",
-        problem: "A class has a strict professor! The professor has set a 'cancellation threshold' <b>k</b>. If fewer than <b>k</b> students arrive on time (arrival time ≤ 0), the class is cancelled. Given the arrival times of all students, determine if the class is cancelled.",
-        solution: "We solve this by simply counting how many students have an arrival time that is zero or negative (indicating they arrived on time or early). Once we have the total count of on-time students, we compare it to the professor's threshold <b>k</b>. If our count is less than <b>k</b>, the class is cancelled ('YES'); otherwise, it proceeds ('NO').",
-        optimality: "This 'Threshold Checker' is perfectly optimal, operating in <b>O(N) Time complexity</b> as we must check the arrival time of every student once. It uses <b>O(1) Space</b> to store the count of on-time students.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def angryProfessor(k, a):\n    on_time = sum(1 for x in a if x <= 0)\n    return 'YES' if on_time < k else 'NO'</pre>",
-        stepByStep: `<b>Input:</b> k=3, a=[-1, -3, 4, 2]<br><br>
-<b>Checking Attendance:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Student 1 (-1):</i> On time.<br>
-    <i>Student 2 (-3):</i> On time.<br>
-    <i>Student 3 (4):</i> Late.<br>
-    <i>Student 4 (2):</i> Late.<br>
-    <i>Total On Time:</i> 2
+        problem: "<b>Core Objective:</b> Determine if a class session should be cancelled based on a student attendance threshold $k$.<br><br><b>Technical Condition:</b> A student is considered 'on time' if their arrival time $a_i \le 0$. The class is cancelled if the total number of on-time students is strictly less than $k$.",
+        solution: "<b>Algorithmic Strategy (Linear Threshold Audit):</b><br>The algorithm performs a <b>Linear Scan</b> through the arrival vector to aggregate attendance data.<br><br>1. <b>Filtering:</b> Identify all elements in the arrival array $a$ where $val \le 0$.<br>2. <b>Cardinality Comparison:</b> Compare the size of the filtered set against the threshold $k$.<br>3. <b>Predicate Mapping:</b> Return 'YES' (cancelled) if $count < k$, otherwise return 'NO'.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N). Each student's arrival time is examined exactly once.<br>• <b>Space:</b> O(1). Only a single counter variable is maintained during the scan.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def angryProfessor(k, a):\n    # Count students with arrival time <= 0\n    on_time = sum(1 for arrival in a if arrival <= 0)\n    return 'YES' if on_time < k else 'NO'</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> k=3, a=[-1, -3, 4, 2]<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ff3b30; margin-left: 10px; margin-bottom: 10px;">
+    <i>Evaluation:</i> -1 $\le$ 0 (Yes), -3 $\le$ 0 (Yes), 4 $\le$ 0 (No), 2 $\le$ 0 (No).<br>
+    <i>Aggregation:</i> Total on-time = 2.<br>
+    <i>Threshold Check:</i> 2 < 3. <b>Cancellation Triggered.</b>
 </div>
-<b>Final Result:</b> 2 is less than 3 (k). Class is Cancelled! Result: <b>YES</b>`
+<b>Final Result:</b> YES`
     },
     {
         id: "bigger-is-greater",
         title: "Bigger is Greater<br><a href='https://www.hackerrank.com/challenges/bigger-is-greater/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Simulation",
-        problem: "You are given a word, and you want to rearrange its letters to create a new word that is 'alphabetically next'. Specifically, you need the smallest word that is lexicographically greater than the original. If no such word can be formed (because the word is already in its final alphabetical order), return 'no answer'.",
-        solution: "We use the 'Next Lexicographical Permutation' algorithm! <br>1. **Find the Pivot**: Scan from right to left to find the first character that is smaller than the one to its right. This is our 'pivot'.<br>2. **Find the Successor**: Scan from right to left again to find the smallest character that is still larger than our pivot.<br>3. **Swap**: Swap the pivot and the successor.<br>4. **Reverse**: Reverse (or sort) everything to the right of the pivot's original position to ensure it is as small as possible.<br><br>If we can't find a pivot (the whole string is descending), it means no greater word exists.",
-        optimality: "This 'Pivot-Swap-Reverse' strategy is perfectly optimal, achieving <b>O(N) Time complexity</b> (or O(N log N) if sorting the suffix). Since we only scan the string a few times, it is incredibly fast even for very long words. It uses <b>O(N) Space</b> to store the character list for modification.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def biggerIsGreater(w):\n    chars = list(w)\n    i = len(chars) - 1\n    while i > 0 and chars[i-1] >= chars[i]:\n        i -= 1\n    if i <= 0: return 'no answer'\n    \n    pivot = i - 1\n    j = len(chars) - 1\n    while chars[j] <= chars[pivot]:\n        j -= 1\n    \n    chars[pivot], chars[j] = chars[j], chars[pivot]\n    chars[pivot+1:] = chars[pivot+1:][::-1]\n    return ''.join(chars)</pre>",
-        stepByStep: `<b>Input:</b> "abdc"<br><br>
-<b>Finding the Next Word:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Step 1:</i> Pivot is 'b' (index 1) because 'b' < 'd'.<br>
-    <i>Step 2:</i> Successor is 'c' because it's the smallest on the right larger than 'b'.<br>
-    <i>Step 3:</i> Swap 'b' and 'c' → "acdb".<br>
-    <i>Step 4:</i> Reverse everything after index 1 → "acbd".
+        problem: "<b>Core Objective:</b> Find the lexicographically smallest string that is strictly greater than the input by rearranging its characters.<br><br><b>Context:</b> This is equivalent to finding the next permutation in a lexicographical sequence.",
+        solution: "<b>Algorithmic Strategy (Pivot-Successor-Reverse):</b><br>The algorithm follows the standard <b>Next Permutation</b> logic.<br><br>1. <b>Identify Pivot:</b> Scan from right-to-left to find the first character $w[i]$ such that $w[i] < w[i+1]$.<br>2. <b>Identify Successor:</b> Scan from right-to-left to find the smallest character $w[j]$ such that $w[j] > w[i]$.<br>3. <b>Swap & Minimize:</b> Swap $w[i]$ and $w[j]$, then reverse the suffix starting at $i+1$ to ensure it is in non-decreasing order (lexicographically minimal).",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N). The procedure involves three linear scans of the string.<br>• <b>Space:</b> O(N). String characters are converted to a list for in-place modifications.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def biggerIsGreater(w):\n    arr = list(w)\n    n = len(arr)\n    \n    # 1. Find pivot\n    i = n - 2\n    while i >= 0 and arr[i] >= arr[i+1]: i -= 1\n    if i == -1: return 'no answer'\n    \n    # 2. Find successor\n    j = n - 1\n    while arr[j] <= arr[i]: j -= 1\n    \n    # 3. Swap and reverse suffix\n    arr[i], arr[j] = arr[j], arr[i]\n    arr[i+1:] = reversed(arr[i+1:])\n    return ''.join(arr)</pre>",
+        stepByStep: `<b>Algorithmic Trace:</b><br>
+<b>Input:</b> "dkhc"<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ffcc00; margin-left: 10px; margin-bottom: 10px;">
+    <i>Pivot Search:</i> 'k' > 'h', 'h' > 'c'... No pivot until 'd' < 'k' at index 0.<br>
+    <i>Successor Search:</i> 'h' is the smallest on right larger than 'd'.<br>
+    <i>Swap:</i> "h " + "kdc".<br>
+    <i>Reverse Suffix:</i> "h" + "cdk".
 </div>
-<b>Final Result:</b> "acbd"`
+<b>Final Result:</b> "hcdk"`
     },
     {
         id: "bon-appetit",
