@@ -661,58 +661,59 @@ const algorithms = [
         id: "kaprekar-numbers",
         title: "Modified Kaprekar Numbers<br><a href='https://www.hackerrank.com/challenges/kaprekar-numbers/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Math",
-        problem: "A Modified Kaprekar Number is a rare and special integer! If you take this number, square it, and then split that square into two parts (a left side and a right side), adding those two parts together brings you right back to your original number! The only catch is that the right side must have the same number of digits as the original number. Can you find all of them in a given range?",
-        solution: "We solve this by trying every number in the range. For each number: <br>1. We measure how many digits it has ($d$). <br>2. We calculate its square. <br>3. We slice the square into two pieces: the right piece gets the last $d$ digits, and the left piece gets everything else. <br>4. We add them together. If the sum equals our original number, we found a Kaprekar Number!",
-        optimality: "This 'Number Scanner' approach is optimal, running in <b>O(N * D) Time complexity</b> where N is the range size and D is the number of digits (since squaring and string-slicing depend on length). Since we have to check every individual number to see if it's special, we cannot go faster. It uses <b>O(N) Space</b> only to store our final list of winners.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def kaprekarNumbers(p, q):\n    results = []\n    for n in range(p, q + 1):\n        d = len(str(n))\n        square = n * n\n        \n        # Split square into two parts\n        s_str = str(square)\n        right = s_str[-d:] if s_str[-d:] else '0'\n        left = s_str[:-d] if s_str[:-d] else '0'\n        \n        if int(left) + int(right) == n:\n            results.append(n)\n    return results</pre>",
-        stepByStep: `<b>Input Range:</b> [1, 50], Check Number: <b>45</b><br><br>
-<b>The Kaprekar Test:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Step 1:</i> 45 has <b>2</b> digits.<br>
-    <i>Step 2:</i> 45 squared is <b>2025</b>.<br>
-    <i>Step 3:</i> Split 2025 into two parts (right side gets 2 digits):<br>
-    &nbsp;&nbsp;• Left: 20<br>
-    &nbsp;&nbsp;• Right: 25<br>
-    <i>Step 4:</i> Add them: 20 + 25 = <b>45</b>.
+        problem: "<b>Core Objective:</b> Identify all 'Modified Kaprekar Numbers' within a specified range $[p, q]$.<br><br><b>Technical Definition:</b> A number $n$ with $d$ digits is a Kaprekar number if the sum of the left and right halves of its square ($n^2$) equals $n$, where the right half contains exactly $d$ digits.",
+        solution: "<b>Algorithmic Strategy (Exhaustive Property Check):</b><br>The solution iterates through the search space, applying a <b>Positional Digit Partitioning</b> test to each candidate.<br><br>1. <b>Square & Transform:</b> For each $n$, compute $S = n^2$ and convert to its string representation.<br>2. <b>Pivot Calculation:</b> Determine the split point based on the digit count $d$ of $n$. The right segment $R$ consists of the terminal $d$ characters; the left segment $L$ consists of the remaining prefix.<br>3. <b>Arithmetic Reconstruction:</b> Sum the integer values of $L$ and $R$. If $L+R = n$, record the value.",
+        optimality: "<b>Complexity Profile:</b><br>• <b>Time:</b> O(N * D), where $N$ is the range width and $D$ is the number of digits in $q^2$. Squaring and string slicing are linear relative to the digit count.<br>• <b>Space:</b> O(K) where $K$ is the count of identified Kaprekar numbers.<br><br><b>Conclusion:</b> This approach is perfectly optimal for identifying number-theoretic invariants within a bounded domain.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def kaprekarNumbers(p, q):\n    results = []\n    for n in range(p, q + 1):\n        digits = len(str(n))\n        square_str = str(n * n)\n        \n        # Partition the square\n        right_part = square_str[-digits:]\n        left_part = square_str[:-digits] or \"0\"\n        \n        if int(left_part) + int(right_part) == n:\n            results.append(n)\n    return results if results else \"INVALID RANGE\"</pre>",
+        stepByStep: `<b>Validation Scenario:</b><br>
+<b>Input:</b> n = 297, d = 3<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #afafaf; margin-left: 10px; margin-bottom: 10px;">
+    <i>Square:</i> 297 * 297 = 88209.<br>
+    <i>Partition:</i> Right (3 digits) = 209, Left = 88.<br>
+    <i>Sum:</i> 88 + 209 = 297.<br>
+    <i>Verdict:</i> <b>KAPREKAR NUMBER.</b>
 </div>
-<b>Final Result:</b> 45 is a Kaprekar Number!`
+<b>Final Result:</b> Identified.`
     },
     {
         id: "library-fine",
         title: "Library Fine<br><a href='https://www.hackerrank.com/challenges/library-fine/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Math",
-        problem: "You've returned a book to the library, but oh no—it might be overdue! The library has a strict 'Penalty Tier' system based on how late you are. If you return it in a different year, it's a huge flat fine. A different month? A monthly fine. Just a few days? A daily fine. On time? Zero fine! Can you calculate the exact damage to your wallet?",
-        solution: "We solve this by comparing the 'Return Date' and the 'Due Date' starting from the most severe case to the least severe. <br>1. **Year Check:** If the return year is greater than the due year, the user pays a flat 10,000 fine. <br>2. **Month Check:** If the year is the same but the month is later, we multiply the number of months late by 500. <br>3. **Day Check:** If both year and month are the same but the day is later, we multiply the number of days late by 15. <br>4. **On-Time:** In any other case (return date is before or on the due date), the fine is 0.",
-        optimality: "This 'Hierarchical Comparison' is perfectly optimal, running in <b>O(1) Time complexity</b>. It only performs a constant number of integer comparisons and basic arithmetic. It uses <b>O(1) Space</b> as well.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def libraryFine(d1, m1, y1, d2, m2, y2):\n    # Severe case: Different year\n    if y1 > y2:\n        return 10000\n\n    # Moderate case: Same year, different month\n    if y1 == y2 and m1 > m2:\n        return 500 * (m1 - m2)\n\n    # Minor case: Same month, different day\n    if y1 == y2 and m1 == m2 and d1 > d2:\n        return 15 * (d1 - d2)\n\n    return 0</pre>",
-        stepByStep: `<b>Input:</b> Returned 9 June 2015, Due 6 June 2015<br><br>
-<b>Calculating the Penalty:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Year Check:</i> 2015 == 2015. (Not a year late)<br>
-    <i>Month Check:</i> June == June. (Not a month late)<br>
-    <i>Day Check:</i> 9 > 6. User is <b>3 days late</b>.<br>
-    <i>Calculation:</i> 3 days * 15 = 45.
+        problem: "<b>Core Objective:</b> Determine the library fine rate based on a multi-tiered temporal penalty schedule.<br><br><b>Penalty Logic:</b><br>• Return year > Due year: Flat 10,000 fine.<br>• Return year = Due year AND Return month > Due month: 500 per month late.<br>• Return year = Due year AND Return month = Due month AND Return day > Due day: 15 per day late.<br>• Otherwise: Zero fine.",
+        solution: "<b>Algorithmic Strategy (Hierarchical Predicate Evaluation):</b><br>The algorithm leverages <b>Sequential Comparison</b> to identify the highest applicable penalty tier.<br><br>1. <b>Temporal Dominance:</b> Evaluate the year delta first, as it overrides all other conditions.<br>2. <b>Tiered Fallthrough:</b> If the years are equal, evaluate the month delta. If months are equal, evaluate the day delta.<br>3. <b>Immediate Return:</b> As soon as a late condition is met, the fine is computed and returned, bypassing subsequent checks.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(1). The solution performs a fixed max of three comparisons.<br>• <b>Space:</b> O(1). No auxiliary data structures are necessitated.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def libraryFine(d1, m1, y1, d2, m2, y2):\n    # Tier 1: Inter-annual delinquency\n    if y1 > y2: return 10000\n    if y1 < y2: return 0\n    \n    # Tier 2: Monthly delinquency\n    if m1 > m2: return (m1 - m2) * 500\n    if m1 < m2: return 0\n    \n    # Tier 3: Daily delinquency\n    if d1 > d2: return (d1 - d2) * 15\n    return 0</pre>",
+        stepByStep: `<b>Administrative Trace:</b><br>
+<b>Input:</b> Returned: 15-07-2015, Due: 01-07-2015<br><br>
+<b>Audit Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ff2d55; margin-left: 10px; margin-bottom: 10px;">
+    <i>Year Status:</i> 2015 = 2015 (Valid).<br>
+    <i>Month Status:</i> 07 = 07 (Valid).<br>
+    <i>Day Status:</i> 15 > 01. <b>14 days late.</b><br>
+    <i>Calculation:</i> 14 * 15 = 210.
 </div>
-<b>Final Result:</b> Your fine is 45.`
+<b>Terminal Fine:</b> 210`
     },
     {
         id: "finding-the-percentage",
         title: "Finding the Percentage<br><a href='https://www.hackerrank.com/challenges/finding-the-percentage/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Math",
-        problem: "You have a list of students and their marks in different subjects. You need to store all this data efficiently and then, when someone asks for a specific student, calculate their average marks and display them perfectly formatted to two decimal places (e.g., 80.00).",
-        solution: "We use a <b>Dictionary (Hash Map)</b> to store the student data, where the student's name is the 'Key' and their list of marks is the 'Value'. This makes looking up a student near-instant! To calculate the average, we sum the marks for the requested student and divide by the total number of subjects. Finally, we use Python's <b>F-string formatting</b> (`:.2f`) to ensure the average always looks professional with exactly two decimal points.",
-        optimality: "This 'Dictionary Lookup' approach is optimal, offering <b>O(1) Time complexity</b> for the student lookup and <b>O(K) Time</b> to calculate the average mark (where K is the number of subjects). It uses <b>O(N * K) Space</b> to store all student data in memory.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def marksCal(student_data, query_name):\n    # Lookup the student's marks list\n    marks = student_data[query_name]\n    \n    # Calculate average and format to 2 decimal places\n    average = sum(marks) / len(marks)\n    return f\"{average:.2f}\"</pre>",
-        stepByStep: `<b>Data Store:</b> { "Alice": [80, 90, 70], "Bob": [60, 75, 85] }<br>
-<b>Query:</b> "Alice"<br><br>
-<b>Calculating Average:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Lookup:</i> Found "Alice" → [80, 90, 70]<br>
-    <i>Summing marks:</i> 80 + 90 + 70 = 240<br>
-    <i>Averaging:</i> 240 / 3 = 80.0<br>
-    <i>Formatting:</i> "80.0" becomes <b>"80.00"</b>.
+        problem: "<b>Core Objective:</b> Efficiently query student record data to calculate the mean of an integer vector, ensuring a fixed-precision floating-point output.<br><br><b>Technical Requirement:</b> The result must be formatted to exactly two decimal places, regardless of whether the value is an integer or has trailing zeros.",
+        solution: "<b>Algorithmic Strategy (Key-Value Retrieval & Mean Computation):</b><br>The algorithm leverages <b>Hash Map Adjacency</b> for near-instantaneous record retrieval.<br><br>1. <b>Record Association:</b> Store student marks in a dictionary where $Name \rightarrow Marks[]$.<br>2. <b>Aggregate Calculation:</b> Compute the arithmetic mean: $\mu = \frac{\sum marks}{n}$.<br>3. <b>String Serialization:</b> Apply precision-controlled formatting (e.g., Python's `':.2f'`) to satisfy the output specification.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(K), where $K$ is the number of marks per student. Dictionary lookup is O(1) on average; summation is linear relative to the vector size.<br>• <b>Space:</b> O(N * K) to persist the record dataset in memory.<br><br><b>Conclusion:</b> This approach is asymptotically optimal for interactive record-based queries.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def solve(student_marks, query_name):\n    # Average marks calculation with 2-decimal formatting\n    marks = student_marks[query_name]\n    avg = sum(marks) / len(marks)\n    return f\"{avg:.2f}\"</pre>",
+        stepByStep: `<b>Computational Trace:</b><br>
+<b>Dataset:</b> {"Alpha": [50, 60, 70], "Beta": [30, 40, 50]}<br>
+<b>Query:</b> "Alpha"<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5ac8fa; margin-left: 10px; margin-bottom: 10px;">
+    <i>Step 1:</i> Map lookup: "Alpha" $\rightarrow$ [50, 60, 70].<br>
+    <i>Step 2:</i> $\sum = 180, n = 3$.<br>
+    <i>Step 3:</i> $180 / 3 = 60.0$.<br>
+    <i>Step 4:</i> Format 60.0 $\rightarrow$ <b>"60.00"</b>.
 </div>
-<b>Final Result:</b> 80.00`
+<b>Final Result:</b> 60.00`
     },
     {
         id: "minimum-distances",
