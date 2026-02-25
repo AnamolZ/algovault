@@ -979,104 +979,95 @@ const algorithms = [
         id: "counting-valleys",
         title: "Counting Valleys<br><a href='https://www.hackerrank.com/challenges/counting-valleys/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Simulation",
-        problem: "An avid hiker keeps track of their steps on a journey! Each step is either an 'up' (<b>U</b>) or a 'down' (<b>D</b>). They always start at sea level (altitude 0). A 'valley' is defined as a sequence of steps that starts with a step down from sea level and ends with a step up to sea level. Your job is to count exactly how many valleys the hiker traversed during their trip.",
-        solution: "We solve this by keeping a 'sea level tracker'—an integer variable representing our current altitude. We loop through every step in the path: if it's a 'U', we add 1 to our altitude; if it's a 'D', we subtract 1. The key is in spotting the *end* of a valley: if our previous step was 'U' and our new altitude is exactly 0, it means we just climbed back to sea level from a valley below. We increment our valley counter every time this specific event happens.",
-        optimality: "This 'Altitude Tracker' approach is highly efficient, running in <b>O(N) Time complexity</b> because we visit each step in the path exactly once. It uses <b>O(1) Space</b> to store the current altitude and the valley count. It is the most robust way to process continuous motion data.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def countingValleys(steps, path):\n    altitude = 0\n    valleys = 0\n    for step in path:\n        if step == 'U':\n            altitude += 1\n            if altitude == 0:\n                valleys += 1\n        else:\n            altitude -= 1\n    return valleys</pre>",
-        stepByStep: `<b>Path:</b> [D, D, U, U, U, U, D, D] (8 steps)<br><br>
-<b>Walking the Path:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Step 1 (D):</i> Altitude -1. We are below sea level.<br>
-    <i>Step 2 (D):</i> Altitude -2.<br>
-    <i>Step 3 (U):</i> Altitude -1.<br>
-    <i>Step 4 (U):</i> Altitude 0. <b>Valley Finished!</b> (Count: 1)<br>
-    <i>Step 5 (U):</i> Altitude 1. We are on a mountain.<br>
-    <i>Step 6 (U):</i> Altitude 2.<br>
-    <i>Step 7 (D):</i> Altitude 1.<br>
-    <i>Step 8 (D):</i> Altitude 0. (Not a valley, just returned from height).
+        problem: "<b>Core Objective:</b> Count the number of 'valleys' traversed in a sequence of steps, where a valley is defined as a continuous sub-sequence that begins with a step below sea level and concludes with a step back to sea level.",
+        solution: "<b>Algorithmic Strategy (Temporal Altitude Tracking):</b><br>The algorithm maintains a <b>Relative Altitude State</b>, using zero as the reference point for sea level.<br><br>1. <b>State Transition:</b> For each step, increment (if 'U') or decrement (if 'D') the current altitude.<br>2. <b>Event Detection:</b> A valley completion is detected when the altitude transitions from -1 to 0. This implies the participant has just emerged from sub-surface terrain.<br>3. <b>Aggregation:</b> Increment the valley counter only during this specific upward zero-crossing.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N). Each step in the path is visited once.<br>• <b>Space:</b> O(1). Only two integer variables (altitude and count) are required.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def countingValleys(steps, path):\n    altitude = valleys = 0\n    \n    for step in path:\n        if step == 'U':\n            altitude += 1\n            # Emergence from sea level identifies a valley end\n            if altitude == 0: valleys += 1\n        else:\n            altitude -= 1\n            \n    return valleys</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Path:</b> D D U U<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5ac8fa; margin-left: 10px; margin-bottom: 10px;">
+    <i>Step 1 (D):</i> Alt: -1. Entering sub-surface.<br>
+    <i>Step 2 (D):</i> Alt: -2.<br>
+    <i>Step 3 (U):</i> Alt: -1.<br>
+    <i>Step 4 (U):</i> Alt: 0. <b>Valley Emergence Detected.</b>
 </div>
-<b>Final Result:</b> 1 valley traversed.`
+<b>Final Result:</b> 1 Valley`
     },
     {
         id: "designer-pdf-viewer",
         title: "Designer PDF Viewer<br><a href='https://www.hackerrank.com/challenges/designer-pdf-viewer/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Simulation",
-        problem: "When you select a word in a PDF viewer, a blue highlighting rectangle appears. In this specific viewer, all characters are 1mm wide, but they have different heights! Given a list of heights for every letter in the alphabet and a specific word, calculate the total area in mm² of the rectangle that would highlight that word. The height of the rectangle is determined by the *tallest* letter in the word selection.",
-        solution: "We solve this by finding the 'Maximum Height' among all the characters in the word. We iterate through each letter of the word, look up its height in the provided list (using its alphabetical index), and keep track of the tallest one we see. Once we know the max height, we multiply it by the width of the word, which is simply the number of letters in the word! Area = max_height * word_length.",
-        optimality: "This 'Height Scanner' strategy is perfectly optimal, achieving <b>O(N) Time complexity</b> where N is the length of the word to find the maximum height. It uses <b>O(1) Space</b> as we only store one 'max height' variable. It is a clean, direct simulation of a UI selection component.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def designerPdfViewer(h, word):\n    max_h = 0\n    for char in word:\n        height = h[ord(char) - ord('a')]\n        if height > max_h:\n            max_h = height\n    return max_h * len(word)</pre>",
-        stepByStep: `<b>Heights:</b> [1, 3, 1, 3, 1, 4, ...] (a=1, b=3, c=1, d=3, e=1, f=4)<br>
-<b>Word:</b> "abc"<br><br>
-<b>Calculating Area:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Letter 'a':</i> Height 1. Max so far: 1.<br>
-    <i>Letter 'b':</i> Height 3. Max so far: 3.<br>
-    <i>Letter 'c':</i> Height 1. Max so far: 3.<br>
-    <i>Final Max Height:</i> 3mm.<br>
-    <i>Word Length:</i> 3 characters.<br>
-    <i>Math:</i> 3mm * 3mm = <b>9mm²</b>
+        problem: "<b>Core Objective:</b> Calculate the area of a selection highlight rectangle for a given word, where each character has a fixed width of 1mm and a variable height defined by an input array.<br><br><b>Constraint:</b> The rectangle's height is defined by the maximum height among all characters in the selection string.",
+        solution: "<b>Algorithmic Strategy (Bounding Box Area Calculation):</b><br>The algorithm identifies the <b>Global Maximum Height</b> of the selected substring.<br><br>1. <b>Mapping:</b> For each character in the string, retrieve its height from the 26-element array $h$ using its ASCII offset from 'a'.<br>2. <b>Maximization:</b> Maintain a running $max\_h$ during the traversal.<br>3. <b>Area Derivation:</b> Multiply $max\_h$ by the string length (total width).",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N). The word is scanned once to determine the maximum height.<br>• <b>Space:</b> O(1). Only a single peak variable is stored.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def designerPdfViewer(h, word):\n    # Find the maximum height among characters in the word\n    max_height = max(h[ord(char) - 97] for char in word)\n    return max_height * len(word)</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> h=[1, 3, 1, 3, ...], Word="abc"<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5856d6; margin-left: 10px; margin-bottom: 10px;">
+    <i>'a':</i> h[0] = 1. Max: 1.<br>
+    <i>'b':</i> h[1] = 3. Max: 3.<br>
+    <i>'c':</i> h[2] = 1. Max: 3.<br>
+    <i>Calculation:</i> 3 (Height) * 3 (Width) = 9.
 </div>
-<b>Final Result:</b> 9`
+<b>Final Result:</b> 9mm²`
     },
     {
         id: "encryption",
         title: "Encryption<br><a href='https://www.hackerrank.com/challenges/encryption/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Simulation",
-        problem: "You need to encrypt a secret message! The message is a string of letters (spaces removed). You must fit the letters into a grid where the number of rows and columns are determined by the square root of the string length ($L$). Specifically, if $\\text{rows} \\times \\text{cols} \\geq L$, and they are close to $\\sqrt{L}$, the grid is valid. Once the message is in the grid row-by-row, you read the result out column-by-column to create the ciphertext.",
-        solution: "We solve this by first calculating the ideal dimensions. We find the square root of the message length, take the floor as our row count and the ceiling as our column count. If that isn't large enough to hold all characters, we just increment the row count until it fits. <br><br>Once the dimensions are set, we don't actually need to build a physical grid! We can just use a nested loop: for each 'column index', we jump through the string in steps equal to the 'column count'. This effectively 'plucks' the letters out in column order, which we then join together with spaces.",
-        optimality: "This 'Index Jumper' approach is very efficient, achieving <b>O(L) Time complexity</b> where L is the length of the string, as we process each character exactly once to form the ciphertext. It uses <b>O(L) Space</b> to store and return the encrypted result. It's a classic example of using grid logic without needing the memory overhead of an actual 2D array.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>import math\ndef encryption(s):\n    s = s.replace(\" \", \"\")\n    n = len(s)\n    root = math.sqrt(n)\n    rows = math.floor(root)\n    cols = math.ceil(root)\n    if rows * cols < n: rows += 1\n    \n    res = []\n    for c in range(cols):\n        temp = \"\"\n        for r in range(rows):\n            idx = r * cols + c\n            if idx < n: temp += s[idx]\n        res.append(temp)\n    return \" \".join(res)</pre>",
-        stepByStep: `<b>Input Message:</b> "haveaniceday" (length 12)<br><br>
-<b>Grid Selection:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Square Root:</i> √12 ≈ 3.46. Rows=3, Cols=4.<br>
-    <i>Area:</i> 3 * 4 = 12. Fits perfectly!<br>
-    <i>Row-by-Row Grid:</i><br>
-    have<br>anic<br>eday
+        problem: "<b>Core Objective:</b> Encrypt a string using a grid-based columnar transposition cipher, where the grid dimensions are constrained by the square root of the string length $L$.<br><br><b>Technical Constraints:</b> $\lfloor \sqrt{L} \rfloor \le row \le col \le \lceil \sqrt{L} \rceil$ and $row \times col \ge L$.",
+        solution: "<b>Algorithmic Strategy (Virtual Grid Transposition):</b><br>The algorithm projects characters into a columnar format without explicit matrix allocation.<br><br>1. <b>Dimension Optimization:</b> Calculate $cols = \lceil \sqrt{L} \rceil$. The number of columns is the primary driver for transposing the string.<br>2. <b>Index Projection:</b> Iterate from $c = 0$ to $cols-1$. For each column, extract characters at indices $i, i+cols, i+2cols, \dots$.<br>3. <b>Concatenation:</b> Join the extracted columnar strings with spaces to form the final ciphertext.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(L). Each character in the original string is processed exactly once to construct the output.<br>• <b>Space:</b> O(L). Necessary for storing the resulting ciphertext string.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>import math\n\ndef encryption(s):\n    s = s.replace(' ', '')\n    n = len(s)\n    cols = math.ceil(math.sqrt(n))\n    \n    res = []\n    for i in range(cols):\n        # Slice string with 'cols' as step to simulate column reading\n        res.append(s[i::cols])\n        \n    return ' '.join(res)</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> "if man was meant to stay on the ground..." (no spaces)<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #afafaf; margin-left: 10px; margin-bottom: 10px;">
+    <i>Length:</i> 54. $\sqrt{54} \approx 7.35$. $Cols=8$.<br>
+    <i>Col 1:</i> s[0], s[8], s[16]... -> "imntsd..."<br>
+    <i>Col 2:</i> s[1], s[9], s[17]... -> "fweao..."<br>
+    <i>Join:</i> "imntsd fweao ... "
 </div>
-<b>Reading Columns:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Col 1:</i> 'h' + 'a' + 'e' = "hae"<br>
-    <i>Col 2:</i> 'a' + 'n' + 'd' = "and"<br>
-    <i>Col 3:</i> 'v' + 'i' + 'a' = "via"<br>
-    <i>Col 4:</i> 'e' + 'c' + 'y' = "ecy"
-</div>
-<b>Final Result:</b> "hae and via ecy"`
+<b>Final Result:</b> Encrypted Ciphertext`
     },
     {
         id: "fair-rations",
         title: "Fair Rations<br><a href='https://www.hackerrank.com/challenges/fair-rations/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Simulation",
-        problem: "You are the minister of food distribution! A line of people is waiting for bread, but there's a catch: everyone must have an 'even' number of loaves. If you give a loaf to someone, you MUST also give a loaf to the person immediately behind (or in front of) them. Your goal is to find the minimum number of loaves you need to distribute to make everyone's count even, or determine if it's impossible.",
-        solution: "We solve this by walking through the line from start to finish. Whenever we encounter someone with an 'odd' number of loaves, we give them one (making it even) and automatically give one to the next person in line. We keep doing this until we reach the last person. If the last person ends up with an even number, we've succeeded! If they are still odd, it means it was mathematically impossible to satisfy the 'even' rule for everyone.",
-        optimality: "This 'Ripple Effect' simulation runs in <b>O(N) Time complexity</b> because we only need to pass through the line once. It uses <b>O(1) Space</b> to store the loaf counter. It is perfectly optimal because each decision is forced: if person `i` is odd, you *must* give a loaf to them and `i+1` to fix `i`.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def fairRations(b):\n    loaves = 0\n    for i in range(len(b) - 1):\n        if b[i] % 2 != 0:\n            b[i] += 1\n            b[i+1] += 1\n            loaves += 2\n    return loaves if b[-1] % 2 == 0 else 'NO'</pre>",
-        stepByStep: `<b>Input:</b> [2, 3, 4, 5, 6]<br><br>
-<b>Feeding the Line:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Person 0 (2):</i> Even. Skip.<br>
-    <i>Person 1 (3):</i> Odd! Give 1 to P1 and P2 → [2, 4, 5, 5, 6]. (Loaves: 2)<br>
-    <i>Person 2 (5):</i> Odd! Give 1 to P2 and P3 → [2, 4, 6, 6, 6]. (Loaves: 4)<br>
-    <i>Person 3 (6):</i> Even. Skip.<br>
-    <i>Person 4 (6):</i> Even. Success!
+        problem: "<b>Core Objective:</b> Determine the minimum number of loaves required to ensure every individual in a sequence has an even number of loaves, under the constraint that loaves must be distributed in pairs to adjacent positions.",
+        solution: "<b>Algorithmic Strategy (Greedy Ripple Correction):</b><br>The algorithm iterates through the sequence, resolving parity deficits by propagating them to the next index.<br><br>1. <b>Parity Scan:</b> Traverse the array from index 0 to $n-2$. If $arr[i]$ is odd, increment both $arr[i]$ and $arr[i+1]$.<br>2. <b>Counter Increment:</b> Each pair distribution adds 2 to the global tally.<br>3. <b>Feasibility Validation:</b> After the scan, if the final element $arr[n-1]$ remains odd, a valid state is mathematically impossible.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N). A single linear pass processes the entire sequence.<br>• <b>Space:</b> O(1). Only a scalar counter is utilized during simulation.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def fairRations(B):\n    loaves = 0\n    for i in range(len(B) - 1):\n        # If parity is odd, distribute a pair\n        if B[i] % 2 != 0:\n            B[i] += 1\n            B[i+1] += 1\n            loaves += 2\n            \n    return str(loaves) if B[-1] % 2 == 0 else 'NO'</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> [2, 3, 4, 5, 6]<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 20px solid #ff9500; margin-left: 10px; margin-bottom: 10px;">
+    <i>i=0:</i> Even. Skip.<br>
+    <i>i=1:</i> 3 is Odd. $B[1] \to 4, B[2] \to 5$. Loaves: 2.<br>
+    <i>i=2:</i> 5 is Odd. $B[2] \to 6, B[3] \to 6$. Loaves: 4.<br>
+    <i>i=3:</i> Even. Skip.<br>
+    <i>Check:</i> $B[4]=6$ is Even.
 </div>
-<b>Final Result:</b> 4 loaves distributed.`
+<b>Final Result:</b> 4`
     },
     {
         id: "flatland-space-stations",
         title: "Flatland Space Stations<br><a href='https://www.hackerrank.com/challenges/flatland-space-stations/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Simulation",
-        problem: "Flatland has <b>n</b> cities built in a single line, and some of them have space stations. A citizen in any city wants to know exactly how far they are from the *nearest* space station. Your task is to find the maximum possible 'minimum distance' anyone in Flatland has to travel. Basically, find the city that is most 'marooned' from space travel!",
-        solution: "We solve this by sorting the locations of all space stations. The distance to the nearest station can be found by checking three main areas:<br>1. The distance from the **first city** to the **first station**.<br>2. The distance from the **last city** to the **last station**.<br>3. The gaps **between** any two adjacent stations. For these gaps, the most isolated person is exactly in the middle, so the distance is half the gap size (`gap // 2`).<br><br>The final answer is simply the largest of all these distances.",
-        optimality: "This 'Gap Analysis' approach is highly efficient, running in <b>O(M log M) Time complexity</b> (due to sorting the station list) where M is the number of stations. Since M is usually much smaller than the total number of cities N, this is significantly faster than checking every city individually. It uses <b>O(1) Space</b> (ignoring the input list).",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def flatlandSpaceStations(n, c):\n    c.sort()\n    # Check start and end distances\n    max_d = max(c[0], (n - 1) - c[-1])\n    \n    # Check gaps between stations\n    for i in range(len(c) - 1):\n        distance = (c[i+1] - c[i]) // 2\n        max_d = max(max_d, distance)\n        \n    return max_d</pre>",
-        stepByStep: `<b>Input:</b> n=5 cities (0-4), Stations at [0, 4]<br><br>
-<b>Finding the Maximum Gap:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Start Check:</i> Pos 0 is a station. Distance = 0.<br>
-    <i>End Check:</i> Pos 4 is a station. Distance = 0.<br>
-    <i>Inter-station Gap:</i> Between 0 and 4 is a gap of 4. Middle distance is 4 // 2 = <b>2</b>.<br>
-    (The person in City 2 is 2 steps away from 0 AND 2 steps away from 4).
+        problem: "<b>Core Objective:</b> Find the maximum possible minimum distance between a city and its nearest space station in a linear geography of $n$ cities.<br><br><b>Technical Challenge:</b> The result is the maximum of the distances at the boundaries and the halfway points of inter-station gaps.",
+        solution: "<b>Algorithmic Strategy (Gap Analysis):</b><br>The algorithm identifies critical points in the linear topology and calculates the local minimum-distance maxima.<br><br>1. <b>Sorting:</b> Order the station indices $c$. Distance calculation depends on adjacency.<br>2. <b>Boundary Analysis:</b> Compute distance from city 0 to $c[0]$ and city $n-1$ to $c[-1]$.<br>3. <b>Intermediate Analysis:</b> For any two adjacent stations $c[i]$ and $c[i+1]$, the maximum distance occurs at the midpoint $(\lfloor (c[i+1] - c[i]) / 2 \rfloor)$.<br>4. <b>Global Extremum:</b> The answer is the maximum value observed across all three categories.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(M log M) where $M$ is the number of stations, dominated by sorting. The subsequent linear pass is O(M).<br>• <b>Space:</b> O(1) auxiliary space (excluding input storage).",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def flatlandSpaceStations(n, c):\n    c.sort()\n    # Maximize distance from boundaries\n    max_dist = max(c[0], (n - 1) - c[-1])\n    \n    # Maximize distance from gaps\n    for i in range(len(c) - 1):\n        gap_max = (c[i+1] - c[i]) // 2\n        max_dist = max(max_dist, gap_max)\n        \n    return max_dist</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> n=5, stations=[0, 4]<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5ac8fa; margin-left: 10px; margin-bottom: 10px;">
+    <i>Sort:</i> [0, 4].<br>
+    <i>Start:</i> 0. <i>End:</i> (5-1) - 4 = 0.<br>
+    <i>Gap (0,4):</i> (4 - 0) // 2 = 2.<br>
+    <i>Max:</i> max(0, 0, 2) = 2.
 </div>
 <b>Final Result:</b> 2`
     },
@@ -1084,17 +1075,18 @@ const algorithms = [
         id: "electronics-shop",
         title: "Electronics Shop<br><a href='https://www.hackerrank.com/challenges/electronics-shop/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Simulation",
-        problem: "Monica wants to buy exactly one keyboard and one USB drive within her budget <b>b</b>. She wants to spend as much of her money as possible! Given the prices for several models of keyboards and USB drives, find the highest total cost she can afford. If she can't even afford the cheapest pair, return -1.",
-        solution: "We solve this by sorting one list (keyboards) ascending and the other (USB drives) descending. Using a **Two-Pointer** technique, we start at the beginning of the keyboards and the beginning of the drives. <br>• If the sum is within budget, we record it (as it's a candidate for the max) and move to a more expensive keyboard to try and spend more.<br>• If the sum exceeds the budget, we move to a cheaper USB drive to try and bring the cost down.<br><br>This way, we explore all potentially optimal pairs without checking every single combination.",
-        optimality: "This 'Two-Pointer' approach is highly optimal, running in <b>O(N log N + M log M) Time complexity</b> (dominated by sorting). The actual search takes only <b>O(N + M)</b>, which is significantly better than a brute-force O(N * M) search for large inventories. It uses <b>O(1) Space</b> beyond storing the prices.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def getMoneySpent(keyboards, drives, b):\n    keyboards.sort()\n    drives.sort(reverse=True)\n    max_spent = -1\n    i = j = 0\n    while i < len(keyboards) and j < len(drives):\n        total = keyboards[i] + drives[j]\n        if total <= b:\n            max_spent = max(max_spent, total)\n            i += 1 # Try a more expensive keyboard\n        else:\n            j += 1 # Must use a cheaper drive\n    return max_spent</pre>",
-        stepByStep: `<b>Budget:</b> 10 | <b>Keyboards:</b> [3, 1] | <b>Drives:</b> [5, 2, 8]<br><br>
-<b>Shopping Simulation:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Sorted:</i> K: [1, 3], D: [8, 5, 2]<br>
-    <i>Pair 1 ([1, 8]):</i> Sum 9. Within budget! Max=9. (Move to K=3)<br>
-    <i>Pair 2 ([3, 8]):</i> Sum 11. Too expensive. (Move to D=5)<br>
-    <i>Pair 3 ([3, 5]):</i> Sum 8. Affordable, but 8 < 9. (Move to K=end)
+        problem: "<b>Core Objective:</b> Determine the maximum total cost Monica can spend to purchase exactly one keyboard and one USB drive, given a fixed budget $b$.",
+        solution: "<b>Algorithmic Strategy (Two-Pointer Optimization):</b><br>The algorithm avoids the $O(N \times M)$ brute-force approach by utilizing <b>Sorted Search</b>.<br><br>1. <b>Preprocessing:</b> Sort keyboards in ascending order and USB drives in descending order.<br>2. <b>Search Phase:</b> Initialize pointers at the start of both sorted arrays. Iterate while pointers are within bounds:<br>&nbsp;&nbsp;• If $sum \le b$, update the maximum expenditure and increment the keyboard pointer (trying to spend more).<br>&nbsp;&nbsp;• If $sum > b$, increment the USB drive pointer (moving to a cheaper item to meet the budget).<br>3. <b>Optimal Result:</b> Return the maximum valid sum found, or -1 if no combination is affordable.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N log N + M log M). Sorting dominates the linear $O(N+M)$ search pass.<br>• <b>Space:</b> O(1) beyond the input arrays.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def getMoneySpent(keyboards, drives, b):\n    # Sort ascending and descending for two-pointer logic\n    keyboards.sort()\n    drives.sort(reverse=True)\n    \n    max_spent = -1\n    i = j = 0\n    \n    while i < len(keyboards) and j < len(drives):\n        total = keyboards[i] + drives[j]\n        if total <= b:\n            max_spent = max(max_spent, total)\n            i += 1\n        else:\n            j += 1\n            \n    return max_spent</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Budget:</b> 10. K=[3, 1]. D=[5, 2, 8].<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #34c759; margin-left: 10px; margin-bottom: 10px;">
+    <i>Sort:</i> K=[1, 3], D=[8, 5, 2].<br>
+    <i>i=0, j=0 (1+8):</i> 9 $\le$ 10. Max=9. i=1.<br>
+    <i>i=1, j=0 (3+8):</i> 11 > 10. j=1.<br>
+    <i>i=1, j=1 (3+5):</i> 8 $\le$ 10. Max=9. i=2 (Done).
 </div>
 <b>Final Result:</b> 9`
     },
@@ -1102,70 +1094,74 @@ const algorithms = [
         id: "the-hurdle-race",
         title: "The Hurdle Race<br><a href='https://www.hackerrank.com/challenges/the-hurdle-race/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Simulation",
-        problem: "In a hurdle race, a character can naturally jump a maximum height of <b>k</b>. However, some hurdles in the race are taller than <b>k</b>! To jump over these, the character must drink a 'magic potion'. Each dose of the potion increases their jump height by 1 unit. Your goal is to find the minimum number of doses the character needs to drink to jump over every single hurdle in the race.",
-        solution: "This is a very straightforward 'Comparison' problem. To jump over every hurdle, the character's jump height must be at least as high as the *tallest* hurdle in the track. <br><br>We simply find the maximum height in the list of hurdles. If that maximum height is already less than or equal to <b>k</b>, zero doses are needed. If it's greater than <b>k</b>, the number of doses required is simply the difference: `max_height - k`.",
-        optimality: "This 'One-Pass Max' approach is perfectly optimal, running in <b>O(N) Time complexity</b> as we only need to look at each hurdle once to find the maximum. It uses <b>O(1) Space</b> to store the maximum value found. There is no faster way to know the height of the tallest hurdle.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def hurdleRace(k, height):\n    tallest = max(height)\n    return max(0, tallest - k)</pre>",
-        stepByStep: `<b>Input:</b> k=4, Hurdles=[1, 6, 3, 5, 2]<br><br>
-<b>Finding the Requirement:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Step 1:</i> Scan the race track. The tallest hurdle is <b>6</b>.<br>
-    <i>Step 2:</i> Current capacity is 4.<br>
-    <i>Step 3:</i> Calculation: 6 - 4 = <b>2</b>.
+        problem: "<b>Core Objective:</b> Determine the minimum number of 'doses' required to increase a character's natural jump height $k$ such that they can clear the tallest hurdle in a given set.",
+        solution: "<b>Algorithmic Strategy (Threshold Deficit Calculation):</b><br>The algorithm identifies the bottleneck hurdle and calculates the jump deficit.<br><br>1. <b>Boundary Identification:</b> Find the maximum hurdle height $h_{max}$ in the input array.<br>2. <b>Deficit Derivation:</b> Use the formula $max(0, h_{max} - k)$. If the tallest hurdle is cleared by the natural jump height, the result is zero.<br>3. <b>Scalar Evaluation:</b> The dose count is the linear offset between the peak hurdle and initial capacity.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N). Requires a single pass to find the maximum hurdle height.<br>• <b>Space:</b> O(1). Only the maximum value discovered is stored.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def hurdleRace(k, height):\n    # Identify the highest peak and subtract current capacity\n    tallest = max(height)\n    return max(0, tallest - k)</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> k=4, hurdles=[1, 6, 3, 5, 2]<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5ac8fa; margin-left: 10px; margin-bottom: 10px;">
+    <i>Peak Detection:</i> max(1, 6, 3, 5, 2) = 6.<br>
+    <i>Capacity Check:</i> 6 > 4.<br>
+    <i>Requirement:</i> 6 - 4 = 2.
 </div>
-<b>Final Result:</b> 2 doses of potion needed!`
+<b>Final Result:</b> 2`
     },
     {
         id: "queens-attack-2",
         title: "Queen's Attack II<br><a href='https://www.hackerrank.com/challenges/queens-attack-2/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Simulation",
-        problem: "You have a queen on an <b>n x n</b> chessboard. There are also <b>k</b> obstacles on the board that block her path. We need to calculate exactly how many squares the queen can attack. Remember: a queen can move any number of squares horizontally, vertically, or diagonally, but she cannot jump over obstacles or move off the board.",
-        solution: "Instead of simulating the queen's movement square-by-square (which would be too slow for a large board), we pre-calculate the maximum possible distance she could travel in all 8 directions (North, South, East, West, and the 4 diagonals). <br><br>Then, we loop through the list of obstacles once. For each obstacle, we check if it lies on any of those 8 paths. If it does, we 'trim' the possible distance in that specific direction to stop just before the obstacle. After checking all obstacles, the sum of these 8 distances is our final answer.",
-        optimality: "This 'Direction Trimming' approach is highly optimal, running in <b>O(K) Time complexity</b> where K is the number of obstacles. The size of the board (up to 10^5) doesn't capture the runtime, making it much faster than any board-scanning method. It uses <b>O(1) Space</b> to store the 8 distance values.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def queensAttack(n, k, r_q, c_q, obstacles):\n    # Initial distances to edges\n    dists = {\n        'N': n-r_q, 'S': r_q-1, 'W': c_q-1, 'E': n-c_q,\n        'NW': min(n-r_q, c_q-1), 'NE': min(n-r_q, n-c_q),\n        'SW': min(r_q-1, c_q-1), 'SE': min(r_q-1, n-c_q)\n    }\n    for r_o, c_o in obstacles:\n        # Check if obstacle is in any of the 8 directions\n        # and update (trim) the distance if it is\n        # (Logic for horizontal, vertical, diagonal checks...)\n        pass\n    return sum(dists.values())</pre>",
-        stepByStep: `<b>Board:</b> 4x4, <b>Queen:</b> (4, 4), <b>Obstacle:</b> (4, 2)<br><br>
-<b>Calculating Reach:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Initial Reach (W):</i> 3 squares (Cols 3, 2, 1).<br>
-    <i>Obstacle (4, 2):</i> This blocks the 'West' path at Col 2.<br>
-    <i>Trimmed Reach (W):</i> The queen can only hit Col 3. New distance: <b>1</b>.<br>
-    <i>Other Directions:</i> North=0, East=0, South=3, NE=0, NW=0, SE=0, SW=3.
+        problem: "<b>Core Objective:</b> Calculate the total number of squares a queen can attack on an $n \times n$ chessboard, accounting for board boundaries and $k$ obstacles.",
+        solution: "<b>Algorithmic Strategy (Radial Beam Trimming):</b><br>Instead of grid traversal, the algorithm calculates the maximum reach in 8 discrete directions and 'trims' them based on obstacle intersections.<br><br>1. <b>Initial Reach:</b> Compute the distance to the board edge for all 8 vectors (ordinal and cardinal).<br>2. <b>Obstacle Auditing:</b> For each obstacle $(r_o, c_o)$, determine if it lies on a vector from the queen's position $(r_q, c_q)$.<br>3. <b>Distance Reduction:</b> If an obstacle is encountered, update the reach for that specific direction to $dist_{new} = min(dist_{current}, dist_{to\_obstacle} - 1)$.<br>4. <b>Aggregation:</b> The result is the sum of the final 8 distances.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(K). The processing time is proportional only to the number of obstacles, independent of board size $n$.<br>• <b>Space:</b> O(1). Only 8 distance variables are maintained.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def queensAttack(n, k, r_q, c_q, obstacles):\n    # Distances to [Up, Down, Left, Right, UL, UR, DL, DR]\n    u, d = n - r_q, r_q - 1\n    l, r = c_q - 1, n - c_q\n    ul, ur = min(u, l), min(u, r)\n    dl, dr = min(d, l), min(d, r)\n    \n    for r_o, c_o in obstacles:\n        if c_o == c_q: # Vertical\n            if r_o > r_q: u = min(u, r_o - r_q - 1)\n            else: d = min(d, r_q - r_o - 1)\n        elif r_o == r_q: # Horizontal\n            if c_o > c_q: r = min(r, c_o - c_q - 1)\n            else: l = min(l, c_q - c_o - 1)\n        elif abs(r_o - r_q) == abs(c_o - c_q): # Diagonal\n            if r_o > r_q and c_o < c_q: ul = min(ul, r_o - r_q - 1)\n            elif r_o > r_q and c_o > c_q: ur = min(ur, r_o - r_q - 1)\n            elif r_o < r_q and c_o < c_q: dl = min(dl, r_q - r_o - 1)\n            elif r_o < r_q and c_o > c_q: dr = min(dr, r_q - r_o - 1)\n            \n    return u + d + l + r + ul + ur + dl + dr</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Board:</b> 4x4. <b>Queen:</b> (4, 4). <b>Obstacle:</b> (4, 2).<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ff3b30; margin-left: 10px; margin-bottom: 10px;">
+    <i>Initial W:</i> 3 (4-1).<br>
+    <i>Obstacle (4, 2):</i> Horizontal path. $c_o < c_q$.<br>
+    <i>Trim:</i> min(3, 4 - 2 - 1) = 1.<br>
+    <i>Sum:</i> 1 (W) + 0 (Other Directions) + 6 (Implicit reach) = 7.
 </div>
-<b>Final Result:</b> 1 + 3 + 3 = 7 attackable squares.`
+<b>Final Result:</b> 7 attackable squares.`
     },
     {
         id: "repeated-string",
         title: "Repeated String<br><a href='https://www.hackerrank.com/challenges/repeated-string/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Simulation",
-        problem: "You have a short string that repeats infinitely to form an endless chain. Given an integer <b>n</b>, you need to count exactly how many 'a's appear in the first <b>n</b> characters of this infinite string. It's like counting how many red beads are in a necklace that only has a few feet showing.",
-        solution: "Since the string repeats perfectly, we don't need to actually build the infinite version! We calculate two things using basic division:<br>1. **Full Cycles**: How many times the whole original string fits into the first <b>n</b> characters (`n // length`).<br>2. **The Leftover**: How many extra characters are left at the end of the last partial repeat (`n % length`).<br><br>Total 'a's = (Count in original string * Full Cycles) + (Count in the leftover substring).",
-        optimality: "This 'Math-Not-Simulation' approach is perfectly optimal, running in <b>O(L) Time complexity</b> where L is the length of the *original* string (to count 'a's once). It handles massive values of <b>n</b> (up to trillions) instantly. It uses <b>O(1) Space</b>.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def repeatedString(s, n):\n    # Count 'a's in one string\n    count_in_pattern = s.count('a')\n    # Number of whole patterns\n    full_repeats = n // len(s)\n    # Remaining characters\n    remainder = n % len(s)\n    \n    return (full_repeats * count_in_pattern) + s[:remainder].count('a')</pre>",
-        stepByStep: `<b>String (s):</b> "aba", <b>Target (n):</b> 10 characters<br><br>
-<b>Calculating Frequency:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Step 1:</i> "aba" has 2 'a's. Length is 3.<br>
-    <i>Step 2:</i> 10 // 3 = 3 full repeats ("abaabaaba"). Total 'a's: 3 * 2 = 6.<br>
-    <i>Step 3:</i> 10 % 3 = 1 leftover char ("a"). Extra 'a's: 1.<br>
-    <i>Math:</i> 6 + 1 = 7.
+        problem: "<b>Core Objective:</b> Count the occurrences of a character 'a' in a string that repeats infinitely, truncated at length $n$.",
+        solution: "<b>Algorithmic Strategy (Modular Frequency Extrapolation):</b><br>The algorithm avoids infinite construction by leveraging the periodicity of the string.<br><br>1. <b>Unit Frequency:</b> Count the occurrences of 'a' in a single instance of the pattern $s$.<br>2. <b>Quotient Evaluation:</b> Determine how many complete patterns fit into $n$ ($n // len(s)$) and multiply by the unit frequency.<br>3. <b>Remainder Analysis:</b> Count 'a's in the partial prefix of length $n \pmod{len(s)}$.<br>4. <b>Aggregation:</b> The total count is the sum of cyclic and residual frequencies.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(L) where $L$ is the length of input string $s$. The count is proportional only to the pattern length, not the truncated length $n$.<br>• <b>Space:</b> O(1). Only scalar counters are stored.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def repeatedString(s, n):\n    # Calculate counts using integer division and modulo\n    count_in_pattern = s.count('a')\n    full_repeats = n // len(s)\n    remainder_len = n % len(s)\n    \n    total_a = (full_repeats * count_in_pattern) + s[:remainder_len].count('a')\n    return total_a</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> s="aba", n=10.<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5856d6; margin-left: 10px; margin-bottom: 10px;">
+    <i>Unit:</i> "aba" → 2 'a's. Len=3.<br>
+    <i>Cycles:</i> 10 // 3 = 3 full repeats. $3 \times 2 = 6$.<br>
+    <i>Residual:</i> 10 % 3 = 1. s[:1] ("a") → 1 'a'.<br>
+    <i>Sum:</i> 6 + 1 = 7.
 </div>
-<b>Final Result:</b> 7 'a's in the first 10 characters of "abaabaabaa..."`
+<b>Final Result:</b> 7`
     },
     {
         id: "service-lane",
         title: "Service Lane<br><a href='https://www.hackerrank.com/challenges/service-lane/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Simulation",
-        problem: "Imagine a freeway with a service lane that changes width at every segment. There are three types of vehicles: bikes (width 1), cars (width 2), and trucks (width 3). Given a specific segment of the road defined by a start and end entry, you need to find the *widest* vehicle that can travel through that entire stretch without getting stuck.",
-        solution: "This is a 'Minimum Value' problem! For a vehicle to pass through a stretch of road, it must be slender enough to fit through the *narrowest* part of that stretch. <br><br>We solve this by looking at all the width values between our entry and exit points and finding the smallest number (the minimum). If the minimum width in that range is 1, only a bike fits. If it's 2, cars can pass. If it's 3, even heavy trucks can make it through.",
-        optimality: "This 'Range Minimum' approach runs in <b>O(N) Time complexity per query</b> in its simplest form. For a small number of tests, this is perfect. It could be optimized to **O(1)** using a 'Segment Tree' or 'Sparse Table' if we had millions of queries, but for this problem, a simple scan is the most readable and efficient solution. It uses <b>O(1) Space</b>.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def serviceLane(widths, cases):\n    for entry, exit in cases:\n        # The widest vehicle depends on the narrowest segment\n        print(min(widths[entry : exit + 1]))</pre>",
-        stepByStep: `<b>Freeway Widths:</b> [2, 3, 1, 2, 3, 2, 3, 3]<br>
-<b>Inquiry:</b> Can we pass between Segment 0 and Segment 3?<br><br>
-<b>Checking the Stretch:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Stretch:</i> [2, 3, 1, 2]<br>
-    <i>Narrowest Point:</i> The width at segment 2 is <b>1</b>.<br>
-    <i>Constraint:</i> Because of that '1', only a bike (width 1) can pass.
+        problem: "<b>Core Objective:</b> Find the maximum width vehicle (bike, car, or truck) that can pass through a specified segment $[i, j]$ of a service lane with varying segment widths.",
+        solution: "<b>Algorithmic Strategy (Bottleneck Capacity Identification):</b><br>The algorithm identifies the limiting factor (the minimum width) within the specified range.<br><br>1. <b>Slicing:</b> Extract the sub-sequence of widths from index $i$ to $j$ (inclusive).<br>2. <b>Minimization:</b> Apply the $min$ function to the sub-sequence. The widest vehicle that can traverse the entire stretch is constrained by the narrowest point.<br>3. <b>Throughput Assessment:</b> The resulting value (1, 2, or 3) directly corresponds to the vehicle type.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(T) per query, where $T$ is the segment length ($j - i + 1$). For many queries, this could be optimized to O(1) using a Range Minimum Query (RMQ) data structure like a Segment Tree.<br>• <b>Space:</b> O(1) beyond the input storage.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def serviceLane(n, widths, cases):\n    results = []\n    for entry, exit in cases:\n        # Bottleneck is the minimum width in the range\n        results.append(min(widths[entry : exit + 1]))\n    return results</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Widths:</b> [2, 3, 1, 2, 3, 2, 3, 3]. <b>Case:</b> [0, 3].<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ff9500; margin-left: 10px; margin-bottom: 10px;">
+    <i>Segment:</i> width[0] to width[3] (inclusive).<br>
+    <i>Values:</i> [2, 3, 1, 2].<br>
+    <i>Min:</i> 1.<br>
+    <i>Capacity:</i> Only width 1 (Bike) can pass.
 </div>
 <b>Final Result:</b> 1`
     },
@@ -1173,51 +1169,54 @@ const algorithms = [
         id: "staircase",
         title: "Staircase<br><a href='https://www.hackerrank.com/challenges/staircase/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Simulation",
-        problem: "Your task is to build a beautiful, right-aligned staircase made of symbols (<b>#</b>). The staircase should have a base and height of size <b>n</b>. For example, a staircase of size 4 should look like a climbable slope where the bottom row is completely full and the top row has only one symbol on the far right.",
-        solution: "We solve this by printing the staircase row by row. For each row <b>i</b> (starting from 1 up to <b>n</b>):<br>1. Calculate the number of **spaces** needed to align it to the right: `n - i`.<br>2. Calculate the number of **symbols** (<b>#</b>) needed: `i`.<br>3. Combine them together and print that line.<br><br>As we move down the rows, the number of spaces decreases and the number of symbols increases, creating that iconic staircase shape.",
-        optimality: "This 'Pattern Printer' runs in <b>O(N^2) Time complexity</b> because for <b>n</b> rows, we print <b>n</b> characters. Since we must output every single character, this is the theoretical limit of efficiency. It uses <b>O(1) Space</b> (beyond the output buffer).",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def staircase(n):\n    for i in range(1, n + 1):\n        spaces = \" \" * (n - i)\n        hashes = \"#\" * i\n        print(spaces + hashes)</pre>",
-        stepByStep: `<b>Input:</b> n = 4<br><br>
-<b>Building the Pattern:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px; font-family: monospace; white-space: pre;">
-    Row 1: "   #" (3 spaces, 1 hash)<br>
-    Row 2: "  ##" (2 spaces, 2 hashes)<br>
-    Row 3: " ###" (1 space, 3 hashes)<br>
-    Row 4: "####" (0 spaces, 4 hashes)
+        problem: "<b>Core Objective:</b> Generate a right-aligned staircase pattern of size $n$, using '#' symbols and leading spaces.",
+        solution: "<b>Algorithmic Strategy (Aligned Quadrant Simulation):</b><br>The algorithm iterates through row indices to calculate the specific ratio of whitespace to padding characters.<br><br>1. <b>Iteration:</b> Loop from $i=1$ to $n$.<br>2. <b>Whitespace Calculation:</b> For each row, the number of leading spaces is $n-i$.<br>3. <b>Symbol Population:</b> The number of '#' characters is equal to the current row index $i$.<br>4. <b>Row Construction:</b> Concatenate the strings and output the result.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N²). For $n$ rows, we manipulate and print $n$ characters. Since every character must be generated, this is asymptotically optimal for the output size.<br>• <b>Space:</b> O(1) auxiliary space (excluding the output buffer).",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def staircase(n):\n    for i in range(1, n + 1):\n        # Right-align by padding with n-i spaces\n        print((' ' * (n - i)) + ('#' * i))</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> n=4<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5856d6; margin-left: 10px; margin-bottom: 10px; font-family: monospace; white-space: pre;">
+    Row 1: "   #" (Spaces: 3, #: 1)<br>
+    Row 2: "  ##" (Spaces: 2, #: 2)<br>
+    Row 3: " ###" (Spaces: 1, #: 3)<br>
+    Row 4: "####" (Spaces: 0, #: 4)
 </div>
-<b>Final Result:</b> A perfectly aligned staircase!`
+<b>Final Result:</b> Right-aligned staircase`
     },
     {
         id: "taum-bday",
         title: "Taum and B'day<br><a href='https://www.hackerrank.com/challenges/taum-and-bday/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Simulation",
-        problem: "Taum wants to buy gifts for Diksha! He needs <b>B</b> black gifts and <b>W</b> white gifts. The local shop sells black gifts for <b>bc</b> and white gifts for <b>wc</b>. However, they also offer a 'conversion' service: for a fee <b>z</b>, they can turn any black gift into a white one, or vice versa. Taum is on a budget—help him find the absolute minimum he needs to spend.",
-        solution: "We solve this by comparing the direct price of each gift against the 'conversion' alternative. <br>• For a **black gift**: Is it cheaper to buy it for <b>bc</b>, or buy a white one for <b>wc</b> and convert it for <b>z</b>? <br>• For a **white gift**: Is it cheaper to buy it for <b>wc</b>, or buy a black one for <b>bc</b> and convert it for <b>z</b>? <br><br>We calculate these two optimized prices, multiply them by the required counts, and add them together!",
-        optimality: "This 'Economic Choice' approach is perfectly optimal, running in <b>O(1) Constant Time</b>. We perform exactly two comparisons and one addition regardless of how many billions of gifts Taum needs to buy. It uses <b>O(1) Space</b>.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def taumBday(b, w, bc, wc, z):\n    # Decide the best price for each color\n    best_bc = min(bc, wc + z)\n    best_wc = min(wc, bc + z)\n    \n    return (b * best_bc) + (w * best_wc)</pre>",
-        stepByStep: `<b>Input:</b> B=3, W=5, bc=3, wc=4, z=1<br><br>
-<b>Checking the Market:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Black Gift:</i> Buy direct (3) or buy white+convert (4+1=5). Best: <b>3</b>.<br>
-    <i>White Gift:</i> Buy direct (4) or buy black+convert (3+1=4). Best: <b>4</b>.<br>
-    <i>Wait!</i> In this case, direct is best for both.
+        problem: "<b>Core Objective:</b> Minimize the total cost of purchasing $b$ black gifts and $w$ white gifts, considering the direct purchase price and the possibility of cross-color conversion ($z$ fee).",
+        solution: "<b>Algorithmic Strategy (Economic Arbitrage Selection):</b><br>The algorithm evaluates whether converting a cheaper gift is more cost-effective than purchasing the desired color directly.<br><br>1. <b>Effective Price Calculation:</b> For each color, the optimal cost is $min(price_{direct}, price_{alt} + z)$.<br>2. <b>Cost Optimization:</b> If $wc + z < bc$, it is cheaper to buy white and convert to black. Conversely, if $bc + z < wc$, it is cheaper to buy black and convert to white.<br>3. <b>Linear Summation:</b> Multiply the requirements by the calculated effective prices.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(1). The solution involves a fixed number of operations regardless of the input magnitude.<br>• <b>Space:</b> O(1). Only temporary price variables are required.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def taumBday(b, w, bc, wc, z):\n    # Calculate effective minimum price for both colors\n    effective_bc = min(bc, wc + z)\n    effective_wc = min(wc, bc + z)\n    \n    return (b * effective_bc) + (w * effective_wc)</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> B=3, W=5, bc=3, wc=4, z=1.<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5ac8fa; margin-left: 10px; margin-bottom: 10px;">
+    <i>Effective Black:</i> min(3, 4 + 1) = 3.<br>
+    <i>Effective White:</i> min(4, 3 + 1) = 4.<br>
+    <i>Total:</i> (3 * 3) + (5 * 4) = 9 + 20 = 29.
 </div>
-<b>Final Result:</b> (3*3) + (5*4) = 9 + 20 = <b>29</b>`
+<b>Final Result:</b> 29`
     },
     {
         id: "time-conversion",
         title: "Time Conversion<br><a href='https://www.hackerrank.com/challenges/time-conversion/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Simulation",
-        problem: "You are given a time string in the 12-hour AM/PM format (e.g., 07:05:45PM). Your mission is to convert it into the 24-hour military format (19:05:45). Accuracy is critical, especially around the tricky 12:00 mark where the rules for AM and PM are quite different!",
-        solution: "We solve this by splitting the string and inspecting the 'AM/PM' suffix. <br>• **If PM**: If the hour is 12, it stays 12. If it's anything else (1-11), we add 12 to convert it to the range 13-23. <br>• **If AM**: If the hour is 12 (midnight), we change it to '00'. If it's anything else, we keep it exactly as is. <br><br>Finally, we strip the suffix and join the parts back together with colons.",
-        optimality: "This 'String Parser' strategy is perfectly optimal, running in <b>O(1) Constant Time</b> because time strings are always a fixed length (10 characters). It uses <b>O(1) Space</b> to store the temporary string parts.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def timeConversion(s):\n    period = s[-2:]\n    hh, mm, ss = s[:-2].split(':')\n    \n    if period == 'PM':\n        if hh != '12':\n            hh = str(int(hh) + 12)\n    else: # AM\n        if hh == '12':\n            hh = '00'\n            \n    return f\"{hh}:{mm}:{ss}\"</pre>",
-        stepByStep: `<b>Input:</b> "12:01:00AM"<br><br>
-<b>Converting to Military:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Step 1:</i> Suffix is 'AM'.<br>
-    <i>Step 2:</i> Hour is '12'. Since it's AM, '12' becomes '00'.<br>
-    <i>Step 3:</i> Minutes '01' and Seconds '00' stay the same.
+        problem: "<b>Core Objective:</b> Convert a time string from 12-hour AM/PM format to 24-hour (military) format.<br><br><b>Constraint:</b> Handle the edge cases of 12:00:00AM (00:00:00) and 12:00:00PM (12:00:00) correctly.",
+        solution: "<b>Algorithmic Strategy (Meridiem-Based Normalization):</b><br>The algorithm parses the time string and applies modular logic for the hour component.<br><br>1. <b>Segmentation:</b> Extract the hour, minute, second, and period (AM/PM).<br>2. <b>Parity Logic:</b><br>&nbsp;&nbsp;• <b>PM:</b> If hour < 12, add 12. If hour == 12, keep as 12.<br>&nbsp;&nbsp;• <b>AM:</b> If hour == 12, set to 00. If hour < 12, keep as is.<br>3. <b>Format Reassembly:</b> Format the hour to two digits and join with the original minutes and seconds.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(1). The input string length is fixed (10 characters).<br>• <b>Space:</b> O(1). Only a few string fragments are stored temporarily.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def timeConversion(s):\n    period = s[-2:]\n    hh, mm, ss = map(int, s[:-2].split(':'))\n    \n    if period == 'PM' and hh != 12: hh += 12\n    elif period == 'AM' and hh == 12: hh = 0\n    \n    return f\"{hh:02}:{mm:02}:{ss:02}\"</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> "12:01:00AM"<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5ac8fa; margin-left: 10px; margin-bottom: 10px;">
+    <i>Period:</i> AM. <i>Hour:</i> 12.<br>
+    <i>Condition:</i> AM + 12 $\to$ 00.<br>
+    <i>Result:</i> "00:01:00".
 </div>
 <b>Final Result:</b> "00:01:00"`
     },
@@ -1225,20 +1224,20 @@ const algorithms = [
         id: "utopian-tree",
         title: "Utopian Tree<br><a href='https://www.hackerrank.com/challenges/utopian-tree/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Simulation",
-        problem: "A Utopian Tree goes through two very different growth cycles every year! In the Spring, its height doubles ($x2$). In the Summer, its height increases by 1 meter ($+1$). If the tree starts at 1 meter tall at the beginning of Spring, what will its height be after <b>n</b> growth cycles?",
-        solution: "We can solve this by literally simulating the tree's life! We start with a height of 1 and loop from cycle 1 to <b>n</b>. If the cycle number is odd (Spring), we double the height. If it's even (Summer), we add 1. <br><br>While simulation is intuitive, there's also a secret 'Mathematical Secret': the height after <b>n</b> cycles can be found directly using powers of 2 (e.g., $2^{(ceil(n/2)+1)} - (n \\% 2 + 1)$ logic). But for a small number of cycles, simulation is perfectly clear!",
-        optimality: "This 'Life Cycle Simulation' runs in <b>O(N) Time complexity</b>, where N is the number of cycles. Since N is typically small (up to 60), the computer finishes this in less than a microsecond. It uses <b>O(1) Space</b> to store the height variable.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def utopianTree(n):\n    height = 1\n    for i in range(1, n + 1):\n        if i % 2 == 1:\n            height *= 2\n        else:\n            height += 1\n    return height</pre>",
-        stepByStep: `<b>Input:</b> 4 cycles<br><br>
-<b>Seasons in Order:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Start:</i> Height = 1<br>
-    <i>Cycle 1 (Spring):</i> 1 * 2 = 2<br>
-    <i>Cycle 2 (Summer):</i> 2 + 1 = 3<br>
-    <i>Cycle 3 (Spring):</i> 3 * 2 = 6<br>
-    <i>Cycle 4 (Summer):</i> 6 + 1 = 7
+        problem: "<b>Core Objective:</b> Calculate the final height of a tree subjected to alternating growth cycles: Spring ($2 \times height$) and Summer ($height + 1$).",
+        solution: "<b>Algorithmic Strategy (Seasonal Parity Oscillation):</b><br>The algorithm iterates through sequential cycles, applying growth logic based on the cycle index parity.<br><br>1. <b>Initialization:</b> The baseline height is constant at 1 meter.<br>2. <b>Modality Check:</b> For each cycle $n$ in $[1, N]$:<br>&nbsp;&nbsp;• If $n$ is odd (Spring), perform a bitwise shift or multiplication by 2.<br>&nbsp;&nbsp;• If $n$ is even (Summer), increment the height by 1.<br>3. <b>Iterative Simulation:</b> Repeat until the target cycle count is reached.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N). Each cycle is processed in constant time. (Note: Can be O(1) using the geometric closed form $2^{\lceil N/2 \rceil + 1} - (N\%2 + 1)$).<br>• <b>Space:</b> O(1). Only the scalar height state is maintained.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def utopianTree(n):\n    height = 1\n    for i in range(1, n + 1):\n        # Spring cycles are odd, summer are even\n        if i % 2 != 0:\n            height *= 2\n        else:\n            height += 1\n    return height</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> 4 cycles.<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ff9500; margin-left: 10px; margin-bottom: 10px;">
+    <i>Cycle 1 (Spring):</i> 1 * 2 = 2.<br>
+    <i>Cycle 2 (Summer):</i> 2 + 1 = 3.<br>
+    <i>Cycle 3 (Spring):</i> 3 * 2 = 6.<br>
+    <i>Cycle 4 (Summer):</i> 6 + 1 = 7.
 </div>
-<b>Final Result:</b> 7 meters`
+<b>Final Result:</b> 7`
     },
     {
         id: "valid-regex",
