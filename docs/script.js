@@ -262,52 +262,37 @@ const algorithms = [
         id: "equalize-the-array",
         title: "Equalize the Array<br><a href='https://www.hackerrank.com/challenges/equality-in-a-array/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Arrays",
-        problem: "You are given a bucket of numbers, and your goal is to make every single number in the bucket exactly the same! <br><br>The only action you are allowed to take is 'deleting' a number from the bucket. What is the absolute minimum number of deletions you have to make to leave the bucket in a state where every remaining number matches perfectly?",
-        solution: "To delete as few numbers as possible, we need to keep as many numbers as possible! This means we should figure out which number appears the *most* frequently in the bucket, decide that it is our 'target number', and just delete everything else!<br><br>To do this, we use Python's built-in `Counter` superpower. It instantly builds a tally chart telling us exactly how many times each number appears. We just ask the chart: 'Which number has the highest tally?' Once we know the highest tally count, the math is easy: The total amount of numbers in the bucket *minus* the highest tally count gives us exactly how many numbers we are forced to delete!",
-        optimality: "Using a Hash Map (like `Counter`) makes this solution incredibly fast, operating in <b>O(N) Time complexity</b> to build the frequency map in a single pass. Finding the max tally in the map takes O(U) time, where U is the amount of unique numbers, which is always less than or equal to N. The auxiliary space memory footprint is <b>O(U) Space</b> to store the tally chart. This is the flawlessly optimal way to solve it.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>from collections import Counter\n\ndef equalizeArray(arr):\n    if not arr: return 0\n    counts = Counter(arr)\n    return len(arr) - counts[max(counts, key=counts.get)]</pre>",
-        stepByStep: `<b>Input Bucket:</b> [3, 3, 2, 1, 3]<br>
-<b>Phase 1: Build the Tally Chart</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Count '3':</i> Appears 3 times.<br>
-    <i>Count '2':</i> Appears 1 time.<br>
-    <i>Count '1':</i> Appears 1 time.
+        problem: "<b>Core Objective:</b> Transform an array into a collection of identical elements using the minimum number of deletions.<br><br><b>Constraint:</b> Deletion is the only permitted modification. The goal is to maximize the size of the remaining subset of identical values.",
+        solution: "<b>Algorithmic Strategy (Max Frequency Preservation):</b><br>The problem is an inverse of finding the <b>Statistical Mode</b> of the dataset.<br><br>1. <b>Frequency Profiling:</b> Construct a frequency map (Hash Map) of all elements in the array to determine their individual occurrences.<br>2. <b>Survivor Selection:</b> Identify the element with the maximum frequency count. This element is the most efficient 'target' to keep, as it minimizes the required deletions.<br>3. <b>Deletion Calculation:</b> The minimum deletions required is simply: $N - \max(\text{frequencies})$.",
+        optimality: "<b>Complexity Profile:</b><br>• <b>Time:</b> O(N). Building the frequency map takes linear time, and finding the maximum frequency is O(U) where $U \leq N$.<br>• <b>Space:</b> O(U) auxiliary space to store the frequency counts in a Hash Map.<br><br><b>Conclusion:</b> This frequency-based approach is perfectly optimal, as it requires only a single pass over the data and constant-time lookups.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>from collections import Counter\n\ndef equalizeArray(arr):\n    counts = Counter(arr)\n    max_freq = max(counts.values())\n    return len(arr) - max_freq</pre>",
+        stepByStep: `<b>Execution Trace:</b><br>
+<b>Input Array:</b> [3, 3, 2, 1, 3]<br><br>
+<b>Processing Phases:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ff9500; margin-left: 10px; margin-bottom: 10px;">
+    <i>Frequency Map:</i> {3: 3, 2: 1, 1: 1}.<br>
+    <i>Target Identification:</i> Max frequency is 3 (for element '3').<br>
+    <i>Calculation:</i> 5 (total) - 3 (kept) = <b>2 deletions</b>.
 </div>
-<b>Phase 2: Find the Target and Subtract</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Ask the Chart:</i> What is the biggest tally? <b>3</b> (the number '3' is our chosen survivor).<br>
-    <i>Do the Math:</i> Total numbers in the bucket (5) minus the ones we are saving (3). <code>5 - 3 = 2</code> deletions!<br>
-    <i>Verify visually:</i> We keep the three \`3\`s, and we delete the \`2\` and the \`1\`. That took 2 deletions!<br>
-</div>
-<b>Final Printed Answer:</b> 2.`
+<b>Terminal Verdict:</b> 2.`
     },
     {
         id: "migratory-birds",
         title: "Migratory Birds<br><a href='https://www.hackerrank.com/challenges/migratory-birds/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Arrays",
-        problem: "You are a bird watcher! Every time a bird flies over your head, you write down its Type ID (which is a number from 1 to 5). After watching for a long time, you have a massive list of numbers.<br><br>Your job is to figure out which Bird Type you saw the *most* often! But there is a very important rule: If there is a tie (for example, you saw exactly 10 Hawks and exactly 10 Eagles), you must pick the bird with the **smallest Type ID number** as the winner.",
-        solution: "Like many counting problems, the smartest way to track our bird sightings is by keeping a 'tally chart' in a dictionary! We loop through our sightings list exactly one time. If we see a Type 3 bird, we add a tally to the 'Type 3' bucket. <br><br>Once we finish our entire list, we look at our tally chart and find out what the highest count was (say, 10 sightings). Then, we use a cool Python list comprehension to gather up *all* the Bird Type IDs that managed to score exactly 10 sightings. Since it could be a tie, this might return a list like `[Type 4, Type 2]`. Finally, we just use the `min()` function on that list to guarantee we return the smallest Type ID!",
-        optimality: "This is a flawless <b>O(N) Time complexity</b> solution. We only look at the massive list of bird sightings one time to build the tally chart. After that, we only look at the 5 distinct bird types to find the maximums and minimums, which takes instant constant time. Since there are strictly only 5 types of birds, the memory is locked to a tiny dictionary, resulting in an unbeatable <b>O(1) Space complexity</b>!",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def migratoryBirds(arr):\n    ar_dit = {}\n    for i in arr:\n        if i in ar_dit:\n            ar_dit[i] += 1\n        else:\n            ar_dit[i] = 1\n    mc = max(ar_dit.values())\n    return min([x for x, c in ar_dit.items() if c == mc])</pre>",
-        stepByStep: `<b>Input Sightings:</b> [1, 2, 3, 4, 5, 4, 3, 2, 1, 3, 4]<br>
-<b>Phase 1: Build the Tally Chart</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Type 1:</i> 2 sightings.<br>
-    <i>Type 2:</i> 2 sightings.<br>
-    <i>Type 3:</i> 3 sightings.<br>
-    <i>Type 4:</i> 3 sightings.<br>
-    <i>Type 5:</i> 1 sighting.
+        problem: "<b>Case Objective:</b> Identify the most frequently occurring element in an array of Type IDs (integers 1-5). <br><br><b>Tie-Breaking Constraint:</b> In the event of multiple elements sharing the maximum frequency, the element with the minimum scalar value (lowest Type ID) must be selected.",
+        solution: "<b>Algorithmic Strategy (Linear Frequency Tallying):</b><br>The solution employs <b>Multi-Stage Selection</b> to satisfy both the frequency and tie-breaking requirements.<br><br>1. <b>Frequency Aggregation:</b> Perform a linear traversal of the sightings array to build a frequency map. Since Type IDs are limited to 1-5, a fixed-size array or dictionary is sufficient.<br>2. <b>Global Maximum Search:</b> Determine the highest frequency count across all categories.<br>3. <b>Lexicographical Filtering:</b> Iterate through the gathered tallies (or use a filtered comprehension) to find all Type IDs matching the maximum frequency, and return the minimum value.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N). The sighting array is traversed once. Post-processing involves at most 5 elements, which is constant-time.<br>• <b>Space:</b> O(1). The storage remains constant because the number of Bird Types is fixed at 5, regardless of the input size $N$.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def migratoryBirds(arr):\n    # Type IDs are strictly 1-5\n    counts = [0] * 6\n    for bird_type in arr:\n        counts[bird_type] += 1\n    \n    max_count = max(counts)\n    for i in range(1, 6):\n        if counts[i] == max_count:\n            return i</pre>",
+        stepByStep: `<b>Validation Scenario:</b><br>
+<b>Sightings:</b> [1, 4, 4, 4, 5, 3]<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5ac8fa; margin-left: 10px; margin-bottom: 10px;">
+    <i>Tallying:</i> {1:1, 3:1, 4:3, 5:1}.<br>
+    <i>Max Sighting Count:</i> 3.<br>
+    <i>Winner Selection:</i> Type 4 has count 3. No other type matches.
 </div>
-<b>Phase 2: Find the Maximum</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Ask the Chart:</i> What was the highest number of sightings? <b>3</b>.
-</div>
-<b>Phase 3: Tie-breaker!</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Gather the winners:</i> Which birds scored exactly 3? Both <b>Type 3</b> and <b>Type 4</b>!<br>
-    <i>The Rule:</i> We must pick the smallest ID. <code>min([3, 4])</code> is <b>3</b>.
-</div>
-<b>Final Printed Answer:</b> 3.`
+<b>Final Result:</b> 4.`
     },
     {
         id: "picking-numbers",
