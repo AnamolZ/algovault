@@ -719,41 +719,39 @@ const algorithms = [
         id: "minimum-distances",
         title: "Minimum Distances<br><a href='https://www.hackerrank.com/challenges/minimum-distances/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Math",
-        problem: "You have a list of numbers, and some of them might be identical twins! Your goal is to find the pair of identical numbers that are standing closest to each other in the line. How few steps are between them? If there are no twins at all, we return -1.",
-        solution: "We solve this efficiently using a <b>Memory Map (Dictionary)</b> to remember where we last saw each number. <br><br>As we walk through the list, we check: 'Have I seen this number before?' <br>• If **yes**, we calculate the distance between our current spot and the spot where we last saw it. We keep track of the smallest distance found so far. <br>• In both cases, we update our memory with the number's current location so we're ready for the next time it appears!",
-        optimality: "This 'One-Pass Memory' approach is highly optimal, running in <b>O(N) Time complexity</b> because we only walk through the list once. It uses <b>O(N) Space</b> to store the locations of the numbers we've encountered. This is much faster than checking every possible pair ($O(N^2)$).",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def minimumDistances(a):\n    last_seen = {}\n    min_dist = float('inf')\n\n    for i, val in enumerate(a):\n        if val in last_seen:\n            dist = i - last_seen[val]\n            min_dist = min(min_dist, dist)\n        last_seen[val] = i\n\n    return min_dist if min_dist != float('inf') else -1</pre>",
-        stepByStep: `<b>Input Array:</b> [7, 1, 3, 4, 1, 7]<br><br>
-<b>Walking the List:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Step 1:</i> See 7 at index 0. Store: {7: 0}<br>
-    <i>Step 2:</i> See 1 at index 1. Store: {7: 0, 1: 1}<br>
-    <i>Step 3:</i> See 3 at index 2. Store: {7: 0, 1: 1, 3: 2}<br>
-    <i>Step 4:</i> See 4 at index 3. Store: {..., 4: 3}<br>
-    <i>Step 5:</i> See <b>1</b> at index 4. Distance from last 1 (at index 1) is <b>3</b>. Min Dist: 3.<br>
-    <i>Step 6:</i> See <b>7</b> at index 5. Distance from last 7 (at index 0) is <b>5</b>. Min stays 3.
+        problem: "<b>Core Objective:</b> Given an array $A$, find the minimum absolute distance $d = |i - j|$ such that $A[i] = A[j]$.<br><br><b>Boundary Case:</b> If no duplicate elements exist within the vector, return -1.",
+        solution: "<b>Algorithmic Strategy (Index Persistence Mapping):</b><br>The solution optimizes for speed using a <b>Hash Map (Dictionary)</b> to track the most recent observed index of each element.<br><br>1. <b>Linear Traversal:</b> Iterate through $A$ once. For each element $x$ at index $i$:<br>2. <b>Conflict Detection:</b> If $x$ exists in the map, calculate the localized distance $d_{curr} = i - map[x]$ and update the global minimum: $d_{min} = min(d_{min}, d_{curr})$.<br>3. <b>State Update:</b> Persist the current index $i$ in the map for future encounters.",
+        optimality: "<b>Complexity Profile:</b><br>• <b>Time:</b> O(N). The algorithm performs a single pass over the dataset with O(1) dictionary operations per step.<br>• <b>Space:</b> O(N) to store the indices of distinct elements in the auxiliary map.<br><br><b>Conclusion:</b> This approach bypasses the $O(N^2)$ brute-force comparison, reaching the theoretical time lower bound.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def minimumDistances(a):\n    last_seen = {}\n    min_dist = float('inf')\n\n    for i, val in enumerate(a):\n        if val in last_seen:\n            # Calculate distance to last occurrence\n            min_dist = min(min_dist, i - last_seen[val])\n        # Track most recent position\n        last_seen[val] = i\n\n    return min_dist if min_dist != float('inf') else -1</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> [3, 2, 1, 2, 3]<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ffcc00; margin-left: 10px; margin-bottom: 10px;">
+    <i>i=0, val=3:</i> Map: {3:0}.<br>
+    <i>i=1, val=2:</i> Map: {3:0, 2:1}.<br>
+    <i>i=2, val=1:</i> Map: {3:0, 2:1, 1:2}.<br>
+    <i>i=3, val=2:</i> Duplicate! |3-1| = 2. $d_{min} = 2$.<br>
+    <i>i=4, val=3:</i> Duplicate! |4-0| = 4. $d_{min} = min(2, 4) = 2$.
 </div>
-<b>Final Result:</b> 3`
+<b>Final Result:</b> 2`
     },
     {
         id: "non-divisible-subset",
         title: "Non-Divisible Subset<br><a href='https://www.hackerrank.com/challenges/non-divisible-subset/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Math",
-        problem: "You have a collection of numbers and a secret divisor `k`. You want to pick as many numbers as possible to form a 'safe' group. What makes it safe? No two numbers in your group, when added together, can be perfectly divisible by `k`. How big a group can you build?",
-        solution: "This is a clever logic puzzle! Instead of looking at the numbers themselves, we look at their <b>Remainders</b> when divided by `k`. <br><br>1. If two numbers have remainders that add up to `k` (like 1 and 3 if $k=4$), they are 'dangerous' together. <br>2. For each dangerous pair of remainders, we simply pick the remainder that appears more often in our collection. <br>3. We handle special cases: remainders of 0 and $k/2$ can only have <i>one</i> representative in our safe group, because adding two of them would create a sum divisible by `k`.",
-        optimality: "This 'Remainder Counting' approach is optimal, running in <b>O(N + K) Time complexity</b>. We look at each number once to find its remainder ($O(N)$) and then loop through the unique remainders ($O(K)$). It uses <b>O(K) Space</b> to store the counts of each remainder.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def non_divisible_subset(k, s):\n    counts = [0] * k\n    for x in s: counts[x % k] += 1\n    \n    # Special cases for 0 and k/2\n    result = min(counts[0], 1) \n    \n    for r in range(1, (k // 2) + 1):\n        if r == k - r:\n            result += min(counts[r], 1)\n        else:\n            result += max(counts[r], counts[k - r])\n            \n    return result</pre>",
-        stepByStep: `<b>Input:</b> $S = [1, 7, 2, 4]$, $K = 3$<br><br>
-<b>Building the Safe Group:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Step 1:</i> Find remainders for each number (mod 3):<br>
-    &nbsp;&nbsp;• 1 % 3 = 1<br>
-    &nbsp;&nbsp;• 7 % 3 = 1<br>
-    &nbsp;&nbsp;• 2 % 3 = 2<br>
-    &nbsp;&nbsp;• 4 % 3 = 1<br>
-    <i>Step 2:</i> Counts: { Rem-1: 3, Rem-2: 1 }<br>
-    <i>Step 3:</i> Rem-1 and Rem-2 add up to 3 (K). They are dangerous! <br>
-    <i>Step 4:</i> Pick the winner: Count(1) vs Count(2) → 3 vs 1. We pick the 3 numbers with Rem-1.
+        problem: "<b>Core Objective:</b> Determine the maximum cardinality of a subset $S' \subseteq S$ such that for any $a, b \in S'$, $(a+b) \pmod k \neq 0$.<br><br><b>Mathematical Invariant:</b> The condition $(a+b) \pmod k = 0$ is equivalent to $(a \pmod k + b \pmod k) = k$ or both being $0 \pmod k$.",
+        solution: "<b>Algorithmic Strategy (Modular Remainder Bucketing):</b><br>The algorithm leverages <b>Pigeonhole Principle</b> extensions on remainders.<br><br>1. <b>Frequency Map:</b> Count occurrences of each remainder $r \in [0, k-1]$.<br>2. <b>Conflict Resolution:</b> For each remainder pair $(r, k-r)$, greedily select the one with higher frequency. They are mutually exclusive in a valid subset.<br>3. <b>Degenerate Cases:</b> Remainder $0$ and $k/2$ (if $k$ is even) can only contribute at most one element, as adding any two from these sets triggers divisibility by $k$.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N + K). A single pass over $S$ followed by a linear scan of $k$ remainder buckets.<br>• <b>Space:</b> O(K) to store the bucket counts.<br><br><b>Conclusion:</b> This approach is asymptotically optimal, transforming a potentially $O(2^N)$ search into linear time logic.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def nonDivisibleSubset(k, s):\n    # Count remainders\n    counts = [0] * k\n    for x in s: counts[x % k] += 1\n    \n    # Only 1 element with rem 0 can exist\n    ans = min(counts[0], 1)\n    \n    # Pick max between counts[i] and counts[k-i]\n    for i in range(1, (k // 2) + 1):\n        if i == k - i:\n            ans += 1 if counts[i] > 0 else 0\n        else:\n            ans += max(counts[i], counts[k - i])\n            \n    return ans</pre>",
+        stepByStep: `<b>Logical Trace:</b><br>
+<b>S:</b> [1, 2, 3, 4, 5, 6], <b>K:</b> 3<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #55efc4; margin-left: 10px; margin-bottom: 10px;">
+    <i>Remainders:</i> 1%3=1, 2%3=2, 3%3=0, 4%3=1, 5%3=2, 6%3=0.<br>
+    <i>Counts:</i> R0:2, R1:2, R2:2.<br>
+    <i>Selection:</i><br>
+    &nbsp;&nbsp;• R0: Add 1 (max capacity).<br>
+    &nbsp;&nbsp;• R1 vs R2: Max(2, 2) = 2. Pick all from R1 or R2.
 </div>
 <b>Final Result:</b> 3`
     },
@@ -761,17 +759,19 @@ const algorithms = [
         id: "page-count",
         title: "Drawing Book<br><a href='https://www.hackerrank.com/challenges/drawing-book/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Math",
-        problem: "You're looking for a specific page in a drawing book. The book always starts with page 1 on the right side. When you turn a page, you see two new pages (except for the very last page, which might be alone). Since you're lazy, you want to get to your page with the absolute minimum number of turns. Should you start from the front or the back?",
-        solution: "This is a problem of finding the shortest path! <br>• **Starting from the front:** Since every turn reveals 2 pages, reaching page `p` takes `p // 2` turns. <br>• **Starting from the back:** Reaching page `p` takes `(total_pages // 2) - (p // 2)` turns. <br><br>We simply calculate both distances and return the smaller one. It's like deciding whether to take the front door or the back door to get to the kitchen!",
-        optimality: "This 'Shortest Path' logic is optimal, running in <b>O(1) Constant Time</b>. We only perform a few basic integer divisions and subtractions to get the answer instantly. It uses <b>O(1) Space</b>.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def pageCount(n, p):\n    from_front = p // 2\n    from_back = (n // 2) - (p // 2)\n    \n    return min(from_front, from_back)</pre>",
-        stepByStep: `<b>Book Details:</b> Total Pages (n) = 6, Target Page (p) = 2<br><br>
-<b>Finding the Shortcut:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Front Path:</i> 2 // 2 = <b>1 turn</b> (Page 1 → Pages 2,3)<br>
-    <i>Back Path:</i> (6 // 2) - (2 // 2) = 3 - 1 = <b>2 turns</b> (Pages 6,7 → Pages 4,5 → Pages 2,3)<br>
+        problem: "<b>Core Objective:</b> Determine the minimum number of page turns required to reach page $p$ in a book of $n$ pages, allowing turns from either the front (page 1) or the back (page $n$).<br><br><b>Constraint Context:</b> Pages are grouped in pairs (except possibly the start/end), meaning each turn advances or regresses the view by two logical page numbers.",
+        solution: "<b>Algorithmic Strategy (Minimization Heuristic):</b><br>The algorithm leverages the <b>Direct Mapping</b> of page numbers to turn counts.<br><br>1. <b>Frontal Distance:</b> Moving from page 1, the turn count is $\lfloor p/2 \rfloor$.<br>2. <b>Rear Distance:</b> Moving from the back, the distance is the total possible turns minus the turns to reach $p$: $\lfloor n/2 \rfloor - \lfloor p/2 \rfloor$.<br>3. <b>Selection:</b> Return the minimum of the two calculated values.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(1). Calculations are scalar and independent of $n$ or $p$.<br>• <b>Space:</b> O(1). No auxiliary data structures are utilized.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def pageCount(n, p):\n    # Integer division yields the turn count directly\n    front = p // 2\n    back = (n // 2) - (p // 2)\n    return min(front, back)</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> n=6, p=2<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5856d6; margin-left: 10px; margin-bottom: 10px;">
+    <i>Front Path:</i> 2 // 2 = 1.<br>
+    <i>Back Path:</i> (6 // 2) - (2 // 2) = 3 - 1 = 2.<br>
+    <i>Verdict:</i> min(1, 2) = 1.
 </div>
-<b>Final Result:</b> 1 turn (Start from the front!)`
+<b>Final Result:</b> 1`
     },
     {
         id: "save-the-prisoner",
