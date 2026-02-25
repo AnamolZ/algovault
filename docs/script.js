@@ -1730,6 +1730,34 @@ const algorithms = [
     <i>Back in Call(3):</i> Print 3.
 </div>
 <b>Final Output:</b> 1, 2, 3`
+    },
+    {
+        id: "jumping-on-the-clouds-min",
+        title: "Jumping on the Clouds: Minimum Jumps<br><a href='https://www.hackerrank.com/challenges/jumping-on-the-clouds/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Arrays",
+        problem: "You are playing a game where you jump between safe clouds (0) and avoid thunderheads (1). Starting at cloud 0, your goal is to reach the final cloud in as few jumps as possible. You can only jump 1 or 2 steps at a time, and you can only land on clouds marked 0. What is the lowest number of jumps needed to win?",
+        solution: "To find the minimum number of jumps, we use a 'Greedy' approach. Greedy means always trying to make the biggest possible move (2 steps) first. <br><br>We start at index 0 and look at the cloud 2 steps ahead. If it exists and is safe (0), we jump there immediately. If it's a thunderhead or doesn't exist, we must jump only 1 step to the next safe cloud. By always preferring the 2-step jump, we mathematically guarantee that we reach the end in the smallest number of moves.",
+        optimality: "This strategy is perfectly optimal, completing in <b>O(N) Time</b> because we only visit each cloud once on our path. It uses <b>O(1) Space</b> as we only need two variables: one to track our current position and one to count our jumps. It is the fastest possible way to navigate the cloud array.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def jumpingOnCloudsMin(c):\n    jumps = 0\n    i = 0\n    while i < len(c) - 1:\n        # Priority: Jump 2 steps if safe\n        if i + 2 < len(c) and c[i + 2] == 0:\n            i += 2\n        else:\n            i += 1\n        jumps += 1\n    return jumps</pre>",
+        stepByStep: `<b>Input Array:</b> [0, 0, 1, 0, 0, 1, 0]<br><br>
+<b>Path Navigation:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Current Position 0:</i> Check index 2. It is a 1 (Thundercloud). <br>
+    <i>Action:</i> Must jump 1 step to index 1. <b>(Jump 1)</b>
+</div>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Current Position 1:</i> Check index 3. It is a 0 (Safe!). <br>
+    <i>Action:</i> Leap 2 steps to index 3. <b>(Jump 2)</b>
+</div>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Current Position 3:</i> Check index 5. It is a 1 (Thundercloud). <br>
+    <i>Action:</i> Must jump 1 step to index 4. <b>(Jump 3)</b>
+</div>
+<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
+    <i>Current Position 4:</i> Check index 6. It is a 0 (Safe!). <br>
+    <i>Action:</i> Leap 2 steps to index 6 (The end!). <b>(Jump 4)</b>
+</div>
+<b>Final Result:</b> 4`
     }
 ];
 
