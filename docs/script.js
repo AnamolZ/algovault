@@ -242,26 +242,21 @@ const algorithms = [
         id: "divisible-sum-pairs",
         title: "Divisible Sum Pairs<br><a href='https://www.hackerrank.com/challenges/divisible-sum-pairs/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Arrays",
-        problem: "You are given a list of random numbers and a magic divisor number called `k`. Your task is to pick out exactly two numbers from the list so that when you add them together, their sum can be perfectly divided by `k` (meaning there is no remainder).<br><br>For example, if your list is `[1, 2, 3, 4, 5, 6]` and `k = 5`, picking `1` and `4` is a winning pair because 1 + 4 = 5, and 5 divides cleanly into 5. Picking `2` and `3` is also a winning pair! Oh, and order matters, so `(1, 4)` is the same as `(4, 1)`. How many winning pairs can you find?",
-        solution: "The slow way is a nested loop: checking every number against every other number. The genius way is using **Buckets of Remainders**!<br><br>Think about math trickery. If two numbers add up to a multiple of `k`, it is absolutely guaranteed that their *remainders* (when divided by `k`) also add up perfectly to `k`!<br>For example, if `k = 5`. The number 14 has a remainder of 4. What does it need to hit a clean multiple of 5? It needs a number with a remainder of exactly 1 (like 6, or 11, or 21).<br><br>So we throw all our numbers into buckets based on what their remainder is when divided by `k`. Then, we just do combinations. We multiply the amount of things in Bucket 1 by the amount of things in Bucket 4 (because 1+4=5). We multiply Bucket 2 by Bucket 3. The only tricky case is Bucket 0 (numbers already perfectly divisible)—they can only uniquely pair with *other* numbers in Bucket 0! We tally all these bucket math combinations together to get the final count!",
-        optimality: "By moving from checking loops to 'Bucket Math Combinations', we shred the time complexity from O(N²) down to an astonishing <b>O(N + K) Time</b>! We iterate over the list once to drop them in buckets O(N), and then we do some instant multiplication checking pairs of buckets up to half of K O(K). It requires exactly <b>O(K) Space</b> to store the frequency dictionary of remainders.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>from collections import Counter\n\ndef divisibleSumPairs(ar, k):\n    rbkt = [x % k for x in ar]\n    cnt = Counter(rbkt)\n\n    res = cnt[0] * (cnt[0] - 1) // 2\n\n    for i in range(1, (k // 2) + 1):\n        if i == k - i:\n            res += cnt[i] * (cnt[i] - 1) // 2\n        else:\n            res += cnt[i] * cnt[k - i]\n\n    return res</pre>",
-        stepByStep: `<b>Input Array:</b> [1, 2, 3, 4, 5, 6], Magic Divisor <code>k = 5</code><br><br>
-<b>Phase 1: Sorting into Remainder Buckets</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Bucket 0:</i> (5) -> Contains 1 number.<br>
-    <i>Bucket 1:</i> (1, 6) -> Contains 2 numbers.<br>
-    <i>Bucket 2:</i> (2) -> Contains 1 number.<br>
-    <i>Bucket 3:</i> (3) -> Contains 1 number.<br>
-    <i>Bucket 4:</i> (4) -> Contains 1 number.<br>
+        problem: "<b>Pair Identification:</b> In an array of integers, find the total count of pairs $(i, j)$ such that $i < j$ and the sum $(a[i] + a[j])$ is perfectly divisible by a divisor $k$.",
+        solution: "<b>Arithmetic Optimization (Remainder Bucketing):</b><br>Checking all pairs (O(N²)) is sub-optimal. We leverage the <b>Modular Addition Property</b>: <br><i>(a + b) % k == 0</i> is true if <i>(a%k + b%k) % k == 0</i>.<br><br>1. <b>Tallying Remainder Frequencies:</b> Iterate through the array once, counting how many elements yield each remainder when divided by $k$. Store these in a frequency array <code>rem_counts</code> of size $k$.<br>2. <b>Combinatorial Pair Matching:</b><br>• For remainder 0, use the formula $n(n-1)/2$ to find internal pairs.<br>• For remainders where $r = k/2$ (center cases), also use $n(n-1)/2$.<br>• For all other remainder pairs $(r, k-r)$, the total winning pairs is simple multiplication: <code>rem_counts[r] * rem_counts[k-r]</code>.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N + K). One linear pass over $N$ elements and one pass over $K$ remainder buckets.<br>• <b>Space:</b> O(K) to store the remainder frequency array.<br><br><b>Technical Superiority:</b> This approach converts a quadratic nested-search into a linear combinatorial calculation, making it scalable for extremely large $N$.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def divisibleSumPairs(n, k, ar):\n    # Remainder frequency map\n    counts = [0] * k\n    for x in ar:\n        counts[x % k] += 1\n    \n    # Internal pairs for Remainder 0\n    total = (counts[0] * (counts[0] - 1)) // 2\n    \n    # Cross-remainder matching\n    for i in range(1, (k // 2) + 1):\n        if i == k - i:\n            total += (counts[i] * (counts[i] - 1)) // 2\n        else:\n            total += counts[i] * counts[k - i]\n            \n    return total</pre>",
+        stepByStep: `<b>Validation Scenario:</b><br>
+<b>Input:</b> [1, 2, 3, 4, 5, 6], k = 5<br><br>
+<b>Reminders:</b> [1, 2, 3, 4, 0, 1]<br>
+<b>Bucket Frequencies:</b> 0:{1}, 1:{2}, 2:{1}, 3:{1}, 4:{1}<br><br>
+<b>Combinatorial Phase:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5856d6; margin-left: 10px; margin-bottom: 10px;">
+    <i>Match (r=1, r'=4):</i> 2 * 1 = <b>2 pairs</b>.<br>
+    <i>Match (r=2, r'=3):</i> 1 * 1 = <b>1 pair</b>.<br>
+    <i>Match (r=0):</i> 1 * 0 / 2 = 0 pairs.
 </div>
-<b>Phase 2: Matchmaking!</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Match Bucket 0 with Itself:</i> We only have 1 number in here, so it can't pair with a partner. <code>Pairs = 0</code>.<br>
-    <i>Match Bucket 1 with Bucket 4:</i> Bucket 1 has 2 items. Bucket 4 has 1 item. <code>2 x 1 = 2</code> pairs! (They are 1+4 and 6+4).<br>
-    <i>Match Bucket 2 with Bucket 3:</i> Bucket 2 has 1 item. Bucket 3 has 1 item. <code>1 x 1 = 1</code> pair! (It is 2+3).<br>
-</div>
-<b>Final Answer!</b> <code>0 + 2 + 1</code> = <b>3 winning pairs!</b>`
+<b>Final Result:</b> 3.`
     },
     {
         id: "equalize-the-array",
