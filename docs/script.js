@@ -456,204 +456,206 @@ const algorithms = [
         id: "a-very-big-sum",
         title: "A Very Big Sum<br><a href='https://www.hackerrank.com/challenges/a-very-big-sum/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Math",
-        problem: "Imagine you are adding up numbers so huge that they would break a normal calculator! In some programming languages, when a number gets too big, it 'overflows' and turns into a strange negative number. Your task is to sum a list of these massive integers correctly.",
-        solution: "While this is a tricky problem in languages like C++ or Java (where you have to use special '64-bit' storage types), Python is like a wizard! It handles numbers of any size automatically without any extra work. <br><br>We simply use a standard 'accumulator' loop. We start at 0 and add each massive number one by one. Python's memory expands dynamically to make sure the total is always accurate, no matter how many billions or trillions it reaches!",
-        optimality: "This solution is perfectly optimal with <b>O(N) Time complexity</b>, as we must touch every number once to include it in the sum. It uses <b>O(1) Space</b> for the accumulator variable (though the variable itself grows slightly in memory as the number increases, it's still considered constant logic space).",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def aVeryBigSum(ar):\n    total_sum = 0\n    for number in ar:\n        total_sum += number\n    return total_sum</pre>",
-        stepByStep: `<b>Input Array:</b> [1000000001, 1000000002, 1000000003]<br><br>
-<b>The Wizardry of Big Integers:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Start:</i> Total = 0<br>
-    <i>Add 1,000,000,001:</i> Total = 1,000,000,001<br>
-    <i>Add 1,000,000,002:</i> Total = 2,000,000,003<br>
-    <i>Add 1,000,000,003:</i> Total = 3,000,000,006
+        problem: "<b>Core Objective:</b> Calculate the aggregate sum of a vector containing large integers ($10^{10}$ or greater).<br><br><b>Constraint Context:</b> In statically typed languages (e.g., C++, Java), standard 32-bit integers overflow at $2^{31}-1$. This problem necessitates the use of 64-bit integers (long/long long) or arbitrary-precision arithmetic.",
+        solution: "<b>Algorithmic Strategy (Arbitrary-Precision Accumulation):</b><br>The solution leverages high-level language capabilities for <b>Infinite Precision Arithmetic</b>.<br><br>1. <b>Accumulator Initialization:</b> Define a 64-bit or arbitrary-precision integer initialized to zero.<br>2. <b>Sequential Aggregation:</b> Iterate through the integer array, performing scalar addition. Python, specifically, dynamically reallocates memory for integers to prevent overflow, treating large values as objects.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N). Each element must be visited once.<br>• <b>Space:</b> O(1). Only a single accumulator is maintained, though its bit-width grows logarithmically with the sum's magnitude.<br><br><b>Conclusion:</b> This approach is asymptotically optimal, ensuring safe summation without the risk of arithmetic overflow.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def aVeryBigSum(ar):\n    # Python handles arbitrary precision integers automatically\n    total = 0\n    for x in ar:\n        total += x\n    return total</pre>",
+        stepByStep: `<b>Computational Trace:</b><br>
+<b>Input:</b> [10^10 + 1, 10^10 + 2]<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ffcc00; margin-left: 10px; margin-bottom: 10px;">
+    <i>Current Sum:</i> 0.<br>
+    <i>Add Val 1:</i> 10,000,000,001.<br>
+    <i>Add Val 2:</i> 20,000,000,003.
 </div>
-<b>Final Result:</b> 3000000006`
+<b>Final Result:</b> 20,000,000,003`
     },
     {
         id: "beautiful-days",
         title: "Beautiful Days at the Movies<br><a href='https://www.hackerrank.com/challenges/beautiful-days-at-the-movies/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Math",
-        problem: "Imagine you are planning a trip to the movies, but you only want to go on 'Beautiful Days'. A day is considered beautiful if the difference between the day number and its reverse is perfectly divisible by your magic number `k`. <br><br>For example, if today is Day 20 and your magic number is 6, is it beautiful? The reverse of 20 is 02. The difference is `20 - 2 = 18`. Since 18 is divisible by 6, today is a Beautiful Day! How many such days exist in a given range?",
-        solution: "To find all beautiful days, we simply walk through every day in the range one by one. For each day, we calculate its reverse by turning the number into a string, flipping it, and turning it back into a number. <br><br>Once we have the reversed number, we subtract it from the original day number and take the absolute value. If that result divided by `k` has a remainder of zero, we add 1 to our 'Beautiful Day' tally!",
-        optimality: "This 'Range Scanner' approach is optimal, running in <b>O(N * D) Time complexity</b>, where N is the number of days in the range and D is the number of digits in the day number (since we have to reverse the digits). Since we must check every individual day to see if it's beautiful, we cannot do it faster. It uses <b>O(1) Space</b> because we only keep a single tally variable.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def beautifulDays(start, end, k):\n    beautiful_count = 0\n    for day in range(start, end + 1):\n        reversed_day = int(str(day)[::-1])\n        if abs(day - reversed_day) % k == 0:\n            beautiful_count += 1\n    return beautiful_count</pre>",
-        stepByStep: `<b>Input Range:</b> [20, 23], Magic Number <code>k = 6</code><br><br>
-<b>Checking the Calendar:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Day 20:</i> Reverse is 02. |20 - 2| = 18. 18 % 6 == 0. <b>Beautiful!</b> (Tally: 1)<br>
-    <i>Day 21:</i> Reverse is 12. |21 - 12| = 9. 9 % 6 != 0. Not beautiful.<br>
-    <i>Day 22:</i> Reverse is 22. |22 - 22| = 0. 0 % 6 == 0. <b>Beautiful!</b> (Tally: 2)<br>
-    <i>Day 23:</i> Reverse is 32. |23 - 32| = 9. 9 % 6 != 0. Not beautiful.
+        problem: "<b>Core Objective:</b> Given a range $[i, j]$ and a divisor $k$, count the number of 'beautiful days'.<br><br><b>Mathematical Definition:</b> A day $x$ is beautiful if $|x - reverse(x)|$ is perfectly divisible by $k$ (i.e., $|x - reverse(x)| \pmod k = 0$).",
+        solution: "<b>Algorithmic Strategy (Exhaustive Range Search):</b><br>The problem is solved using <b>Linear Iteration</b> combined with <b>String-Based Transformation</b> for digit reversal.<br><br>1. <b>Range Traversal:</b> Iterate from $i$ to $j$ inclusive.<br>2. <b>Digit Inversion:</b> For each day $x$, convert it to a string, reverse the character sequence, and cast it back to an integer to obtain $reverse(x)$.<br>3. <b>Divisibility Validation:</b> Compute the absolute difference and evaluate the modular condition against $k$. Increment the counter for successful matches.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N * log10(M)), where $N$ is the range width and $M$ is the magnitude of the day number. Reversing digits takes logarithmic time relative to the value.<br>• <b>Space:</b> O(log10(M)) auxiliary space to store the string representation during the reversal process.<br><br><b>Conclusion:</b> This approach is efficient and robust for the typical constraints of integer range problems.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def beautifulDays(i, j, k):\n    count = 0\n    for day in range(i, j + 1):\n        # String reversal trick\n        rev = int(str(day)[::-1])\n        if abs(day - rev) % k == 0:\n            count += 1\n    return count</pre>",
+        stepByStep: `<b>Execution Trace:</b><br>
+<b>Range:</b> [20, 21], <b>k:</b> 6<br><br>
+<b>Processing Cycle:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5ac8fa; margin-left: 10px; margin-bottom: 10px;">
+    <i>Day 20:</i> Reverse = 02. |20 - 2| = 18. 18 % 6 = 0. <b>Success.</b><br>
+    <i>Day 21:</i> Reverse = 12. |21 - 12| = 9. 9 % 6 = 3. <b>Fail.</b>
 </div>
-<b>Final Result:</b> 2 Beautiful Days found!`
+<b>Final Result:</b> 1`
     },
     {
         id: "cat-and-mouse",
         title: "Cats and a Mouse<br><a href='https://www.hackerrank.com/challenges/cats-and-a-mouse/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Math",
-        problem: "Two cats (Cat A and Cat B) are at different positions on a line, and a mouse (Mouse C) is also sitting somewhere on that same line. Both cats want to catch the mouse! They move at the exact same speed. If one cat is closer to the mouse, it will catch it first. If they are exactly the same distance away, they will start fighting, and the mouse will escape! Who wins?",
-        solution: "To find the winner, we just need a simple ruler! We calculate the absolute distance from Cat A to the Mouse, and then the absolute distance from Cat B to the Mouse. <br><br>We compare the two distances: if Cat A's distance is smaller, Cat A wins. If Cat B's distance is smaller, Cat B wins. If they are identical, the 'Mouse C' escapes while the cats fight!",
-        optimality: "This 'Distance Duel' logic is perfectly optimal, operating in <b>O(1) Time complexity</b> per query. Since we only do two subtractions and one comparison, it is as fast as a computer can possibly be. It uses <b>O(1) Space</b> because we only store two small distance numbers.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def catAndMouse(x, y, z):\n    dist_a = abs(x - z)\n    dist_b = abs(y - z)\n    \n    if dist_a < dist_b:\n        return \"Cat A\"\n    elif dist_b < dist_a:\n        return \"Cat B\"\n    else:\n        return \"Mouse C\"</pre>",
-        stepByStep: `<b>Input:</b> Cat A at 1, Cat B at 2, Mouse C at 3<br><br>
-<b>Calculating the Chase:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Cat A distance:</i> |1 - 3| = <b>2</b><br>
-    <i>Cat B distance:</i> |2 - 3| = <b>1</b><br>
-    <i>Comparison:</i> 1 is smaller than 2.
+        problem: "<b>Core Objective:</b> Determine which of two cats (positioned at $x$ and $y$) will reach a mouse (at $z$) first, assuming uniform velocity and simultaneous starts.<br><br><b>Constraint Logic:</b> If both cats are equidistant from the mouse, they enter a state of conflict, allowing the mouse to escape.",
+        solution: "<b>Algorithmic Strategy (Absolute Distance Comparison):</b><br>The problem simplifies to a <b>Scalar 1D Distance Analysis</b>.<br><br>1. <b>Metric Calculation:</b> Compute the L1 distance (absolute difference) for both cats relative to the mouse's coordinate: $D_A = |x - z|$ and $D_B = |y - z|$.<br>2. <b>Selection Logic:</b> Apply conditional branches to identify the minimum distance. If $D_A = D_B$, the collision state is triggered.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(1). Only two arithmetic subtractions and one logical comparison are required per query.<br>• <b>Space:</b> O(1). No auxiliary data structures are necessitated.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def catAndMouse(x, y, z):\n    dist_a = abs(x - z)\n    dist_b = abs(y - z)\n    \n    if dist_a < dist_b: return 'Cat A'\n    if dist_b < dist_a: return 'Cat B'\n    return 'Mouse C'</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> x=1, y=5, z=4<br><br>
+<b>Calculation Cycle:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ff2d55; margin-left: 10px; margin-bottom: 10px;">
+    <i>Cat A Distance:</i> |1 - 4| = 3.<br>
+    <i>Cat B Distance:</i> |5 - 4| = 1.<br>
+    <i>Verdict:</i> 1 < 3. Cat B wins.
 </div>
-<b>Final Result:</b> Cat B reaches the mouse first!`
+<b>Terminal Result:</b> Cat B`
     },
     {
         id: "chocolate-feast",
         title: "Chocolate Feast<br><a href='https://www.hackerrank.com/challenges/chocolate-feast/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Math",
-        problem: "Imagine you have a few dollars in your pocket and you hit the candy store! You buy as many chocolates as you can afford. But there's a bonus: the shop has a special 'Wrapper Recycling' deal! If you bring back a certain number of empty wrappers, they'll give you a brand-new chocolate for free! And yes, that free chocolate comes with a wrapper you can recycle too! How many chocolates can you eat in total?",
-        solution: "We solve this by simulating the entire feast! First, we spend our initial cash `n` to buy as many chocolates as the cost `c` allows. We count these toward our total and keep all the wrappers. Then, we start a loop: as long as we have enough wrappers `m` to get a freebie, we trade them in! Every time we get free chocolates, we add them to our total and collect their shiny new wrappers to add to whatever leftovers we had. We keep recycling until we're left with fewer wrappers than the shop requires.",
-        optimality: "This 'Simulated Recycling' approach is highly efficient, running in <b>O(log(N)) Time complexity</b>. Because the number of wrappers decreases significantly with each trade-in cycle, the loop finishes almost instantly even for large amounts of money. It uses <b>O(1) Space</b> because we only need to keep track of a few integer variables.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def chocolateFeast(n, c, m):\n    chocolates = n // c\n    wrappers = chocolates\n    total_eaten = chocolates\n    \n    while wrappers >= m:\n        new_chocolates = wrappers // m\n        total_eaten += new_chocolates\n        wrappers = (wrappers % m) + new_chocolates\n        \n    return total_eaten</pre>",
-        stepByStep: `<b>Input:</b> $10, Chocolate Cost: $2, Exchange Rate: 5 wrappers<br><br>
-<b>The Feast Begins:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Step 1:</i> Spend $10 to buy 5 chocolates. (Total Eaten: 5, Wrappers: 5)<br>
-    <i>Step 2:</i> Trade 5 wrappers for 1 free chocolate. (Total Eaten: 6, Wrappers: 1)<br>
-    <i>Step 3:</i> Only 1 wrapper left. Can't trade for more.
+        problem: "<b>Core Objective:</b> Calculate the maximum number of chocolates obtainable given an initial budget $n$, unit cost $c$, and a wrapper-to-chocolate exchange rate $m$.<br><br><b>Constraint Logic:</b> The process is recursive/iterative; every 'free' chocolate acquired yields a wrapper that can be aggregated for subsequent exchanges.",
+        solution: "<b>Algorithmic Strategy (Iterative Exchange Simulation):</b><br>The solution models a <b>Diminishing Return Loop</b>.<br><br>1. <b>Primary Purchase:</b> Derive initial count and wrappers: $chocolates = n // c$.<br>2. <b>Exchange Loop:</b> While $wrappers \geq m$, trade $m$ wrappers for 1 new chocolate. The new wrapper count becomes the sum of newly acquired wrappers and the remainder of the previous set ($wrappers \pmod m$).<br>3. <b>Aggregation:</b> Continuously increment the total eaten count until the exchange threshold is no longer met.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> $O(\log_m(n))$. The number of wrappers decreases geometrically in each iteration of the loop.<br>• <b>Space:</b> O(1). Only scalar integer variables are used to track state.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def chocolateFeast(n, c, m):\n    total = n // c\n    wrappers = total\n    \n    while wrappers >= m:\n        # Convert wrappers to chocolate\n        claimed = wrappers // m\n        total += claimed\n        # Remaining wrappers + new wrappers\n        wrappers = (wrappers % m) + claimed\n        \n    return total</pre>",
+        stepByStep: `<b>Simulation Log:</b><br>
+<b>Input:</b> n=15, c=3, m=2<br><br>
+<b>Phases:</b>
+<div style="padding-left: 20px; border-left: 2px solid #34c759; margin-left: 10px; margin-bottom: 10px;">
+    <i>Initial:</i> Eaten: 5, Wrappers: 5.<br>
+    <i>Cycle 1:</i> Trade 4 wrappers for 2 chocolates. Eaten: 7, Wrappers: (5-4)+2 = 3.<br>
+    <i>Cycle 2:</i> Trade 2 wrappers for 1 chocolate. Eaten: 8, Wrappers: (3-2)+1 = 2.<br>
+    <i>Cycle 3:</i> Trade 2 wrappers for 1 chocolate. Eaten: 9, Wrappers: (2-2)+1 = 1.<br>
+    <i>Terminate:</i> 1 < 2.
 </div>
-<b>Final Result:</b> You ate a total of 6 chocolates!`
+<b>Final Result:</b> 9`
     },
     {
         id: "day-of-programmer",
-        title: "Day of the Programmer<br><a href='https://www.hackerrank.com/challenges/day-of-the-programmer/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        title: "Day of the Programmer<br><a href='https://www.hackerrank.com/challenges/day-of-the-programmer/problem' target='_blank' style='font-size: 0.9rem; epoch='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Math",
-        problem: "Russia has a very interesting calendar history! Between 1700 and 2700, they used the Julian calendar, then switched to the Gregorian calendar in 1918. Your task is to find the exact date (in dd.mm.yyyy format) of the 256th day of any given year. Beware: the leap year rules changed during the switch, and 1918 was a very short year because they skipped 13 days in February!",
-        solution: "We solve this by checking which historical period the year falls into! <br>1. **Before 1918 (Julian):** Leap years are simply any year divisible by 4. <br>2. **After 1918 (Gregorian):** We use standard leap year rules (divisible by 400, or by 4 but not 100). <br>3. **The Year 1918:** This was the transition year. Since they jumped from January 31st directly to February 14th, the 256th day is always September 26th.<br><br>For all other years, the 256th day is either September 12th (leap year) or September 13th (normal year).",
-        optimality: "This is a flawlessly optimal <b>O(1) Time complexity</b> solution. We only perform a few basic math operations and 'if' checks to determine the date. It uses <b>O(1) Space</b> because we don't store any data, just a single return string.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def dayOfProgrammer(y):\n    if y == 1918:\n        return '26.09.1918'\n    \n    if y < 1918:\n        is_leap = (y % 4 == 0)\n    else:\n        is_leap = (y % 400 == 0) or (y % 4 == 0 and y % 100 != 0)\n            \n    day = \"12\" if is_leap else \"13\"\n    return f\"{day}.09.{y}\"</pre>",
-        stepByStep: `<b>Input Year:</b> 2017 (Gregorian)<br><br>
-<b>Calculating the Date:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Step 1:</i> Check year 2017. It is after 1918.<br>
-    <i>Step 2:</i> Rule: Is 2017 divisible by 400? No. By 4? No. <br>
-    <i>Step 3:</i> It is a <b>Normal Year</b>.<br>
-    <i>Step 4:</i> In a normal year, the 256th day is <b>September 13th</b>.
+        problem: "<b>Core Objective:</b> Determine the exact date of the 256th day of the year in Russia, across three distinct temporal regimes (Julian, Gregorian, and the 1918 Revolution Transition).<br><br><b>Contextual Logic:</b><br>• 1700-1917: Julian Calendar (Leap if divisible by 4).<br>• 1918: Transition year (Feb 14 was the day after Jan 31).<br>• 1919-2700: Gregorian Calendar (Standard leap rules).",
+        solution: "<b>Algorithmic Strategy (Temporal Case Partitioning):</b><br>The algorithm provides a <b>Deterministic Mapping</b> based on the historical era of the input year.<br><br>1. <b>Era Identification:</b> Segment years into Julian ( < 1918), Gregorian ( > 1918), or the 1918 anomaly.<br>2. <b>Leap Precision:</b> Apply era-specific leap year predicates. A leap year results in the 256th day falling on Sept 12; a non-leap year on Sept 13.<br>3. <b>Transition Handling:</b> In 1918, due to the 13-day 'desynchronization' in February, the 256th day is uniquely Sept 26.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(1). The solution executes a fixed number of conditional evaluations.<br>• <b>Space:</b> O(1). No auxiliary storage is required; output is a formatted string constant.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def dayOfProgrammer(year):\n    if year == 1918: return \"26.09.1918\"\n    \n    # Predicate for Leap Year\n    if year < 1918:\n        # Julian logic\n        is_leap = (year % 4 == 0)\n    else:\n        # Gregorian logic\n        is_leap = (year % 400 == 0) or (year % 4 == 0 and year % 100 != 0)\n        \n    day = \"12\" if is_leap else \"13\"\n    return f\"{day}.09.{year}\"</pre>",
+        stepByStep: `<b>Validation Scenario:</b><br>
+<b>Year:</b> 1800 (Julian)<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5856d6; margin-left: 10px; margin-bottom: 10px;">
+    <i>Era:</i> Julian (1800 < 1918).<br>
+    <i>Leap Check:</i> 1800 % 4 == 0. <b>TRUE</b>.<br>
+    <i>Mapping:</i> 256th day in a Julian leap year is Sept 12.
 </div>
-<b>Final Result:</b> 13.09.2017`
+<b>Terminal Result:</b> 12.09.1800`
     },
     {
         id: "extra-long-factorials",
         title: "Extra Long Factorials<br><a href='https://www.hackerrank.com/challenges/extra-long-factorials/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Math",
-        problem: "In many programming languages, calculating the factorial of a large number (like 25!) is impossible because the result is so huge it 'overflows' 64-bit memory. Your task is to calculate the factorial for numbers up to 100, which results in a massive number with over 150 digits!",
-        solution: "This is another problem where Python's built-in 'BigInt' capabilities make us look like geniuses! We calculate the factorial using a simple recursive approach: $n! = n \times (n-1)!$. <br><br>While a language like C++ would require complex array-based math to store such a large number, Python's integers grow automatically to accommodate as many digits as needed. We just multiply the numbers down to 1 and let Python handle the massive storage behind the scenes.",
-        optimality: "This recursive approach is optimal for readability and logic, running in <b>O(N²) Time complexity</b> (where N is the number, because each of the N multiplications involves numbers with $O(N)$ digits). It uses <b>O(N) Space</b> on the call stack due to recursion. For values up to 100, this completes in a split second.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def extraLongFactorials(n):\n    if n == 1:\n        return 1\n    return n * extraLongFactorials(n - 1)</pre>",
-        stepByStep: `<b>Input:</b> n = 5<br><br>
-<b>The Recursive Chain:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Step 1:</i> 5 * factorial(4)<br>
-    <i>Step 2:</i> 5 * (4 * factorial(3))<br>
-    <i>Step 3:</i> 5 * (4 * (3 * factorial(2)))<br>
-    <i>Step 4:</i> 5 * (4 * (3 * (2 * factorial(1))))<br>
-    <i>Step 5:</i> 5 * 4 * 3 * 2 * 1 = <b>120</b>
+        problem: "<b>Core Objective:</b> Compute the factorial ($n!$) for large values of $n$ (up to 100).<br><br><b>Precision Constraint:</b> Values like $100!$ contain approximately 158 digits, exceeding the storage capacity of standard 64-bit primitive types.",
+        solution: "<b>Algorithmic Strategy (Arbitrary-Precision Multiplication):</b><br>The algorithm utilizes <b>Infinite Precision Integer Arithmetic</b>, natively supported by Python's object model.<br><br>1. <b>Base Selection:</b> Start with a value of 1.<br>2. <b>Sequential Product:</b> Iteratively multiply by every integer up to $n$.<br>3. <b>Memory Management:</b> The underlying system dynamically allocates contiguous memory blocks to represent increasingly large bit-depths as the product expands.",
+        optimality: "<b>Complexity Profile:</b><br>• <b>Time:</b> O(N² log N). While loop overhead is linear, the cost of multiplying large integers scales with the number of digits/bits involved.<br>• <b>Space:</b> O(N log N) to store the resulting massive integer value.<br><br><b>Conclusion:</b> For the specified constraints, this approach is perfectly efficient, leveraging optimized library-level multiplication routines.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def extraLongFactorials(n):\n    # Python 3 integers have arbitrary precision\n    res = 1\n    for i in range(1, n + 1):\n        res *= i\n    print(res)</pre>",
+        stepByStep: `<b>Mathematical Expansion:</b><br>
+<b>Input:</b> n = 25<br><br>
+<b>Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #afafaf; margin-left: 10px; margin-bottom: 10px;">
+    <i>N=1..10:</i> 3,628,800.<br>
+    <i>N=11..20:</i> ~2.43 * 10^18.<br>
+    <i>Final (25!):</i> 15,511,210,043,330,985,984,000,000.
 </div>
-<b>Final Result:</b> 120 (Imagine this for 100!)`
+<b>Terminal Verdict:</b> Result successfully printed with 26 digits.`
     },
     {
         id: "find-digits",
         title: "Find Digits<br><a href='https://www.hackerrank.com/challenges/find-digits/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Math",
-        problem: "You are given a number and you need to look at each of its digits one by one. Your goal is to see how many of those digits are 'friendly' to the original number—meaning the original number can be divided by that digit without any remainder. (Remember: zero can't divide anything, so we ignore it!)",
-        solution: "To solve this, we first turn the number into a string of characters so we can easily visit each digit individually. For every digit we see, we convert it back into a small number and check two things: <br>1. Is it greater than zero? <br>2. Does the original number divided by this digit leave a remainder of 0? <br><br>If both are true, we give that digit a 'point' in our counter!",
-        optimality: "This 'Digit Inspector' approach is perfectly optimal with <b>O(D) Time complexity</b>, where D is the number of digits in the input. Since we must look at every digit at least once, we can't do it any faster! It uses <b>O(D) Space</b> to store the string version of the number while we inspect it.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def findDigits(n):\n    n_str = str(n)\n    count = 0\n    \n    for char in n_str:\n        digit = int(char)\n        if digit != 0 and n % digit == 0:\n            count += 1\n    return count</pre>",
-        stepByStep: `<b>Input Number:</b> 124<br><br>
-<b>Inspecting the Digits:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Digit 1:</i> 124 % 1 == 0. <b>Yes!</b> (Count: 1)<br>
-    <i>Digit 2:</i> 124 % 2 == 0. <b>Yes!</b> (Count: 2)<br>
-    <i>Digit 3:</i> 124 % 4 == 0. <b>Yes!</b> (Count: 3)
+        problem: "<b>Core Objective:</b> For an integer $n$, determine the count of its component digits that are divisors of $n$.<br><br><b>Constraint Logic:</b> Zero-valued digits must be excluded from the evaluation to prevent division-by-zero errors.",
+        solution: "<b>Algorithmic Strategy (Linear Digit Inspection):</b><br>The algorithm performs a <b>Serial Divisibility Audit</b> on each decimal place of the number.<br><br>1. <b>Digit Extraction:</b> Decompose $n$ into its individual digits using string conversion or modular extraction ($n \pmod{10}$).<br>2. <b>Validation:</b> For each non-zero digit $d$, evaluate the condition $n \pmod d = 0$.<br>3. <b>Aggregation:</b> Maintains a scalar counter for all digits that satisfy the divisibility predicate.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(D), where $D$ is the number of decimal digits ($\log_{10} n$). Each digit is inspected exactly once.<br>• <b>Space:</b> O(D) for digit storage (if using strings) or O(1) if using mathematical extraction.<br><br><b>Conclusion:</b> This approach is perfectly efficient, achieving the mathematical lower bound for digit-based inspection.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def findDigits(n):\n    count = 0\n    # Iterate through string representation\n    for char in str(n):\n        digit = int(char)\n        # Avoid division by zero and check remainder\n        if digit != 0 and n % digit == 0:\n            count += 1\n    return count</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> 1024<br><br>
+<b>Calculation Cycle:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ff9500; margin-left: 10px; margin-bottom: 10px;">
+    <i>Digit 1:</i> 1024 % 1 == 0. <b>TRUE</b>.<br>
+    <i>Digit 0:</i> Skip (Zero).<br>
+    <i>Digit 2:</i> 1024 % 2 == 0. <b>TRUE</b>.<br>
+    <i>Digit 4:</i> 1024 % 4 == 0. <b>TRUE</b>.
 </div>
-<b>Final Result:</b> 3 digits are divisors of 124.`
+<b>Final Result:</b> 3`
     },
     {
         id: "get-total-x",
         title: "Between Two Sets<br><a href='https://www.hackerrank.com/challenges/between-two-sets/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Math",
-        problem: "You are given two sets of numbers, Group A and Group B. You need to find all the numbers that act as a 'bridge' between them. To be a bridge, a number must satisfy two rules: <br>1. Every number in Group A must be able to divide into it perfectly. <br>2. It must be able to divide into every number in Group B perfectly.",
-        solution: "To find these bridges, we use two powerful math tools: <b>LCM</b> (Least Common Multiple) and <b>GCD</b> (Greatest Common Divisor). <br><br>First, we find the LCM of Group A. This is the smallest number that everyone in Group A can divide into. Any 'bridge' must be a multiple of this LCM. <br>Second, we find the GCD of Group B. This is the largest number that divides into everyone in Group B. Any 'bridge' must be a divisor of this GCD. <br><br>Finally, we just look at the multiples of our LCM (LCM, 2*LCM, 3*LCM...) and see which ones divide perfectly into our GCD!",
-        optimality: "This 'Math Identity' approach is extremely efficient, running in <b>O((N+M) log(max)) Time complexity</b>. Instead of checking every possible number, we jump straight to the candidates using LCM and GCD. It uses <b>O(1) Space</b> to store our results.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def getTotalX(a, b):\n    # Helper to find GCD/LCM... \n    L = LCM(a)\n    G = GCD(b)\n    \n    count = 0\n    multiple = L\n    while multiple <= G:\n        if G % multiple == 0:\n            count += 1\n        multiple += L\n    return count</pre>",
-        stepByStep: `<b>Group A:</b> [2, 4], <b>Group B:</b> [16, 32, 96]<br><br>
-<b>Building the Bridge:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Step 1:</i> Find LCM of [2, 4]. Result is <b>4</b>.<br>
-    <i>Step 2:</i> Find GCD of [16, 32, 96]. Result is <b>16</b>.<br>
-    <i>Step 3:</i> Check multiples of 4 that divide 16:<br>
-    &nbsp;&nbsp;• 4? Yes (16/4 = 4).<br>
-    &nbsp;&nbsp;• 8? Yes (16/8 = 2).<br>
-    &nbsp;&nbsp;• 12? No.<br>
-    &nbsp;&nbsp;• 16? Yes (16/16 = 1).
+        problem: "<b>Core Objective:</b> Find the intersection of two mathematical properties: common multiples of set $A$ and common divisors of set $B$.<br><br><b>Technical Rule:</b> An integer $x$ is included if $a|x$ $\forall a \in A$ AND $x|b$ $\forall b \in B$.",
+        solution: "<b>Algorithmic Strategy (LCM-GCD Boundary Identification):</b><br>The solution optimizes the search space using <b>Fundamental Theorem of Arithmetic</b> properties.<br><br>1. <b>Lower Bound:</b> Calculate the Least Common Multiple (LCM) of set $A$. Any valid $x$ must be a multiple of $LCM(A)$.<br>2. <b>Upper Bound:</b> Calculate the Greatest Common Divisor (GCD) of set $B$. Any valid $x$ must be a divisor of $GCD(B)$.<br>3. <b>Iterative Search:</b> Scan multiples of $LCM(A)$ up to $GCD(B)$. If $GCD(B) \pmod x = 0$, $x$ is a valid member of the bridge set.",
+        optimality: "<b>Complexity Profile:</b><br>• <b>Time:</b> O(N log(max) + M log(max)). GCD/LCM calculations are highly efficient (Euclidean algorithm). The final search pass is proportional to the number of multiples.<br>• <b>Space:</b> O(1). Only the bounds and current multiple are persisted.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>from math import gcd\n\ndef getTotalX(a, b):\n    # Helper for LCM\n    def get_lcm(x, y): return (x * y) // gcd(x, y)\n\n    # Reduce A to its LCM, B to its GCD\n    lcm_a = a[0]\n    for i in a[1:]: lcm_a = get_lcm(lcm_a, i)\n    \n    gcd_b = b[0]\n    for i in b[1:]: gcd_b = gcd(gcd_b, i)\n\n    # Count multiples of lcm_a that divide gcd_b\n    count = 0\n    curr = lcm_a\n    while curr <= gcd_b:\n        if gcd_b % curr == 0: count += 1\n        curr += lcm_a\n    return count</pre>",
+        stepByStep: `<b>Algorithmic Trace:</b><br>
+<b>A:</b> [2, 6], <b>B:</b> [24, 36]<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5ac8fa; margin-left: 10px; margin-bottom: 10px;">
+    <i>Step 1:</i> LCM([2, 6]) = 6.<br>
+    <i>Step 2:</i> GCD([24, 36]) = 12.<br>
+    <i>Step 3 (Scanning):</i><br>
+    &nbsp;&nbsp;• x=6: 12 % 6 == 0. <b>Success.</b><br>
+    &nbsp;&nbsp;• x=12: 12 % 12 == 0. <b>Success.</b>
 </div>
-<b>Final Result:</b> 3 bridge numbers found (4, 8, 16).`
+<b>Final Result:</b> 2`
     },
     {
         id: "grading-students",
         title: "Grading Students<br><a href='https://www.hackerrank.com/challenges/grading/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Math",
-        problem: "Professor Sam at HackerLand University has a special way of rounding student grades. He wants every student to be happy, so if a grade is within 2 points of the next multiple of 5, he rounds it up! However, if a student is failing (grade below 38), he doesn't round at all because even a few points won't save them. Your task is to automate Sam's rounding logic.",
-        solution: "We solve this by checking each grade one by one. First, we ignore any grade lower than 38. For the rest, we find out how far away they are from the next multiple of 5. <br><br>We use the <b>Modulo Operator (%)</b> to find the distance. If a grade is 73, `73 % 5` is 3. This means we are 2 points away from 75 ($5 - 3 = 2$). Since 2 is less than 3, we round up to 75! If the distance was 3 or more, we would leave the grade exactly as it is.",
-        optimality: "This 'Conditional Rounding' approach is optimal, running in <b>O(N) Time complexity</b> because we visit each grade exactly once. It uses <b>O(1) Space</b> (beyond the input list) since we modify the grades in-place or store them in a simple resulting list.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def gradingStudents(grades):\n    for i in range(len(grades)):\n        if grades[i] < 38:\n            continue\n\n        remainder = grades[i] % 5\n        if remainder >= 3:\n            # Round up by adding the difference \n            grades[i] += (5 - remainder)\n            \n    return grades</pre>",
-        stepByStep: `<b>Input Grades:</b> [73, 67, 38, 33]<br><br>
-<b>Applying Sam's Logic:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Grade 73:</i> Next multiple is 75. Difference is 2. <b>Round to 75.</b><br>
-    <i>Grade 67:</i> Next multiple is 70. Difference is 3. <b>Stay at 67.</b><br>
-    <i>Grade 38:</i> Next multiple is 40. Difference is 2. <b>Round to 40.</b><br>
-    <i>Grade 33:</i> Below 38. <b>Stay at 33.</b> (Failing)
+        problem: "<b>Core Objective:</b> Transform a list of integer grades using a specific rounding protocol.<br><br><b>Protocol Constraints:</b><br>• If $Grade < 38$, no transformation (failure threshold).<br>• If $(NextMultipleOf5 - Grade) < 3$, round up to the multiple.<br>• Else, maintain the original grade.",
+        solution: "<b>Algorithmic Strategy (Modular Distance Evaluation):</b><br>The algorithm performs a <b>Linear Transformation Pass</b> over student records.<br><br>1. <b>Evaluation:</b> For each grade $g \geq 38$, compute the remainder $r = g \pmod 5$.<br>2. <b>Distance Logic:</b> The distance to the next multiple is $5 - r$. If this delta is strictly less than 3 (equivalently, if $r \geq 3$), apply the rounding upward.<br>3. <b>In-place Update:</b> Modify the array sequence to reflect new scalar values.",
+        optimality: "<b>Complexity Profile:</b><br>• <b>Time:</b> O(N). Each student record is evaluated once in a single pass.<br>• <b>Space:</b> O(1) beyond input if modified in-place, or O(N) for the resulting vector.<br><br><b>Conclusion:</b> This approach is asymptotically optimal for sequential dataset modification.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def gradingStudents(grades):\n    rounded_grades = []\n    for g in grades:\n        if g < 38:\n            rounded_grades.append(g)\n        else:\n            remainder = g % 5\n            if remainder >= 3:\n                rounded_grades.append(g + (5 - remainder))\n            else:\n                rounded_grades.append(g)\n    return rounded_grades</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> [73, 67, 33]<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5856d6; margin-left: 10px; margin-bottom: 10px;">
+    <i>G=73:</i> 73 % 5 = 3. 3 $\geq$ 3? Yes. <b>Round to 75.</b><br>
+    <i>G=67:</i> 67 % 5 = 2. 2 $\geq$ 3? No. <b>Stay 67.</b><br>
+    <i>G=33:</i> 33 < 38? Yes. <b>Stay 33.</b>
 </div>
-<b>Final Result:</b> [75, 67, 40, 33]`
+<b>Final Result:</b> [75, 67, 33]`
     },
     {
         id: "how-many-games",
         title: "Halloween Sale<br><a href='https://www.hackerrank.com/challenges/halloween-sale/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Math",
-        problem: "You're getting ready for a massive Halloween sale! The first game you buy costs `p` dollars. For every game you buy after that, the price drops by `d` dollars until it hits a minimum price of `m` dollars. Every game bought after that stays at `m` dollars. If you have `s` dollars in your wallet, how many games can you walk away with?",
-        solution: "We solve this by simulating a shopping spree! We start with our budget `s` and the current price `p`. As long as we can afford the current price ($s \\geq p$), we buy the game, subtract the price from our budget, and increase our count. Then, we calculate the price for the next game: it's either the current price minus `d` (using `max(m, p-d)`), or the minimum price `m`. We repeat this until we run out of money.",
-        optimality: "This 'Greedy Shopping' approach is optimal, running in <b>O(S/M) Time complexity</b>. Since we only buy one game at a time and the price eventually stabilizes at a constant <code>m</code>, the number of iterations is directly proportional to how many games we can afford. It uses <b>O(1) Space</b> to store our count and current price tally.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def howManyGames(p, d, m, s):\n    count = 0\n    while s >= p:\n        s -= p\n        count += 1\n        p = max(m, p - d)\n    return count</pre>",
-        stepByStep: `<b>Input:</b> Start $20, Discount $3, Min $6, Budget $80<br><br>
-<b>Let's Go Shopping:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Game 1:</i> Cost $20. Budget left: $60. (Price drops to $17)<br>
-    <i>Game 2:</i> Cost $17. Budget left: $43. (Price drops to $14)<br>
-    <i>Game 3:</i> Cost $14. Budget left: $29. (Price drops to $11)<br>
-    <i>Game 4:</i> Cost $11. Budget left: $18. (Price drops to $8)<br>
-    <i>Game 5:</i> Cost $8. Budget left: $10. (Price drops to $6)<br>
-    <i>Game 6:</i> Cost $6. Budget left: $4. (Price stays at $6)<br>
-    <i>Game 7:</i> Can't afford $6! STOP.
+        problem: "<b>Core Objective:</b> Determine the maximum quantity of items purchasable given a starting price $p$, a progressive discount $d$, a price floor $m$, and a total budget $s$.<br><br><b>Pricing Model:</b> The price of the $k$-th item is $max(m, p - (k-1)d)$.",
+        solution: "<b>Algorithmic Strategy (Greedy Simulation):</b><br>The solution employs a <b>Greedy Accumulation Loop</b> to simulate sequential transactions.<br><br>1. <b>Transaction Execution:</b> While the remaining budget $s$ exceeds the current price $p_{curr}$, execute a purchase by decrementing $s$ and incrementing the count.<br>2. <b>Dynamic Repricing:</b> After each purchase, update the price: $p_{new} = max(m, p_{curr} - d)$.<br>3. <b>Termination:</b> The loop concludes when the budget is insufficient for the next purchase.",
+        optimality: "<b>Complexity Profile:</b><br>• <b>Time:</b> O(S/M). In the worst case (where the price hits the floor $m$ quickly), the number of iterations is bounded by the total budget divided by the minimum price.<br>• <b>Space:</b> O(1). Only local scalar variables are used to maintain price and budget state.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def howManyGames(p, d, m, s):\n    count = 0\n    # Iterative greedy purchase\n    while s >= p:\n        s -= p\n        count += 1\n        # Update price with floor constraint\n        p = max(m, p - d)\n    return count</pre>",
+        stepByStep: `<b>Algorithmic Trace:</b><br>
+<b>Initial:</b> p=20, d=3, m=6, s=70<br><br>
+<b>Transaction Cycles:</b>
+<div style="padding-left: 20px; border-left: 2px solid #ff3b30; margin-left: 10px; margin-bottom: 10px;">
+    <i>Buy 1:</i> Cost 20. Rem: 50. Price $\rightarrow$ 17.<br>
+    <i>Buy 2:</i> Cost 17. Rem: 33. Price $\rightarrow$ 14.<br>
+    <i>Buy 3:</i> Cost 14. Rem: 19. Price $\rightarrow$ 11.<br>
+    <i>Buy 4:</i> Cost 11. Rem: 8. Price $\rightarrow$ 8.<br>
+    <i>Buy 5:</i> Cost 8. Rem: 0. Price $\rightarrow$ 6.<br>
+    <i>Buy 6:</i> Cost 6. Rem: -6. <b>FAIL (Insufficient Funds).</b>
 </div>
-<b>Final Result:</b> You bought 6 games!`
+<b>Final Result:</b> 5`
     },
     {
         id: "kangaroo",
         title: "Number Line Jumps<br><a href='https://www.hackerrank.com/challenges/kangaroo/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Math",
-        problem: "Imagine two kangaroos on a number line, ready to jump! The first kangaroo starts at position $x1$ and jumps $v1$ meters at a time. The second starts further ahead at position $x2$ and jumps $v2$ meters at a time. They jump at the exact same moment. Will they ever land on the same spot at the same time?",
-        solution: "To find out if they meet, we look at their speeds and the gap between them. <br><br>First, if the kangaroo starting behind ($x1$) isn't faster than the one in front ($v1 \\leq v2$), it will never catch up. <br>Second, if it is faster, they will only meet if the distance between them is perfectly 'eaten up' by the difference in their jump distances. We use the <b>Modulo Operator (%)</b> to check if the starting gap is perfectly divisible by the speed difference. If it is, they'll land on the same spot in a whole number of jumps!",
-        optimality: "This 'Relative Speed' approach is perfectly optimal, running in <b>O(1) Time complexity</b>. Instead of simulating every single jump, we use one simple math equation to get the answer instantly. It uses <b>O(1) Space</b> as well.",
-        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def kangaroo(x1, v1, x2, v2):\n    # If the one behind is slower or same speed, no meeting\n    if v1 <= v2:\n        return 'NO'\n    \n    # Check if the gap is perfectly divisible by speed difference\n    if (x2 - x1) % (v1 - v2) == 0:\n        return 'YES'\n    \n    return 'NO'</pre>",
-        stepByStep: `<b>Kangaroo 1:</b> Starts at 0, Jumps 3m<br>
-<b>Kangaroo 2:</b> Starts at 4, Jumps 2m<br><br>
-<b>The Race:</b>
-<div style="padding-left: 20px; border-left: 2px solid #ccc; margin-left: 10px; margin-bottom: 10px;">
-    <i>Initial Gap:</i> 4 meters (4 - 0)<br>
-    <i>Speed Difference:</i> 1 meter/jump (3 - 2)<br>
-    <i>Check:</i> Does 1 divide 4 perfectly? <b>Yes!</b> (4 % 1 == 0)<br>
-    <i>Prediction:</i> They will meet in 4 jumps at position 12.
+        problem: "<b>Core Objective:</b> Determine if two objects starting at positions $x_1, x_2$ with constant velocities $v_1, v_2$ will ever occupy the same coordinate at the same discrete time step $t$.",
+        solution: "<b>Algorithmic Strategy (Relative Velocity & Modular Analysis):</b><br>The problem is modeled as a <b>Linear Diophantine Equation</b>: $x_1 + t \cdot v_1 = x_2 + t \cdot v_2$.<br><br>1. <b>Convergence Predicate:</b> For a meeting to occur, the object trailing behind must possess a strictly greater velocity ($v_1 > v_2$ if $x_1 < x_2$).<br>2. <b>Integer Solution Check:</b> Rearranging the equation gives $t = (x_2 - x_1) / (v_1 - v_2)$. A meeting occurs if and only if $t$ is a non-negative integer. This is verified using the modulo operator: $(x_2 - x_1) \pmod{v_1 - v_2} = 0$.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(1). The solution relies on a constant number of arithmetic operations rather than simulation.<br>• <b>Space:</b> O(1). No auxiliary storage is required.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def kangaroo(x1, v1, x2, v2):\n    # Velocity check: trailing object must be faster\n    if v1 > v2:\n        # Check if distance is a multiple of relative speed\n        if (x2 - x1) % (v1 - v2) == 0:\n            return 'YES'\n    return 'NO'</pre>",
+        stepByStep: `<b>Validation Scenario:</b><br>
+<b>Input:</b> x1=0, v1=3, x2=4, v2=2<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #34c759; margin-left: 10px; margin-bottom: 10px;">
+    <i>Relative Speed:</i> 3 - 2 = 1.<br>
+    <i>Initial Distance:</i> 4 - 0 = 4.<br>
+    <i>Equation:</i> 4 % 1 == 0. <b>Success.</b>
 </div>
-<b>Final Result:</b> YES!`
+<b>Terminal Result:</b> YES (They meet at t=4, pos=12)`
     },
     {
         id: "kaprekar-numbers",
