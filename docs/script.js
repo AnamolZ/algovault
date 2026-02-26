@@ -1585,7 +1585,28 @@ const algorithms = [
 </div>
 <b>Final Result:</b> 4`
     },
-
+    {
+        id: "manasa-and-stones",
+        title: "Manasa and Stones<br><a href='https://www.hackerrank.com/challenges/manasa-and-stones/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Simulation",
+        problem: "<b>Core Objective:</b> Manasa is walking on a trail with <b>N</b> stones. Starting from the first stone (value 0), she can take a step of length <b>a</b> or <b>b</b> to reach the next stone. <br><br><b>Goal:</b> Determine all possible values of the $N$-th (last) stone in non-decreasing order.",
+        solution: "<b>Algorithmic Strategy (Combinatorial Summation):</b><br>To reach the $N$-th stone, she must take $N-1$ steps. Each step is either $a$ or $b$.<br><br>1. <b>Mathematical Model:</b> Let $i$ be the number of steps of length $b$. Then there must be $(N-1-i)$ steps of length $a$.<br>2. <b>Linear Combination:</b> The value of the last stone is $V = i \cdot b + (N-1-i) \cdot a$.<br>3. <b>Set Propagation:</b> We iterate $i$ from $0$ to $N-1$ to cover all possible combinations. We use a set to automatically handle cases where $a = b$ (preventing duplicate values).<br>4. <b>Lexicographical Ordering:</b> Sort the unique values collected in the set to provide the required non-decreasing output.",
+        optimality: "<b>Complexity Benchmarks:</b><br>• <b>Time:</b> O(N log N). We generate $N$ potential values in $O(N)$ and then sort them, which takes $O(N \log N)$ in the worst case.<br>• <b>Space:</b> O(N) to store the result set.<br><br><b>Conclusion:</b> This approach is optimal as it relies on a closed-form combinatorial formula to identify possible states directly, rather than simulating every possible path (which would be $O(2^N)$).",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def stones(n, a, b):\n    # Core Logic: Every n-th stone is a combination of (n-1) steps\n    # i steps of 'b' and (n-1-i) steps of 'a'\n    res = {(i * b + (n - 1 - i) * a) for i in range(n)}\n    return sorted(res)</pre>",
+        stepByStep: `<b>Quantitative Trace:</b><br>
+<b>Input:</b> n=3, a=1, b=2<br>
+<b>Steps required:</b> 3 - 1 = 2 total steps.<br><br>
+<b>Execution Log:</b>
+<div style="padding-left: 20px; border-left: 2px solid #5856d6; margin-left: 10px; margin-bottom: 10px;">
+    <i>Scenario 1 (i=0):</i> 0 steps of '2', 2 steps of '1'.<br>
+    Stone Value: (0*2) + (2*1) = <b>2</b>.<br>
+    <i>Scenario 2 (i=1):</i> 1 step of '2', 1 step of '1'.<br>
+    Stone Value: (1*2) + (1*1) = <b>3</b>.<br>
+    <i>Scenario 3 (i=2):</i> 2 steps of '2', 0 steps of '1'.<br>
+    Stone Value: (2*2) + (0*1) = <b>4</b>.<br>
+</div>
+<b>Final Result:</b> [2, 3, 4]`
+    },
 ];
 
 function initSite() {
