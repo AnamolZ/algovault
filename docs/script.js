@@ -1585,6 +1585,7 @@ const algorithms = [
 </div>
 <b>Final Result:</b> 4`
     },
+
 ];
 
 function initSite() {
