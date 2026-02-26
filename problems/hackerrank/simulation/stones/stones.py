@@ -16,9 +16,6 @@ def stones(n, a, b):
     Returns:
         list: Sorted list of unique possible values for the n-th stone.
     """
-    # Mathematical Model: If we take 'i' steps of type 'b', 
-    # we must take '(n - 1 - i)' steps of type 'a'.
-    # We use a set to automatically handle cases where a == b.
     res = {(i * b + (n - 1 - i) * a) for i in range(n)}
     return sorted(res)
 
