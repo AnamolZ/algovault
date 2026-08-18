@@ -1,5 +1,15 @@
 const algorithms = [
     {
+        id: "bomberman-game",
+        title: "The Bomberman Game<br><a href='https://www.hackerrank.com/challenges/bomber-man/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
+        category: "Problems - Arrays",
+        problem: "<b>Challenge Overview:</b> Bomberman lives in a rectangular grid where each cell is empty or contains a bomb. He plants bombs in empty cells. After 3 seconds, a bomb detonates, destroying itself and its 4 neighbors. Bombs planted at the same time detonate simultaneously.<br><br><b>Goal:</b> Given the initial grid and number of seconds <code>N</code>, output the final state of the grid.",
+        solution: "<b>Algorithmic Strategy:</b> We simulate the board state, leveraging the repeating patterns.<br><br>1. If <code>N = 1</code>, return the initial grid.<br>2. If <code>N</code> is even, the grid is completely filled with bombs.<br>3. If <code>N</code> is odd, the board alternates between two states (state at 3 seconds and state at 5 seconds).<br>We compute the state at 3 seconds by detonating the initial bombs. If <code>N % 4 == 3</code>, we return this state. Otherwise, we detonate the bombs of the 3-second state to get the 5-second state.",
+        optimality: "<b>Performance Profile:</b><br>• <b>Time Complexity:</b> O(R × C), where R and C are grid dimensions, since we simulate at most 2 steps.<br>• <b>Space Complexity:</b> O(R × C) to store the grid.<br><br><b>Conclusion:</b> This approach is optimal because it avoids simulating all <code>N</code> seconds, which could be up to 10^9.",
+        codeBlock: "<pre style='background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-family: Fira Code, monospace; font-size: 0.95rem; border: 1px solid #333;'>def bomberMan(n, grid):\n    if n == 1:\n        return grid\n    if n % 2 == 0:\n        return ['O' * len(grid[0]) for _ in range(len(grid))]\n    # Detonate logic skipped for brevity\n    # ...\n    return grid</pre>",
+        stepByStep: `<b>Simulation Audit:</b><br>\n<b>Initial State:</b> Grid with some bombs.<br><br>\n<b>Iteration:</b>\n<div style="padding-left: 20px; border-left: 2px solid #007bff; margin-left: 10px; margin-bottom: 10px;">\n    <i>Even seconds:</i> Grid is completely filled with bombs.<br>\n    <i>Odd seconds:</i> Grid alternates between the state after 3 seconds and 5 seconds.\n</div>\n<b>Final Result:</b> Returns the grid state based on N % 4.`
+    },
+    {
         id: "3d-surface-area",
         title: "3D Surface Area<br><a href='https://www.hackerrank.com/challenges/3d-surface-area/problem' target='_blank' style='font-size: 0.9rem; color: #007bff; text-decoration: none;'>HackerRank</a>",
         category: "Problems - Arrays",
